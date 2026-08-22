@@ -1,0 +1,84 @@
+{
+  "site": {
+    "name": "BlogKu",
+    "tagline": "Stories, notes, and learnings",
+    "description": "A personal blog about technology, self-development, and everyday life."
+  },
+  "nav": {
+    "home": "Home",
+    "blog": "Blog",
+    "about": "About",
+    "search": "Search"
+  },
+  "home": {
+    "overline": "Notes & Essays",
+    "featured": "Featured Posts",
+    "latest": "Latest Posts",
+    "viewAll": "View All",
+    "readMore": "Read More",
+    "newsletterTitle": "Subscribe to Newsletter",
+    "newsletterDesc": "Get the latest posts straight to your inbox.",
+    "subscribe": "Subscribe",
+    "emailPlaceholder": "email@example.com",
+    "subscribed": "Thank you! Your email has been saved.",
+    "subscribeError": "Subscription failed. Please try again.",
+    "heroCta": "Start Reading"
+  },
+  "blog": {
+    "title": "All Posts",
+    "empty": "No posts yet.",
+    "noResults": "No results found.",
+    "minRead": "min read",
+    "views": "views",
+    "publishedOn": "Published on",
+    "related": "Related Posts",
+    "share": "Share",
+    "copyLink": "Copy Link",
+    "copied": "Link copied!",
+    "backToBlog": "Back to Blog",
+    "translationNotice": "The English version of this article is not available yet.",
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "categories": "Categories",
+    "tags": "Tags",
+    "allCategories": "All Categories"
+  },
+  "category": {
+    "title": "Category",
+    "empty": "No posts in this category yet."
+  },
+  "tag": {
+    "title": "Tag",
+    "empty": "No posts with this tag yet."
+  },
+  "about": {
+    "title": "About Me"
+  },
+  "search": {
+    "title": "Search Posts",
+    "placeholder": "Type keywords...",
+    "resultsFor": "Results for"
+  },
+  "comments": {
+    "title": "Comments",
+    "empty": "No comments yet. Be the first!",
+    "name": "Name",
+    "email": "Email (not published)",
+    "content": "Comment",
+    "submit": "Post Comment",
+    "submitting": "Sending...",
+    "successPending": "Thank you! Your comment is awaiting moderation.",
+    "error": "Failed to post comment. Please try again.",
+    "nameRequired": "Name is required",
+    "contentRequired": "Comment is required"
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "builtWith": "Built with Next.js"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "backHome": "Back to Home"
+  }
+}

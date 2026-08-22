@@ -1,0 +1,141 @@
+"use client";
+
+import { Menu, Search, X } from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
+
+import { ThemeToggle } from "@/components/theme-toggle";
+import { Button } from "@/components/ui/button";
+import type { Locale } from "@/lib/i18n/config";
+
+import enDict from "@/lib/i18n/dictionaries/en.json";
+import idDict from "@/lib/i18n/dictionaries/id.json";
+import type { Dictionary } from "@/lib/i18n/get-dictionary";
+
+type NavbarProps = {
+  locale: Locale;
+};
+
+const NAV_LINKS = [
+  { key: "home", href: "" },
+  { key: "blog", href: "/blog" },
+  { key: "about", href: "/tentang" },
+] as const;
+
+function stripLocale(pathname: string | null): string {
+  return (pathname ?? "").replace(/^\/(id|en)(?=\/|$)/, "");
+}
+
+function isActive(current: string, href: string): boolean {
+  if (href === "") return current === "" || current === "/";
+  return current === href || current.startsWith(`${href}/`);
+}
+
+export function Navbar({ locale }: NavbarProps) {
+  const dict = (locale === "id" ? idDict : enDict) as Dictionary;
+  const other = locale === "id" ? "en" : "id";
+  const pathname = usePathname();
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+
+  const switchLocale = () => {
+    const current = pathname ?? `/${locale}`;
+    const next = current.replace(/^\/(id|en)/, `/${other}`);
+    document.cookie = `locale=${other};path=/;max-age=31536000`;
+    router.push(next);
+  };
+
+  return (
+    <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur">
+      <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-4 sm:px-6">
+        <Link
+          href={`/${locale}`}
+          className="font-heading text-xl font-bold tracking-tight text-foreground transition-colors hover:text-primary"
+        >
+          {dict.site.name}
+        </Link>
+
+        <nav className="hidden items-center gap-7 md:flex">
+          {NAV_LINKS.map((link) => (
+            <Link
+              key={link.key}
+              href={`/${locale}${link.href}`}
+              className={`text-sm font-medium transition-colors ${
+                isActive(stripLocale(pathname), link.href)
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {dict.nav[link.key]}
+            </Link>
+          ))}
+          <Link
+            href={`/${locale}/cari`}
+            aria-label={dict.nav.search}
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <Search className="size-5" />
+          </Link>
+          <ThemeToggle />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={switchLocale}
+            aria-label={`Switch to ${other}`}
+          >
+            {other.toUpperCase()}
+          </Button>
+        </nav>
+
+        <Button
+          variant="ghost"
+          size="icon"
+          className="md:hidden"
+          aria-label={open ? "Close menu" : "Open menu"}
+          onClick={() => setOpen((v) => !v)}
+        >
+          {open ? <X className="size-5" /> : <Menu className="size-5" />}
+        </Button>
+      </div>
+
+      {open && (
+        <div className="border-t border-border/70 md:hidden">
+          <nav className="mx-auto flex w-full max-w-5xl flex-col gap-1 px-4 py-4">
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.key}
+                href={`/${locale}${link.href}`}
+                className={`rounded-md px-2 py-2 text-sm font-medium transition-colors ${
+                  isActive(stripLocale(pathname), link.href)
+                    ? "bg-primary/5 text-primary"
+                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                }`}
+                onClick={() => setOpen(false)}
+              >
+                {dict.nav[link.key]}
+              </Link>
+            ))}
+            <Link
+              href={`/${locale}/cari`}
+              className="flex items-center gap-2 rounded-md px-2 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+              onClick={() => setOpen(false)}
+            >
+              <Search className="size-4" />
+              {dict.nav.search}
+            </Link>
+            <div className="mt-2 flex items-center gap-2 px-2">
+              <ThemeToggle />
+              <Button variant="outline" size="sm" onClick={() => {
+                setOpen(false);
+                switchLocale();
+              }}>
+                {other.toUpperCase()}
+              </Button>
+            </div>
+          </nav>
+        </div>
+      )}
+    </header>
+  );
+}

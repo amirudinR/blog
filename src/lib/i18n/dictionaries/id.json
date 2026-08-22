@@ -1,0 +1,84 @@
+{
+  "site": {
+    "name": "BlogKu",
+    "tagline": "Cerita, catatan, dan pembelajaran",
+    "description": "Blog pribadi tentang teknologi, pengembangan diri, dan kehidupan sehari-hari."
+  },
+  "nav": {
+    "home": "Beranda",
+    "blog": "Blog",
+    "about": "Tentang",
+    "search": "Cari"
+  },
+  "home": {
+    "overline": "Catatan & Tulisan",
+    "featured": "Artikel Unggulan",
+    "latest": "Artikel Terbaru",
+    "viewAll": "Lihat Semua",
+    "readMore": "Baca Selengkapnya",
+    "newsletterTitle": "Berlangganan Newsletter",
+    "newsletterDesc": "Dapatkan artikel terbaru langsung di inbox kamu.",
+    "subscribe": "Berlangganan",
+    "emailPlaceholder": "email@contoh.com",
+    "subscribed": "Terima kasih! Email kamu sudah tersimpan.",
+    "subscribeError": "Gagal berlangganan. Coba lagi ya.",
+    "heroCta": "Mulai Membaca"
+  },
+  "blog": {
+    "title": "Semua Artikel",
+    "empty": "Belum ada artikel.",
+    "noResults": "Tidak ada hasil yang ditemukan.",
+    "minRead": "menit baca",
+    "views": "dilihat",
+    "publishedOn": "Diterbitkan pada",
+    "related": "Artikel Terkait",
+    "share": "Bagikan",
+    "copyLink": "Salin Tautan",
+    "copied": "Tautan disalin!",
+    "backToBlog": "Kembali ke Blog",
+    "translationNotice": "Versi Bahasa Inggris dari artikel ini belum tersedia.",
+    "prev": "Sebelumnya",
+    "next": "Selanjutnya",
+    "page": "Halaman",
+    "categories": "Kategori",
+    "tags": "Tag",
+    "allCategories": "Semua Kategori"
+  },
+  "category": {
+    "title": "Kategori",
+    "empty": "Belum ada artikel di kategori ini."
+  },
+  "tag": {
+    "title": "Tag",
+    "empty": "Belum ada artikel dengan tag ini."
+  },
+  "about": {
+    "title": "Tentang Saya"
+  },
+  "search": {
+    "title": "Cari Artikel",
+    "placeholder": "Ketik kata kunci...",
+    "resultsFor": "Hasil untuk"
+  },
+  "comments": {
+    "title": "Komentar",
+    "empty": "Belum ada komentar. Jadilah yang pertama!",
+    "name": "Nama",
+    "email": "Email (tidak dipublikasikan)",
+    "content": "Komentar",
+    "submit": "Kirim Komentar",
+    "submitting": "Mengirim...",
+    "successPending": "Terima kasih! Komentar kamu menunggu moderasi.",
+    "error": "Gagal mengirim komentar. Coba lagi ya.",
+    "nameRequired": "Nama wajib diisi",
+    "contentRequired": "Komentar wajib diisi"
+  },
+  "footer": {
+    "rights": "Semua hak dilindungi.",
+    "builtWith": "Dibuat dengan Next.js"
+  },
+  "notFound": {
+    "title": "Halaman tidak ditemukan",
+    "backHome": "Kembali ke Beranda"
+  }
+}

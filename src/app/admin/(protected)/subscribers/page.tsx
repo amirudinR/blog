@@ -35,10 +35,15 @@ export default async function AdminSubscribersPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-heading text-2xl font-bold tracking-tight sm:text-3xl">
-            Subscriber
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="font-heading text-2xl font-normal tracking-tight">
+              Subscriber
+            </h1>
+            <span className="inline-flex h-7 items-center rounded-full bg-[var(--md-secondary-container)] px-3 text-xs font-medium text-[var(--md-on-secondary-container)]">
+              {new Intl.NumberFormat("id-ID").format(subscribers.length)}
+            </span>
+          </div>
+          <p className="mt-1 text-sm text-[var(--md-on-surface-variant)]">
             Daftar pelanggan newsletter blog kamu.
           </p>
         </div>
@@ -48,31 +53,19 @@ export default async function AdminSubscribersPage() {
         </Button>
       </div>
 
-      <div className="flex items-center gap-3 rounded-xl bg-card px-5 py-4 ring-1 ring-foreground/10">
-        <span className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-          <Users className="size-5" />
-        </span>
-        <div>
-          <p className="font-heading text-2xl leading-none font-bold tabular-nums">
-            {new Intl.NumberFormat("id-ID").format(subscribers.length)}
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground">Total subscriber</p>
-        </div>
-      </div>
-
       {subscribers.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed py-16 text-center">
-          <Users className="size-8 text-muted-foreground/50" />
-          <p className="text-sm font-medium">Belum ada subscriber</p>
-          <p className="max-w-xs text-sm text-muted-foreground">
+        <div className="flex flex-col items-center justify-center py-12 text-center text-sm text-[var(--md-on-surface-variant)]">
+          <Users className="mb-2 size-8 opacity-50" />
+          <p>Belum ada subscriber</p>
+          <p className="max-w-xs">
             Pembaca yang berlangganan newsletter akan tampil di sini.
           </p>
         </div>
       ) : (
-        <div className="hidden overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10 md:block">
+        <div className="hidden overflow-hidden rounded-2xl border border-[var(--md-outline-variant)] md:block">
           <Table>
             <TableHeader>
-              <TableRow className="bg-muted/50 hover:bg-muted/50">
+              <TableRow>
                 <TableHead>Email</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Tanggal Subscribe</TableHead>
@@ -86,14 +79,16 @@ export default async function AdminSubscribersPage() {
                   </TableCell>
                   <TableCell>
                     {subscriber.status === "active" ? (
-                      <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">
+                      <Badge className="bg-[var(--md-tertiary-container)] text-[var(--md-on-tertiary-container)]">
                         Aktif
                       </Badge>
                     ) : (
-                      <Badge variant="secondary">Berhenti</Badge>
+                      <Badge className="bg-[var(--md-surface-container-highest)] text-[var(--md-on-surface-variant)]">
+                        Berhenti
+                      </Badge>
                     )}
                   </TableCell>
-                  <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
+                  <TableCell className="whitespace-nowrap text-sm tabular-nums text-[var(--md-on-surface-variant)]">
                     {formatDate(subscriber.subscribedAt)}
                   </TableCell>
                 </TableRow>
@@ -108,23 +103,23 @@ export default async function AdminSubscribersPage() {
           {subscribers.map((subscriber) => (
             <div
               key={subscriber.id}
-              className="space-y-2 rounded-lg border bg-card p-4"
+              className="space-y-1.5 rounded-2xl bg-[var(--md-surface-container-low)] p-4"
             >
               <div className="flex items-start justify-between gap-2">
                 <p className="min-w-0 break-all font-medium">
                   {subscriber.email}
                 </p>
                 {subscriber.status === "active" ? (
-                  <Badge className="shrink-0 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">
+                  <Badge className="shrink-0 bg-[var(--md-tertiary-container)] text-[var(--md-on-tertiary-container)]">
                     Aktif
                   </Badge>
                 ) : (
-                  <Badge variant="secondary" className="shrink-0">
+                  <Badge className="shrink-0 bg-[var(--md-surface-container-highest)] text-[var(--md-on-surface-variant)]">
                     Berhenti
                   </Badge>
                 )}
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs tabular-nums text-[var(--md-on-surface-variant)]">
                 {formatDate(subscriber.subscribedAt)}
               </p>
             </div>

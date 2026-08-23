@@ -8,6 +8,7 @@ import {
   PencilLine,
   Trash2,
   Upload,
+  X,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,7 +19,6 @@ import { toast } from "sonner";
 import { savePost } from "@/app/admin/actions";
 import { uploadCoverImage } from "@/app/admin/upload-action";
 import { MarkdownContent } from "@/components/blog/markdown-content";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -40,6 +40,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { slugify } from "@/lib/utils/blog";
+
+import { StatusBadge } from "@/components/admin/status-badge";
 
 type EditorTranslation = {
   locale: "id" | "en";
@@ -300,7 +302,7 @@ export function PostEditor({
           <Label htmlFor={`judul-${locale}`}>
             Judul {isId ? "(Indonesia)" : "(English)"}
             {!isId && (
-              <span className="ml-1 text-xs font-normal text-muted-foreground">
+              <span className="ml-1 text-xs font-normal text-[var(--md-on-surface-variant)]">
                 opsional
               </span>
             )}
@@ -314,16 +316,17 @@ export function PostEditor({
             }}
             placeholder={isId ? "Judul artikel…" : "Post title…"}
             aria-invalid={Boolean(errors[errorKey])}
+            className="placeholder:text-[var(--md-on-surface-variant)]/60"
           />
           {errors[errorKey] && (
-            <p className="text-xs text-destructive">{errors[errorKey]}</p>
+            <p className="text-xs text-[var(--md-error)]">{errors[errorKey]}</p>
           )}
         </div>
 
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
             <Label htmlFor={`excerpt-${locale}`}>Excerpt</Label>
-            <span className="text-xs tabular-nums text-muted-foreground">
+            <span className="text-xs tabular-nums text-[var(--md-on-surface-variant)]">
               {excerpt.length}/300
             </span>
           </div>
@@ -333,7 +336,7 @@ export function PostEditor({
             maxLength={300}
             onChange={(e) => setExcerpt(e.target.value)}
             placeholder="Ringkasan singkat artikel…"
-            className="min-h-20"
+            className="min-h-20 placeholder:text-[var(--md-on-surface-variant)]/60"
           />
         </div>
 
@@ -361,24 +364,24 @@ export function PostEditor({
               }}
               placeholder="Tulis konten dalam format Markdown…"
               className={cn(
-                "min-h-[400px] font-mono text-sm leading-relaxed",
-                errors[contentErrorKey] && "border-destructive"
+                "min-h-[400px] font-mono text-sm leading-relaxed placeholder:text-[var(--md-on-surface-variant)]/60",
+                errors[contentErrorKey] && "border-[var(--md-error)]"
               )}
               aria-invalid={Boolean(errors[contentErrorKey])}
             />
             {errors[contentErrorKey] && (
-              <p className="text-xs text-destructive">
+              <p className="text-xs text-[var(--md-error)]">
                 {errors[contentErrorKey]}
               </p>
             )}
           </TabsContent>
           <TabsContent value="pratinjau" className="mt-2">
             {content.trim() ? (
-              <div className="max-h-[480px] overflow-y-auto rounded-lg border bg-card p-5">
+              <div className="max-h-[480px] overflow-y-auto rounded-2xl border border-[var(--md-outline-variant)] p-5">
                 <MarkdownContent markdown={content} />
               </div>
             ) : (
-              <div className="flex min-h-[120px] items-center justify-center rounded-lg border border-dashed text-sm text-muted-foreground">
+              <div className="flex min-h-[120px] items-center justify-center rounded-2xl border border-dashed border-[var(--md-outline-variant)] text-sm text-[var(--md-on-surface-variant)]">
                 Belum ada konten untuk dipratinjau
               </div>
             )}
@@ -397,13 +400,13 @@ export function PostEditor({
   ) {
     return (
       <div className="space-y-3">
-        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <p className="text-[13px] font-medium uppercase tracking-wide text-[var(--md-on-surface-variant)]">
           {label}
         </p>
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
             <Label className="text-xs font-normal">Meta title</Label>
-            <span className="text-[11px] tabular-nums text-muted-foreground">
+            <span className="text-[11px] tabular-nums text-[var(--md-on-surface-variant)]">
               {title.length}/60
             </span>
           </div>
@@ -417,7 +420,7 @@ export function PostEditor({
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
             <Label className="text-xs font-normal">Meta description</Label>
-            <span className="text-[11px] tabular-nums text-muted-foreground">
+            <span className="text-[11px] tabular-nums text-[var(--md-on-surface-variant)]">
               {description.length}/160
             </span>
           </div>
@@ -435,7 +438,7 @@ export function PostEditor({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="sticky top-16 z-20 -mx-4 flex flex-wrap items-center justify-between gap-3 border-b bg-background/90 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <div className="sticky top-16 z-20 -mx-4 flex flex-wrap items-center justify-between gap-3 border-b border-[var(--md-outline-variant)] bg-[color-mix(in_srgb,var(--md-surface)_90%,transparent)] px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex min-w-0 items-center gap-3">
           <Button
             type="button"
@@ -446,23 +449,14 @@ export function PostEditor({
           >
             <ArrowLeft className="size-4" />
           </Button>
-          <Badge
-            className={
-              status === "published"
-                ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400"
-                : ""
-            }
-            variant={status === "published" ? undefined : "secondary"}
-          >
-            {status === "published" ? "Terpublikasi" : "Draft"}
-          </Badge>
-          <span className="hidden truncate text-xs text-muted-foreground sm:inline">
+          <StatusBadge status={status} />
+          <span className="hidden truncate text-xs text-[var(--md-on-surface-variant)] sm:inline">
             /{slug || "slug-belum-diisi"}
           </span>
         </div>
         <div className="flex items-center gap-2">
           {lastSavedAt && (
-            <span className="mr-1 hidden text-xs text-muted-foreground md:inline">
+            <span className="mr-1 hidden text-xs tabular-nums text-[var(--md-on-surface-variant)] md:inline">
               Tersimpan {formatDateTimeId(lastSavedAt)}
             </span>
           )}
@@ -503,13 +497,9 @@ export function PostEditor({
           <Card className="order-3">
             <CardContent className="pt-(--card-spacing)">
               <Tabs defaultValue="id">
-                <TabsList className="w-full max-w-xs">
-                  <TabsTrigger value="id" className="flex-1">
-                    Bahasa Indonesia
-                  </TabsTrigger>
-                  <TabsTrigger value="en" className="flex-1">
-                    English
-                  </TabsTrigger>
+                <TabsList className="grid w-full grid-cols-2 sm:max-w-xs">
+                  <TabsTrigger value="id">Bahasa Indonesia</TabsTrigger>
+                  <TabsTrigger value="en">English</TabsTrigger>
                 </TabsList>
                 <TabsContent value="id" className="pt-5">
                   {renderLocaleFields("id")}
@@ -564,9 +554,9 @@ export function PostEditor({
                   aria-invalid={Boolean(errors.slug)}
                 />
                 {errors.slug ? (
-                  <p className="text-xs text-destructive">{errors.slug}</p>
+                  <p className="text-xs text-[var(--md-error)]">{errors.slug}</p>
                 ) : (
-                  <p className="truncate text-xs text-muted-foreground">
+                  <p className="truncate text-xs text-[var(--md-on-surface-variant)]">
                     /id/blog/{slug || "…"}
                   </p>
                 )}
@@ -602,7 +592,7 @@ export function PostEditor({
                 </Select>
               </div>
 
-              <p className="rounded-md bg-muted/60 px-2.5 py-2 text-xs leading-relaxed text-muted-foreground">
+              <p className="rounded-xl bg-[var(--md-surface-container-high)] px-3 py-2 text-xs leading-relaxed text-[var(--md-on-surface-variant)]">
                 {initial?.publishedAt
                   ? `Diterbitkan ${formatDateTimeId(new Date(initial.publishedAt))}`
                   : "Tanggal terbit diisi otomatis saat pertama kali publikasi."}
@@ -616,7 +606,7 @@ export function PostEditor({
             </CardHeader>
             <CardContent className="space-y-3">
               {coverImageUrl ? (
-                <div className="relative overflow-hidden rounded-lg border">
+                <div className="relative overflow-hidden rounded-xl border border-[var(--md-outline-variant)]">
                   <Image
                     src={coverImageUrl}
                     alt="Pratinjau cover"
@@ -627,9 +617,9 @@ export function PostEditor({
                   />
                   <Button
                     type="button"
-                    variant="destructive"
+                    variant="ghost"
                     size="icon-xs"
-                    className="absolute top-1.5 right-1.5"
+                    className="absolute top-1.5 right-1.5 text-[var(--md-error)] hover:bg-[var(--md-error-container)] hover:text-[var(--md-on-error-container)]"
                     aria-label="Hapus cover"
                     onClick={() => setCoverImageUrl("")}
                   >
@@ -637,7 +627,7 @@ export function PostEditor({
                   </Button>
                 </div>
               ) : (
-                <div className="flex h-36 flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed text-muted-foreground">
+                <div className="flex h-36 flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-[var(--md-outline-variant)] p-6 text-center text-[var(--md-on-surface-variant)] transition-colors hover:border-[var(--md-primary)]">
                   <ImageIcon className="size-6 opacity-50" />
                   <span className="text-xs">Belum ada cover</span>
                 </div>
@@ -720,7 +710,7 @@ export function PostEditor({
             </CardHeader>
             <CardContent>
               {tags.length === 0 ? (
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-[var(--md-on-surface-variant)]">
                   Belum ada tag tersedia.
                 </p>
               ) : (
@@ -734,13 +724,16 @@ export function PostEditor({
                         aria-pressed={active}
                         onClick={() => toggleTag(tag.id)}
                         className={cn(
-                          "inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none",
+                          "inline-flex h-8 items-center gap-1 rounded-full border px-3 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:ring-[var(--md-primary)] focus-visible:outline-none",
                           active
-                            ? "border-primary bg-primary text-primary-foreground"
-                            : "bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                            ? "border-transparent bg-[var(--md-secondary-container)] text-[var(--md-on-secondary-container)]"
+                            : "border-[var(--md-outline-variant)] bg-transparent text-[var(--md-on-surface-variant)] hover:border-[var(--md-primary)] hover:text-[var(--md-on-surface)]"
                         )}
                       >
                         {tag.nameId}
+                        {active && (
+                          <X className="size-3" aria-hidden />
+                        )}
                       </button>
                     );
                   })}

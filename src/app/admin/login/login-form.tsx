@@ -81,14 +81,16 @@ export function LoginForm() {
   return (
     <div className="grid gap-4">
       {error ? (
-        <p role="alert" className="text-center text-sm font-medium text-destructive">
+        <p
+          role="alert"
+          className="text-center text-sm font-medium text-[var(--md-error)]"
+        >
           {error}
         </p>
       ) : null}
       <Button
         type="button"
-        variant="outline"
-        className="w-full justify-center"
+        className="h-11 w-full justify-center"
         disabled={pending}
         onClick={handleGoogleSignIn}
       >

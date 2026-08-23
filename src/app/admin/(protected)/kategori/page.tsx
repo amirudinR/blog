@@ -15,10 +15,10 @@ export default async function AdminCategoriesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-heading text-2xl font-bold tracking-tight sm:text-3xl">
+        <h1 className="font-heading text-2xl font-normal tracking-tight">
           Kategori
         </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="mt-1 text-sm text-[var(--md-on-surface-variant)]">
           Kelola kategori artikel untuk kedua bahasa.
         </p>
       </div>

@@ -122,9 +122,9 @@ function TaxonomyForm({ kind, editing, onSuccess }: TaxonomyFormProps) {
             disabled={pending}
           />
         </div>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-[var(--md-on-surface-variant)]">
           Slug:{" "}
-          <code className="rounded bg-muted px-1.5 py-0.5 font-mono">
+          <code className="rounded-md bg-[var(--md-surface-container-highest)] px-1.5 py-0.5 font-mono">
             {slugPreview || "—"}
           </code>
         </p>
@@ -180,7 +180,7 @@ export function TaxonomyManager({ kind, rows }: TaxonomyManagerProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-[var(--md-on-surface-variant)]">
           {rows.length} {labels.plural.toLowerCase()}
         </p>
         <Button onClick={openCreate}>
@@ -190,20 +190,18 @@ export function TaxonomyManager({ kind, rows }: TaxonomyManagerProps) {
       </div>
 
       {rows.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed py-16 text-center">
-          <p className="text-sm font-medium">
-            Belum ada {labels.plural.toLowerCase()}
-          </p>
-          <p className="text-sm text-muted-foreground">
+        <div className="flex flex-col items-center justify-center py-12 text-center text-sm text-[var(--md-on-surface-variant)]">
+          <p>Belum ada {labels.plural.toLowerCase()}</p>
+          <p>
             Tambahkan {labels.singular.toLowerCase()} pertama kamu.
           </p>
         </div>
       ) : (
         <>
-          <div className="hidden overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10 md:block">
+          <div className="hidden overflow-hidden rounded-2xl border border-[var(--md-outline-variant)] md:block">
           <Table>
             <TableHeader>
-              <TableRow className="bg-muted/50 hover:bg-muted/50">
+              <TableRow>
                 <TableHead>Nama ID</TableHead>
                 <TableHead>Nama EN</TableHead>
                 <TableHead>Slug</TableHead>
@@ -217,16 +215,16 @@ export function TaxonomyManager({ kind, rows }: TaxonomyManagerProps) {
                 <TableRow key={row.id}>
                   <TableCell className="font-medium">
                     {row.nameId ?? (
-                      <span className="italic text-muted-foreground">—</span>
+                      <span className="italic text-[var(--md-on-surface-variant)]">—</span>
                     )}
                   </TableCell>
                   <TableCell>
                     {row.nameEn ?? (
-                      <span className="italic text-muted-foreground">—</span>
+                      <span className="italic text-[var(--md-on-surface-variant)]">—</span>
                     )}
                   </TableCell>
                   <TableCell>
-                    <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-muted-foreground">
+                    <code className="rounded-md bg-[var(--md-surface-container-highest)] px-1.5 py-0.5 font-mono text-xs text-[var(--md-on-surface-variant)]">
                       {row.slug}
                     </code>
                   </TableCell>
@@ -235,7 +233,7 @@ export function TaxonomyManager({ kind, rows }: TaxonomyManagerProps) {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-muted-foreground"
+                        className="text-[var(--md-on-surface-variant)]"
                         aria-label={`Edit ${row.slug}`}
                         onClick={() => openEdit(row)}
                       >
@@ -246,7 +244,7 @@ export function TaxonomyManager({ kind, rows }: TaxonomyManagerProps) {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="text-muted-foreground hover:text-destructive"
+                            className="text-[var(--md-on-surface-variant)] hover:text-[var(--md-error)]"
                             aria-label={`Hapus ${row.slug}`}
                           >
                             <Trash2 className="size-4" />
@@ -268,22 +266,22 @@ export function TaxonomyManager({ kind, rows }: TaxonomyManagerProps) {
             {rows.map((row) => (
               <div
                 key={row.id}
-                className="flex items-start justify-between gap-3 rounded-lg border p-3"
+                className="flex items-center justify-between gap-3 rounded-2xl border border-[var(--md-outline-variant)] px-4 py-3"
               >
-                <div className="min-w-0 space-y-1">
-                  <p className="font-semibold">
+                <div className="min-w-0 space-y-0.5">
+                  <p className="truncate font-medium">
                     {row.nameId ?? (
-                      <span className="font-normal italic text-muted-foreground">
+                      <span className="font-normal italic text-[var(--md-on-surface-variant)]">
                         —
                       </span>
                     )}
                   </p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="truncate text-xs text-[var(--md-on-surface-variant)]">
                     {row.nameEn ?? (
                       <span className="italic">—</span>
                     )}
                   </p>
-                  <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-muted-foreground">
+                  <code className="rounded-md bg-[var(--md-surface-container-highest)] px-1.5 py-0.5 font-mono text-xs text-[var(--md-on-surface-variant)]">
                     {row.slug}
                   </code>
                 </div>
@@ -291,7 +289,7 @@ export function TaxonomyManager({ kind, rows }: TaxonomyManagerProps) {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-muted-foreground"
+                    className="text-[var(--md-on-surface-variant)]"
                     aria-label={`Edit ${row.slug}`}
                     onClick={() => openEdit(row)}
                   >
@@ -302,7 +300,7 @@ export function TaxonomyManager({ kind, rows }: TaxonomyManagerProps) {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-muted-foreground hover:text-destructive"
+                        className="text-[var(--md-on-surface-variant)] hover:text-[var(--md-error)]"
                         aria-label={`Hapus ${row.slug}`}
                       >
                         <Trash2 className="size-4" />

@@ -47,7 +47,7 @@ export function CommentActions({ id, status }: CommentActionsProps) {
             )
           }
         >
-          <Check className="size-4 text-emerald-600 dark:text-emerald-400" />
+          <Check className="size-4 text-[var(--md-tertiary)]" />
         </Button>
       )}
       {status !== "rejected" && (
@@ -62,7 +62,7 @@ export function CommentActions({ id, status }: CommentActionsProps) {
             runAction(() => moderateComment(id, "rejected"), "Komentar ditolak")
           }
         >
-          <X className="size-4 text-amber-600 dark:text-amber-400" />
+          <X className="size-4 text-[var(--md-error)]" />
         </Button>
       )}
       <DeleteConfirmButton
@@ -87,7 +87,7 @@ export function CommentActions({ id, status }: CommentActionsProps) {
             aria-label="Hapus komentar"
             title="Hapus"
           >
-            <Trash2 className="size-4 text-destructive" />
+            <Trash2 className="size-4 text-[var(--md-error)]" />
           </Button>
         }
       />

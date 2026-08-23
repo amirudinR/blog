@@ -3,8 +3,6 @@
 import { LogOut } from "lucide-react";
 import { useTransition } from "react";
 
-import { Button } from "@/components/ui/button";
-
 export async function performLogout(): Promise<void> {
   try {
     await fetch("/api/auth/session", { method: "DELETE" });
@@ -13,22 +11,23 @@ export async function performLogout(): Promise<void> {
   }
 }
 
-export function LogoutButton() {
+export function LogoutButton({ onNavigate }: { onNavigate?: () => void }) {
   const [pending, startTransition] = useTransition();
 
   return (
-    <Button
-      variant="ghost"
-      className="w-full justify-start gap-3 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/70 hover:text-sidebar-accent-foreground"
+    <button
+      type="button"
       disabled={pending}
-      onClick={() =>
+      onClick={() => {
+        onNavigate?.();
         startTransition(async () => {
           await performLogout();
-        })
-      }
+        });
+      }}
+      className="flex h-12 w-full items-center gap-3 rounded-full px-4 text-left text-sm font-medium text-[var(--md-on-surface-variant)] transition-colors hover:bg-[color-mix(in_srgb,var(--md-on-surface)_6%,transparent)] hover:text-[var(--md-on-surface)] disabled:pointer-events-none disabled:opacity-50"
     >
-      <LogOut className="size-4 shrink-0" />
+      <LogOut className="size-5 shrink-0" />
       Keluar
-    </Button>
+    </button>
   );
 }

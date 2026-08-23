@@ -48,10 +48,10 @@ export default async function AdminPostsPage({
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-heading text-2xl font-bold tracking-tight sm:text-3xl">
+          <h1 className="font-heading text-2xl font-normal tracking-tight">
             Posts
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="mt-1 text-sm text-[var(--md-on-surface-variant)]">
             Kelola seluruh artikel blog kamu.
           </p>
         </div>
@@ -79,26 +79,24 @@ export default async function AdminPostsPage({
       </form>
 
       {posts.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed py-16 text-center">
-          <FileText className="size-8 text-muted-foreground/50" />
+        <div className="flex flex-col items-center justify-center py-12 text-center text-sm text-[var(--md-on-surface-variant)]">
+          <FileText className="mb-2 size-8 opacity-50" />
           {q ? (
             <>
-              <p className="text-sm font-medium">
-                Tidak ada hasil untuk &ldquo;{q}&rdquo;
-              </p>
+              <p>Tidak ada hasil untuk &ldquo;{q}&rdquo;</p>
               <Link
                 href="/admin/posts"
-                className="text-sm text-primary underline-offset-4 hover:underline"
+                className="mt-1 text-[var(--md-primary)] underline-offset-4 hover:underline"
               >
                 Reset pencarian
               </Link>
             </>
           ) : (
             <>
-              <p className="text-sm font-medium">Belum ada post</p>
+              <p>Belum ada post</p>
               <Link
                 href="/admin/posts/new"
-                className="text-sm text-primary underline-offset-4 hover:underline"
+                className="mt-1 text-[var(--md-primary)] underline-offset-4 hover:underline"
               >
                 Buat post pertama
               </Link>
@@ -106,10 +104,10 @@ export default async function AdminPostsPage({
           )}
         </div>
       ) : (
-        <div className="hidden overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10 md:block">
+        <div className="hidden overflow-hidden rounded-2xl border border-[var(--md-outline-variant)] md:block">
           <Table>
             <TableHeader>
-              <TableRow className="bg-muted/50 hover:bg-muted/50">
+              <TableRow>
                 <TableHead>Judul</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Dilihat</TableHead>
@@ -132,16 +130,16 @@ export default async function AdminPostsPage({
                       <div className="flex flex-col">
                         <Link
                           href={`/admin/posts/${post.id}`}
-                          className="truncate font-medium hover:text-primary hover:underline hover:underline-offset-4"
+                          className="truncate font-medium hover:underline hover:underline-offset-4"
                         >
                           {primaryTitle}
                         </Link>
                         {secondaryTitle ? (
-                          <span className="truncate text-xs text-muted-foreground">
+                          <span className="truncate text-xs text-[var(--md-on-surface-variant)]">
                             {secondaryTitle}
                           </span>
                         ) : (
-                          <span className="truncate text-xs text-muted-foreground">
+                          <span className="truncate text-xs text-[var(--md-on-surface-variant)]">
                             /{post.slug}
                           </span>
                         )}
@@ -150,10 +148,10 @@ export default async function AdminPostsPage({
                     <TableCell>
                       <StatusBadge status={post.status} />
                     </TableCell>
-                    <TableCell className="text-right tabular-nums text-muted-foreground">
+                    <TableCell className="text-right tabular-nums text-[var(--md-on-surface-variant)]">
                       {formatNumber(post.viewsCount)}
                     </TableCell>
-                    <TableCell className="whitespace-nowrap text-muted-foreground">
+                    <TableCell className="whitespace-nowrap text-[var(--md-on-surface-variant)]">
                       {formatDateShort(post.publishedAt)}
                     </TableCell>
                     <TableCell className="text-right">
@@ -178,25 +176,27 @@ export default async function AdminPostsPage({
             return (
               <div
                 key={post.id}
-                className="space-y-2 rounded-lg border bg-card p-4"
+                className="space-y-1.5 rounded-2xl bg-[var(--md-surface-container-low)] p-4"
               >
                 <div className="flex items-start justify-between gap-2">
                   <Link
                     href={`/admin/posts/${post.id}`}
-                    className="min-w-0 flex-1 truncate font-medium hover:text-primary hover:underline hover:underline-offset-4"
+                    className="min-w-0 flex-1 truncate font-medium hover:underline hover:underline-offset-4"
                   >
                     {primaryTitle}
                   </Link>
                   <StatusBadge status={post.status} />
                 </div>
-                <p className="truncate text-xs text-muted-foreground">
+                <p className="truncate text-xs text-[var(--md-on-surface-variant)]">
                   {secondaryTitle ?? `/${post.slug}`}
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs tabular-nums text-[var(--md-on-surface-variant)]">
                   {formatNumber(post.viewsCount)} dilihat ·{" "}
                   {formatDateShort(post.publishedAt)}
                 </p>
-                <PostRowActions id={post.id} title={primaryTitle} />
+                <div className="flex justify-end">
+                  <PostRowActions id={post.id} title={primaryTitle} />
+                </div>
               </div>
             );
           })}

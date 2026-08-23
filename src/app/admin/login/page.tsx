@@ -16,17 +16,26 @@ export default async function LoginPage() {
   if (session) redirect("/admin");
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/40 px-4">
-      <div className="w-full max-w-sm rounded-2xl bg-card p-8 shadow-sm ring-1 ring-foreground/10">
-        <div className="mb-6 text-center">
-          <h1 className="font-heading text-3xl font-bold tracking-tight text-primary">
-            BlogKu
-          </h1>
-          <p className="mt-1.5 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-            Panel Admin
-          </p>
+    <div className="grid min-h-screen place-items-center bg-[var(--md-surface)] p-4">
+      <div className="w-full max-w-sm">
+        <div
+          className="grid size-12 place-items-center rounded-2xl bg-[var(--md-primary)] text-xl font-bold text-[var(--md-on-primary)]"
+          aria-hidden
+        >
+          B
         </div>
-        <LoginForm />
+        <h1 className="mt-6 text-2xl font-normal tracking-tight">
+          Masuk ke BlogKu
+        </h1>
+        <p className="mt-1 text-sm text-[var(--md-on-surface-variant)]">
+          Panel admin untuk mengelola artikel, kategori, dan komentar.
+        </p>
+        <div className="mt-8 rounded-[28px] border border-[color-mix(in_srgb,var(--md-outline-variant)_60%,transparent)] bg-[var(--md-surface-container-lowest)] p-8 shadow-[var(--md-shadow-2)]">
+          <LoginForm />
+        </div>
+        <p className="mt-6 text-xs text-[var(--md-on-surface-variant)]">
+          Hanya email yang diizinkan yang dapat masuk.
+        </p>
       </div>
     </div>
   );

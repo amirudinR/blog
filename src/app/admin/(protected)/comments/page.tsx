@@ -6,7 +6,7 @@ import { listComments, type AdminCommentRow } from "@/lib/db/queries";
 
 import { CommentActions } from "@/components/admin/comment-actions";
 import { CommentContent } from "@/components/admin/comment-content";
-import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/admin/status-badge";
 import {
   Table,
   TableBody,
@@ -40,24 +40,6 @@ function formatDateTime(date: Date): string {
   }).format(date);
 }
 
-function CommentStatusBadge({ status }: { status: string }) {
-  if (status === "approved") {
-    return (
-      <Badge className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">
-        Disetujui
-      </Badge>
-    );
-  }
-  if (status === "rejected") {
-    return <Badge variant="destructive">Ditolak</Badge>;
-  }
-  return (
-    <Badge className="bg-amber-500/15 text-amber-700 dark:text-amber-400">
-      Pending
-    </Badge>
-  );
-}
-
 function countByStatus(rows: AdminCommentRow[], status: string): number {
   if (status === "all") return rows.length;
   return rows.filter((row) => row.status === status).length;
@@ -82,17 +64,17 @@ export default async function AdminCommentsPage({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-heading text-2xl font-bold tracking-tight sm:text-3xl">
+        <h1 className="font-heading text-2xl font-normal tracking-tight">
           Komentar
         </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="mt-1 text-sm text-[var(--md-on-surface-variant)]">
           Moderasi komentar pembaca sebelum tampil di artikel.
         </p>
       </div>
 
       <nav
         aria-label="Filter status komentar"
-        className="inline-flex w-fit items-center gap-0.5 rounded-lg bg-muted p-[3px]"
+        className="inline-flex w-fit max-w-full items-center gap-1 overflow-x-auto rounded-full bg-[var(--md-surface-container-high)] p-1"
       >
         {FILTERS.map((filter) => {
           const active = filter.value === activeFilter;
@@ -102,10 +84,10 @@ export default async function AdminCommentsPage({
               href={`/admin/comments?status=${filter.value}`}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-md px-3 py-1 text-sm font-medium whitespace-nowrap transition-colors",
+                "inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
                 active
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "bg-[var(--md-secondary-container)] text-[var(--md-on-secondary-container)]"
+                  : "text-[var(--md-on-surface-variant)] hover:bg-[color-mix(in_srgb,var(--md-on-surface)_8%,transparent)]"
               )}
             >
               {filter.label}
@@ -118,22 +100,22 @@ export default async function AdminCommentsPage({
       </nav>
 
       {rows.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed py-16 text-center">
-          <MessageSquare className="size-8 text-muted-foreground/50" />
-          <p className="text-sm font-medium">
+        <div className="flex flex-col items-center justify-center py-12 text-center text-sm text-[var(--md-on-surface-variant)]">
+          <MessageSquare className="mb-2 size-8 opacity-50" />
+          <p>
             {activeFilter === "all"
               ? "Belum ada komentar"
               : `Tidak ada komentar ${FILTERS.find((f) => f.value === activeFilter)?.label.toLowerCase()}`}
           </p>
-          <p className="max-w-xs text-sm text-muted-foreground">
+          <p className="max-w-xs">
             Komentar baru dari pembaca akan muncul di sini.
           </p>
         </div>
       ) : (
-        <div className="hidden overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10 md:block">
+        <div className="hidden overflow-hidden rounded-2xl border border-[var(--md-outline-variant)] md:block">
           <Table>
             <TableHeader>
-              <TableRow className="bg-muted/50 hover:bg-muted/50">
+              <TableRow>
                 <TableHead>Tanggal</TableHead>
                 <TableHead>Penulis</TableHead>
                 <TableHead>Komentar</TableHead>
@@ -147,15 +129,15 @@ export default async function AdminCommentsPage({
             <TableBody>
               {rows.map((comment) => (
                 <TableRow key={comment.id}>
-                  <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
+                  <TableCell className="whitespace-nowrap text-sm tabular-nums text-[var(--md-on-surface-variant)]">
                     {formatDateTime(comment.createdAt)}
                   </TableCell>
                   <TableCell>
-                    <div className="flex flex-col max-w-44">
+                    <div className="flex max-w-44 flex-col">
                       <span className="truncate font-medium">
                         {comment.authorName}
                       </span>
-                      <span className="truncate text-xs text-muted-foreground">
+                      <span className="truncate text-xs text-[var(--md-on-surface-variant)]">
                         {comment.authorEmail}
                       </span>
                     </div>
@@ -169,17 +151,17 @@ export default async function AdminCommentsPage({
                         href={`/id/blog/${comment.postSlug}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="line-clamp-2 max-w-40 text-sm hover:text-primary hover:underline hover:underline-offset-4"
+                        className="line-clamp-2 max-w-40 text-sm hover:underline hover:underline-offset-4"
                         title={comment.postTitle ?? comment.postSlug}
                       >
                         {comment.postTitle ?? `/${comment.postSlug}`}
                       </Link>
                     ) : (
-                      <span className="text-sm text-muted-foreground">—</span>
+                      <span className="text-sm text-[var(--md-on-surface-variant)]">—</span>
                     )}
                   </TableCell>
                   <TableCell>
-                    <CommentStatusBadge status={comment.status} />
+                    <StatusBadge status={comment.status} />
                   </TableCell>
                   <TableCell className="text-right">
                     <CommentActions id={comment.id} status={comment.status} />
@@ -196,16 +178,16 @@ export default async function AdminCommentsPage({
           {rows.map((comment) => (
             <div
               key={comment.id}
-              className="space-y-2 rounded-lg border bg-card p-4"
+              className="space-y-2 rounded-2xl bg-[var(--md-surface-container-low)] p-4"
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
                   <p className="truncate font-medium">{comment.authorName}</p>
-                  <p className="truncate text-xs text-muted-foreground">
+                  <p className="truncate text-xs text-[var(--md-on-surface-variant)]">
                     {comment.authorEmail}
                   </p>
                 </div>
-                <CommentStatusBadge status={comment.status} />
+                <StatusBadge status={comment.status} />
               </div>
               <p className="line-clamp-3 whitespace-pre-wrap text-sm">
                 {comment.content}
@@ -215,15 +197,17 @@ export default async function AdminCommentsPage({
                   href={`/id/blog/${comment.postSlug}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="block truncate text-sm hover:text-primary hover:underline hover:underline-offset-4"
+                  className="block truncate text-sm hover:underline hover:underline-offset-4"
                 >
                   {comment.postTitle ?? `/${comment.postSlug}`}
                 </Link>
               ) : null}
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs tabular-nums text-[var(--md-on-surface-variant)]">
                 {formatDateTime(comment.createdAt)}
               </p>
-              <CommentActions id={comment.id} status={comment.status} />
+              <div className="flex justify-end">
+                <CommentActions id={comment.id} status={comment.status} />
+              </div>
             </div>
           ))}
         </div>

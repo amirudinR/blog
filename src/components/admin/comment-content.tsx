@@ -51,7 +51,7 @@ export function CommentContent({ content }: CommentContentProps) {
             <DialogTitle>Isi Komentar</DialogTitle>
             <DialogDescription>Komentar lengkap dari pembaca.</DialogDescription>
           </DialogHeader>
-          <p className="max-h-80 overflow-y-auto text-sm leading-relaxed whitespace-pre-wrap">
+          <p className="max-h-80 overflow-y-auto border-l-2 border-[var(--md-outline-variant)] pl-3 text-sm leading-relaxed whitespace-pre-wrap text-[var(--md-on-surface-variant)]">
             {content}
           </p>
         </DialogContent>

@@ -29,7 +29,7 @@ export function PostRowActions({ id, title }: { id: string; title: string }) {
             <Button
               variant="ghost"
               size="icon"
-              className="text-muted-foreground"
+              className="text-[var(--md-on-surface-variant)]"
               aria-label={`Aksi untuk ${title}`}
             >
               <MoreHorizontal className="size-4" />

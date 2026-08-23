@@ -194,7 +194,9 @@ export const getCachedBlogData = unstable_cache(
 );
 
 function publishTime(post: PostRecord): number {
-  return post.publishedAt ? post.publishedAt.getTime() : Number.NEGATIVE_INFINITY;
+  if (!post.publishedAt) return Number.NEGATIVE_INFINITY;
+  if (post.publishedAt instanceof Date) return post.publishedAt.getTime();
+  return new Date(post.publishedAt as string | number).getTime();
 }
 
 function sortPostsByPublishedDesc(posts: PostRecord[]): PostRecord[] {

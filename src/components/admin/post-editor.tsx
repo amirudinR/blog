@@ -364,7 +364,7 @@ export function PostEditor({
               }}
               placeholder="Tulis konten dalam format Markdown…"
               className={cn(
-                "min-h-[400px] font-mono text-sm leading-relaxed placeholder:text-[var(--md-on-surface-variant)]/60",
+                "min-h-[250px] md:min-h-[400px] font-mono text-sm leading-relaxed placeholder:text-[var(--md-on-surface-variant)]/60",
                 errors[contentErrorKey] && "border-[var(--md-error)]"
               )}
               aria-invalid={Boolean(errors[contentErrorKey])}
@@ -724,7 +724,7 @@ export function PostEditor({
                         aria-pressed={active}
                         onClick={() => toggleTag(tag.id)}
                         className={cn(
-                          "inline-flex h-8 items-center gap-1 rounded-full border px-3 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:ring-[var(--md-primary)] focus-visible:outline-none",
+                          "inline-flex h-10 items-center gap-1.5 rounded-full border px-3 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:ring-[var(--md-primary)] focus-visible:outline-none",
                           active
                             ? "border-transparent bg-[var(--md-secondary-container)] text-[var(--md-on-secondary-container)]"
                             : "border-[var(--md-outline-variant)] bg-transparent text-[var(--md-on-surface-variant)] hover:border-[var(--md-primary)] hover:text-[var(--md-on-surface)]"

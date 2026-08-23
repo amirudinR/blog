@@ -31,12 +31,12 @@ export function CommentActions({ id, status }: CommentActionsProps) {
   }
 
   return (
-    <div className="flex items-center justify-end gap-0.5">
+    <div className="flex items-center justify-end gap-1.5">
       {status !== "approved" && (
         <Button
           type="button"
           variant="ghost"
-          size="icon-sm"
+          size="icon"
           disabled={pending}
           aria-label="Setujui komentar"
           title="Setujui"
@@ -54,7 +54,7 @@ export function CommentActions({ id, status }: CommentActionsProps) {
         <Button
           type="button"
           variant="ghost"
-          size="icon-sm"
+          size="icon"
           disabled={pending}
           aria-label="Tolak komentar"
           title="Tolak"
@@ -82,7 +82,7 @@ export function CommentActions({ id, status }: CommentActionsProps) {
           <Button
             type="button"
             variant="ghost"
-            size="icon-sm"
+            size="icon"
             disabled={pending}
             aria-label="Hapus komentar"
             title="Hapus"

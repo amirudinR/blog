@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 
 import { ADMIN_NAV_ITEMS, AdminNavLinks } from "@/components/admin/admin-nav";
 import { LogoutButton } from "@/components/admin/logout-button";
+import { PageTransition } from "@/components/admin/page-transition";
 
 type AdminShellProps = {
   children: ReactNode;
@@ -102,6 +103,7 @@ export function AdminShell({ children, userName, userEmail }: AdminShellProps) {
               size="icon"
               aria-label="Buka menu navigasi"
               onClick={() => setDrawerOpen(true)}
+              className="min-h-[44px] min-w-[44px]"
             >
               <Menu className="size-5" />
             </Button>
@@ -125,64 +127,76 @@ export function AdminShell({ children, userName, userEmail }: AdminShellProps) {
         </header>
 
         <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
-          {children}
+          <PageTransition>{children}</PageTransition>
         </main>
       </div>
 
-      {drawerOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="Menu navigasi"
-          className="fixed inset-0 z-50 md:hidden"
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu navigasi"
+        className="fixed inset-0 z-50 md:hidden"
+        style={{
+          pointerEvents: drawerOpen ? "auto" : "none",
+        }}
+      >
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-hidden
+          onClick={closeDrawer}
+          className="md3-mdrawer-scrim absolute inset-0 cursor-default bg-black/32 transition-opacity duration-200"
+          style={{
+            opacity: drawerOpen ? 1 : 0,
+            transitionTimingFunction: "cubic-bezier(0.3, 0, 1, 1)",
+          }}
+        />
+        <aside
+          className="absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col bg-[var(--md-surface-container-low)] shadow-[var(--md-shadow-3)]"
+          style={{
+            transform: drawerOpen ? "translateX(0)" : "translateX(-100%)",
+            transition: "transform 250ms cubic-bezier(0, 0, 0, 1)",
+          }}
         >
-          <button
-            type="button"
-            tabIndex={-1}
-            aria-hidden
-            onClick={closeDrawer}
-            className="md3-mdrawer-scrim absolute inset-0 cursor-default bg-black/32"
-          />
-          <aside className="md3-mdrawer-panel absolute inset-y-0 left-0 flex w-72 max-w-[85vw] flex-col bg-[var(--md-surface-container-low)] shadow-[var(--md-shadow-3)]">
-            <div className="flex h-16 shrink-0 items-center justify-between pl-5 pr-2">
-              <div className="flex items-center gap-2">
-                <Link
-                  href="/admin"
-                  onClick={closeDrawer}
-                  className="text-lg font-medium tracking-tight"
-                >
-                  BlogKu
-                </Link>
-                <span className={brandChipClass}>Admin</span>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                aria-label="Tutup menu navigasi"
+          <div className="flex h-16 shrink-0 items-center justify-between pl-5 pr-2">
+            <div className="flex items-center gap-2">
+              <Link
+                href="/admin"
                 onClick={closeDrawer}
+                className="text-lg font-medium tracking-tight"
               >
-                <X className="size-5" />
-              </Button>
+                BlogKu
+              </Link>
+              <span className={brandChipClass}>Admin</span>
             </div>
-            <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-3">
-              <AdminNavLinks onNavigate={closeDrawer} />
-            </nav>
-            <div className="flex shrink-0 flex-col gap-1 border-t border-[var(--md-outline-variant)] p-3">
-              <a
-                href="/id/blog"
-                target="_blank"
-                rel="noreferrer"
-                onClick={closeDrawer}
-                className={footerItemClass}
-              >
-                <ExternalLink className="size-5 shrink-0" />
-                Lihat Blog
-              </a>
-              <LogoutButton onNavigate={closeDrawer} />
-            </div>
-          </aside>
-        </div>
-      )}
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Tutup menu navigasi"
+              onClick={closeDrawer}
+              className="min-h-[44px] min-w-[44px]"
+            >
+              <X className="size-5" />
+            </Button>
+          </div>
+          <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-3">
+            <AdminNavLinks onNavigate={closeDrawer} />
+          </nav>
+          <div className="flex shrink-0 flex-col gap-1 border-t border-[var(--md-outline-variant)] p-3">
+            <a
+              href="/id/blog"
+              target="_blank"
+              rel="noreferrer"
+              onClick={closeDrawer}
+              className={footerItemClass}
+            >
+              <ExternalLink className="size-5 shrink-0" />
+              Lihat Blog
+            </a>
+            <LogoutButton onNavigate={closeDrawer} />
+          </div>
+        </aside>
+      </div>
     </div>
   );
 }

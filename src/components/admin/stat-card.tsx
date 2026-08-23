@@ -49,9 +49,9 @@ export function StatCard({
     <div
       style={TONE_STYLES[tone]}
       className={cn(
-        "flex flex-col gap-3 rounded-[24px] p-5",
+        "flex flex-col gap-3 rounded-[24px] p-5 transition-all duration-300 ease-out",
         href
-          ? "transition-shadow hover:shadow-[var(--md-shadow-2)]"
+          ? "hover:shadow-[var(--md-shadow-2)]"
           : "shadow-[var(--md-shadow-1)]"
       )}
     >

@@ -233,7 +233,7 @@ export function TaxonomyManager({ kind, rows }: TaxonomyManagerProps) {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-[var(--md-on-surface-variant)]"
+                        className="min-h-[40px] min-w-[40px] text-[var(--md-on-surface-variant)]"
                         aria-label={`Edit ${row.slug}`}
                         onClick={() => openEdit(row)}
                       >
@@ -244,7 +244,7 @@ export function TaxonomyManager({ kind, rows }: TaxonomyManagerProps) {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="text-[var(--md-on-surface-variant)] hover:text-[var(--md-error)]"
+                            className="min-h-[40px] min-w-[40px] text-[var(--md-on-surface-variant)] hover:text-[var(--md-error)]"
                             aria-label={`Hapus ${row.slug}`}
                           >
                             <Trash2 className="size-4" />
@@ -289,7 +289,7 @@ export function TaxonomyManager({ kind, rows }: TaxonomyManagerProps) {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-[var(--md-on-surface-variant)]"
+                    className="min-h-[40px] min-w-[40px] text-[var(--md-on-surface-variant)]"
                     aria-label={`Edit ${row.slug}`}
                     onClick={() => openEdit(row)}
                   >
@@ -300,7 +300,7 @@ export function TaxonomyManager({ kind, rows }: TaxonomyManagerProps) {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-[var(--md-on-surface-variant)] hover:text-[var(--md-error)]"
+                        className="min-h-[40px] min-w-[40px] text-[var(--md-on-surface-variant)] hover:text-[var(--md-error)]"
                         aria-label={`Hapus ${row.slug}`}
                       >
                         <Trash2 className="size-4" />

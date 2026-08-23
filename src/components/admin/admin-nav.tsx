@@ -41,7 +41,7 @@ export function AdminNavLinks({ onNavigate }: { onNavigate?: () => void }) {
             onClick={onNavigate}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "flex h-12 items-center gap-3 rounded-full px-4 text-sm font-medium transition-colors",
+              "flex min-h-[48px] items-center gap-3 rounded-full px-4 text-sm font-medium transition-colors",
               active
                 ? "bg-[var(--md-secondary-container)] text-[var(--md-on-secondary-container)]"
                 : "text-[var(--md-on-surface-variant)] hover:bg-[color-mix(in_srgb,var(--md-on-surface)_6%,transparent)] hover:text-[var(--md-on-surface)]"

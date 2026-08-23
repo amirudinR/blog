@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 
+import { cn } from "@/lib/utils";
+
 import { EmptyState } from "@/components/blog/empty-state";
 import { PostCard } from "@/components/blog/post-card";
 import { Newspaper } from "lucide-react";
@@ -92,6 +94,50 @@ export default async function BlogListPage({
                 <span className="text-muted-foreground">{tag.postCount}</span>
               </Link>
             ))}
+          </div>
+
+          <div className="lg:hidden mb-6">
+            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+              <Link
+                href={`/${locale}/blog`}
+                className={cn(
+                  "inline-flex items-center rounded-full border px-4 py-2 text-sm whitespace-nowrap transition-colors",
+                  !sp.kategori && !sp.tag
+                    ? "bg-[var(--md-primary)] text-[var(--md-on-primary)] border-[var(--md-primary)]"
+                    : "border-[var(--md-outline-variant)] text-[var(--md-on-surface-variant)] hover:bg-[color-mix(in_srgb,var(--md-on-surface)_8%,transparent)]"
+                )}
+              >
+                Semua
+              </Link>
+              {categories.map((cat) => (
+                <Link
+                  key={cat.slug}
+                  href={`/${locale}/kategori/${cat.slug}`}
+                  className={cn(
+                    "inline-flex items-center rounded-full border px-4 py-2 text-sm whitespace-nowrap transition-colors",
+                    sp.kategori === cat.slug
+                      ? "bg-[var(--md-primary)] text-[var(--md-on-primary)] border-[var(--md-primary)]"
+                      : "border-[var(--md-outline-variant)] text-[var(--md-on-surface-variant)] hover:bg-[color-mix(in_srgb,var(--md-on-surface)_8%,transparent)]"
+                  )}
+                >
+                  {cat.name}
+                </Link>
+              ))}
+              {tags.map((tag) => (
+                <Link
+                  key={tag.slug}
+                  href={`/${locale}/tag/${tag.slug}`}
+                  className={cn(
+                    "inline-flex items-center rounded-full border px-4 py-2 text-sm whitespace-nowrap transition-colors",
+                    sp.tag === tag.slug
+                      ? "bg-[var(--md-primary)] text-[var(--md-on-primary)] border-[var(--md-primary)]"
+                      : "border-[var(--md-outline-variant)] text-[var(--md-on-surface-variant)] hover:bg-[color-mix(in_srgb,var(--md-on-surface)_8%,transparent)]"
+                  )}
+                >
+                  {tag.name}
+                </Link>
+              ))}
+            </div>
           </div>
 
           {result.posts.length > 0 ? (

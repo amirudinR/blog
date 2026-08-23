@@ -319,8 +319,10 @@
 }
 .md3 [data-slot="button"] {
   border-radius: 9999px;
+  position: relative;
+  overflow: hidden;
 }
-.md3 [data-slot="button"].h-9:not(.size-9) {
+.md3 [data-slot="button"].h-10:not(.size-10) {
   height: 2.5rem; padding-inline: 1.5rem; letter-spacing: 0.01rem;
 }
 .md3 [data-slot="button"].h-7:not(.size-7) {
@@ -406,7 +408,8 @@
   border-bottom: 0;
 }
 .md3 [data-slot="table-row"]:hover {
-  background-color: color-mix(in srgb, var(--md-on-surface) 4%, transparent);
+  background-color: color-mix(in srgb, var(--md-on-surface) 8%, transparent);
+  transition: background-color 200ms cubic-bezier(0, 0, 0, 1);
 }
 .md3 [data-slot="tabs-list"] {
   border-radius: 9999px; background-color: var(--md-surface-container-high); padding: 0.25rem;
@@ -436,4 +439,95 @@
 }
 .md3-mdrawer-panel {
   animation: md3-drawer-in 200ms ease-out both;
+}
+.md3 { font-size: 16px; line-height: 1.5; }
+.md3 [data-slot="card-title"] { font-size: 1.125rem; font-weight: 500; line-height: 1.4; }
+.md3 [data-slot="dialog-content"] h2,
+.md3 [data-slot="dialog-content"] [data-slot="dialog-title"] { font-size: 1.25rem; font-weight: 500; line-height: 1.4; }
+@keyframes md3-drawer-out {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+@keyframes md3-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes md3-page-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.md3 main { animation: md3-page-in 250ms cubic-bezier(0, 0, 0, 1) both; }
+.md3-page-animate {
+  animation: md3-page-in 250ms cubic-bezier(0, 0, 0, 1) both;
+}
+.md3 {
+  --md-motion-emphasized: 400ms cubic-bezier(0.2, 0, 0, 1);
+  --md-motion-emphasized-decelerate: 400ms cubic-bezier(0.05, 0.7, 0.1, 1);
+  --md-motion-emphasized-accelerate: 200ms cubic-bezier(0.3, 0, 0.8, 0.15);
+  --md-motion-standard: 300ms cubic-bezier(0.2, 0, 0, 1);
+  --md-motion-standard-decelerate: 300ms cubic-bezier(0, 0, 0, 1);
+  --md-motion-standard-accelerate: 200ms cubic-bezier(0.3, 0, 1, 1);
+  --md-motion-short: 200ms cubic-bezier(0.2, 0, 0, 1);
+  --md-motion-short-decelerate: 150ms cubic-bezier(0, 0, 0, 1);
+  --md-motion-short-accelerate: 100ms cubic-bezier(0.3, 0, 1, 1);
+  --md-motion-duration-extra-short: 50ms;
+  --md-motion-duration-short: 100ms;
+  --md-motion-duration-medium: 300ms;
+  --md-motion-duration-long: 500ms;
+}
+.md3 [data-slot="button"]:hover:not(:disabled)::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: var(--md-on-surface);
+  opacity: 0.08;
+  pointer-events: none;
+}
+.md3 [data-slot="button"]:active:not(:disabled)::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: var(--md-on-surface);
+  opacity: 0.12;
+  pointer-events: none;
+}
+.md3 [data-slot="dropdown-menu-item"]:hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: var(--md-on-surface);
+  opacity: 0.08;
+  pointer-events: none;
+}
+.md3 [data-slot="dropdown-menu-item"]:active::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: var(--md-on-surface);
+  opacity: 0.12;
+  pointer-events: none;
+}
+.md3 [data-slot="card"]:hover {
+  background-color: var(--md-surface-container);
+  box-shadow: var(--md-shadow-2);
+  transition: background-color var(--md-motion-standard), box-shadow var(--md-motion-standard);
+}
+.md3 [data-slot="skeleton"] {
+  background: linear-gradient(
+    90deg,
+    var(--md-surface-container-highest) 25%,
+    var(--md-surface-container-high) 50%,
+    var(--md-surface-container-highest) 75%
+  ) !important;
+  background-size: 200% 100% !important;
+  animation: md3-shimmer 1.5s ease-in-out infinite !important;
+  border-radius: 4px;
+}
+@keyframes md3-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }

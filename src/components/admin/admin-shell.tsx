@@ -1,9 +1,9 @@
 "use client";
 
-import { ExternalLink, Menu, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
@@ -38,9 +38,14 @@ const footerItemClass =
 const brandChipClass =
   "rounded-full bg-[var(--md-primary-container)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--md-on-primary-container)]";
 
+const SIDEBAR_WIDTH = 256;
+const SIDEBAR_COLLAPSED_WIDTH = 72;
+
 export function AdminShell({ children, userName, userEmail }: AdminShellProps) {
   const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [lastPathname, setLastPathname] = useState(pathname);
   if (pathname !== lastPathname) {
     setLastPathname(pathname);
@@ -48,6 +53,20 @@ export function AdminShell({ children, userName, userEmail }: AdminShellProps) {
   }
   const initial = (userName ?? userEmail ?? "A").charAt(0).toUpperCase();
   const currentLabel = getCurrentNavLabel(pathname);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("admin-sidebar-collapsed");
+    if (saved === "true") setCollapsed(true);
+    setMounted(true);
+  }, []);
+
+  const toggleCollapsed = useCallback(() => {
+    setCollapsed((prev) => {
+      const next = !prev;
+      localStorage.setItem("admin-sidebar-collapsed", String(next));
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     if (!drawerOpen) return;
@@ -66,36 +85,59 @@ export function AdminShell({ children, userName, userEmail }: AdminShellProps) {
     setDrawerOpen(false);
   }
 
+  const sidebarWidth = mounted ? (collapsed ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_WIDTH) : SIDEBAR_WIDTH;
+
   return (
-    <div className="min-h-screen">
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-[var(--md-outline-variant)] bg-[var(--md-surface-container-low)] md:flex">
-        <div className="flex h-16 shrink-0 items-center gap-2 px-5">
-          <Link
-            href="/admin"
-            className="text-lg font-medium tracking-tight"
+    <div className="min-h-screen" style={{ "--admin-sidebar-w": `${sidebarWidth}px` } as React.CSSProperties}>
+      <aside
+        className="fixed inset-y-0 left-0 z-40 hidden flex-col border-r border-[var(--md-outline-variant)] bg-[var(--md-surface-container-low)] md:flex"
+        style={{
+          width: sidebarWidth,
+          transition: "width 250ms cubic-bezier(0.2, 0, 0, 1)",
+        }}
+      >
+        <div className="flex h-16 shrink-0 items-center gap-2 border-b border-[var(--md-outline-variant)] px-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleCollapsed}
+            aria-label={collapsed ? "Perluas sidebar" : "Ciutkan sidebar"}
+            className="h-9 w-9 shrink-0"
           >
-            BlogKu
-          </Link>
-          <span className={brandChipClass}>Admin</span>
+            {collapsed ? <ChevronRight className="size-5" /> : <ChevronLeft className="size-5" />}
+          </Button>
+          {!collapsed && (
+            <div className="flex min-w-0 items-center gap-2 overflow-hidden">
+              <Link
+                href="/admin"
+                className="truncate text-lg font-medium tracking-tight"
+              >
+                BlogKu
+              </Link>
+              <span className={brandChipClass}>Admin</span>
+            </div>
+          )}
         </div>
         <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-3">
-          <AdminNavLinks />
+          <AdminNavLinks collapsed={collapsed} />
         </nav>
-        <div className="flex shrink-0 flex-col gap-1 border-t border-[var(--md-outline-variant)] p-3">
-          <a
-            href="/id/blog"
-            target="_blank"
-            rel="noreferrer"
-            className={footerItemClass}
-          >
-            <ExternalLink className="size-5 shrink-0" />
-            Lihat Blog
-          </a>
-          <LogoutButton />
-        </div>
+        {!collapsed && (
+          <div className="flex shrink-0 flex-col gap-1 border-t border-[var(--md-outline-variant)] p-3">
+            <a
+              href="/id/blog"
+              target="_blank"
+              rel="noreferrer"
+              className={footerItemClass}
+            >
+              <ExternalLink className="size-5 shrink-0" />
+              Lihat Blog
+            </a>
+            <LogoutButton />
+          </div>
+        )}
       </aside>
 
-      <div className="md:pl-64">
+      <div className="md3-admin-content">
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b border-[var(--md-outline-variant)] bg-[color-mix(in_srgb,var(--md-surface)_88%,transparent)] px-4 backdrop-blur sm:px-6">
           <div className="flex min-w-0 items-center gap-1 md:hidden">
             <Button

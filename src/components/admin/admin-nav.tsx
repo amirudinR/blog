@@ -26,7 +26,7 @@ function isActive(pathname: string, href: string): boolean {
   return href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
 }
 
-export function AdminNavLinks({ onNavigate }: { onNavigate?: () => void }) {
+export function AdminNavLinks({ onNavigate, collapsed }: { onNavigate?: () => void; collapsed?: boolean }) {
   const pathname = usePathname();
 
   return (
@@ -40,8 +40,10 @@ export function AdminNavLinks({ onNavigate }: { onNavigate?: () => void }) {
             href={item.href}
             onClick={onNavigate}
             aria-current={active ? "page" : undefined}
+            title={collapsed ? item.label : undefined}
             className={cn(
-              "flex min-h-[48px] items-center gap-3 rounded-full px-4 text-sm font-medium transition-colors",
+              "flex min-h-[48px] items-center gap-3 rounded-full text-sm font-medium transition-colors",
+              collapsed ? "justify-center px-0" : "px-4",
               active
                 ? "bg-[var(--md-secondary-container)] text-[var(--md-on-secondary-container)]"
                 : "text-[var(--md-on-surface-variant)] hover:bg-[color-mix(in_srgb,var(--md-on-surface)_6%,transparent)] hover:text-[var(--md-on-surface)]"
@@ -51,7 +53,7 @@ export function AdminNavLinks({ onNavigate }: { onNavigate?: () => void }) {
               className="size-5 shrink-0"
               strokeWidth={active ? 2.5 : undefined}
             />
-            {item.label}
+            {!collapsed && item.label}
           </Link>
         );
       })}

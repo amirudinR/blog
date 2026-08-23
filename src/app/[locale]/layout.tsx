@@ -33,7 +33,6 @@ export default async function LocaleLayout({
 }: LocaleLayoutProps) {
   const { locale } = await params;
   if (!isValidLocale(locale)) notFound();
-  const dict = await getDictionary(locale);
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">

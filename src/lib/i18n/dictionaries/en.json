@@ -58,7 +58,8 @@
   "search": {
     "title": "Search Posts",
     "placeholder": "Type keywords...",
-    "resultsFor": "Results for"
+    "resultsFor": "Results for",
+    "resultsCount": "{count} results found"
   },
   "comments": {
     "title": "Comments",

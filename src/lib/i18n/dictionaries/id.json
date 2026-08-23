@@ -58,7 +58,8 @@
   "search": {
     "title": "Cari Artikel",
     "placeholder": "Ketik kata kunci...",
-    "resultsFor": "Hasil untuk"
+    "resultsFor": "Hasil untuk",
+    "resultsCount": "{count} hasil ditemukan"
   },
   "comments": {
     "title": "Komentar",

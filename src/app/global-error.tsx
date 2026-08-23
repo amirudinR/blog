@@ -29,15 +29,24 @@ export default function GlobalError({ reset }: GlobalErrorProps) {
               width: "3.5rem",
               height: "3.5rem",
               borderRadius: "9999px",
+              backgroundColor:
+                "color-mix(in oklch, oklch(0.55 0.13 40) 12%, transparent)",
             }}
             aria-hidden
           >
-            <TriangleAlert size={24} color="#c2571b" />
+            <TriangleAlert size={24} color="oklch(0.55 0.13 40)" />
           </span>
-          <h1 style={{ fontSize: "1.25rem", fontWeight: 700, marginTop: "1.5rem" }}>
+          <h1
+            style={{
+              fontSize: "1.25rem",
+              fontWeight: 700,
+              marginTop: "1.5rem",
+              fontFamily: "var(--font-heading), Georgia, serif",
+            }}
+          >
             Waduh, ada yang salah
           </h1>
-          <p style={{ fontSize: "0.875rem", color: "#71717a", marginTop: "0.5rem" }}>
+          <p style={{ fontSize: "0.875rem", color: "oklch(0.47 0.02 60)", marginTop: "0.5rem" }}>
             Oops, something went wrong.
           </p>
           <button
@@ -48,8 +57,8 @@ export default function GlobalError({ reset }: GlobalErrorProps) {
               padding: "0.625rem 1.5rem",
               borderRadius: "9999px",
               border: "none",
-              backgroundColor: "#c2571b",
-              color: "#ffffff",
+              backgroundColor: "oklch(0.55 0.13 40)",
+              color: "oklch(0.99 0.008 85)",
               fontSize: "0.875rem",
               fontWeight: 500,
               cursor: "pointer",

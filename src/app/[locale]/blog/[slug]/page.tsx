@@ -5,12 +5,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { CommentSection } from "@/components/blog/comment-section";
+import { CopyAttribution } from "@/components/blog/copy-attribution";
 import { MarkdownContent } from "@/components/blog/markdown-content";
+import { ReadingProgress } from "@/components/blog/reading-progress";
 import { RelatedPosts } from "@/components/blog/related-posts";
 import { ShareButtons } from "@/components/blog/share-buttons";
 import { TableOfContents } from "@/components/blog/toc";
 import { ViewCounter } from "@/components/blog/view-counter";
-import { SITE_URL } from "@/lib/constants";
+import { SITE_NAME, SITE_URL } from "@/lib/constants";
 import {
   getApprovedComments,
   getCategoriesWithCount,
@@ -76,9 +78,32 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   const tocItems = extractHeadings(article.contentMarkdown);
   const shareUrl = `${SITE_URL}/${locale}/blog/${article.slug}`;
+  const ogImage = `${SITE_URL}/api/og?title=${encodeURIComponent(article.title)}&locale=${locale}`;
+  const publishedAt = article.publishedAt
+    ? new Date(article.publishedAt).toISOString()
+    : undefined;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description: article.metaDescription ?? article.excerpt ?? "",
+    image: [ogImage],
+    datePublished: publishedAt,
+    dateModified: publishedAt,
+    author: { "@type": "Person", name: SITE_NAME },
+    publisher: { "@type": "Organization", name: SITE_NAME },
+    mainEntityOfPage: { "@type": "WebPage", "@id": shareUrl },
+    inLanguage: locale === "id" ? "id-ID" : "en-US",
+  };
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ReadingProgress />
       <Link
         href={`/${locale}/blog`}
         className="mb-6 inline-flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -143,8 +168,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               alt={article.title}
               fill
               priority
+              draggable={false}
               sizes="(max-width: 1152px) 100vw, 1152px"
-              className="object-cover"
+              className="select-none object-cover"
             />
           ) : (
             <div className="h-64 w-full rounded-xl bg-gradient-to-br from-primary/30 via-primary/10 to-muted sm:h-80 lg:h-96" />
@@ -153,7 +179,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
         <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_16rem]">
           <div className="min-w-0 max-w-[68ch]">
-            <MarkdownContent markdown={article.contentMarkdown} />
+            <CopyAttribution url={shareUrl} siteName={SITE_NAME}>
+              <MarkdownContent markdown={article.contentMarkdown} />
+            </CopyAttribution>
 
             <div className="mt-10 border-t border-border/70 pt-6">
               <ShareButtons title={article.title} url={shareUrl} t={dict.blog} />

@@ -42,6 +42,7 @@ export default async function SearchPage({
           type="search"
           name="q"
           defaultValue={q}
+          autoFocus
           placeholder={dict.search.placeholder}
           className="w-full rounded-md border bg-background px-4 py-2.5 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
         />
@@ -61,7 +62,12 @@ export default async function SearchPage({
             <p className="text-lg font-medium">
               {dict.search.resultsFor}: &ldquo;{q}&rdquo;
             </p>
-            <p className="text-sm text-muted-foreground">{result.total}</p>
+            <p className="text-sm text-muted-foreground">
+              {dict.search.resultsCount.replace(
+                "{count}",
+                String(result.total)
+              )}
+            </p>
           </div>
 
           {result.posts.length > 0 ? (

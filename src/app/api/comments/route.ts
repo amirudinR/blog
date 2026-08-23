@@ -1,9 +1,7 @@
-import { and, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { db, posts } from "@/lib/db";
-import { createComment } from "@/lib/db/queries";
+import { createComment, isPublishedPost } from "@/lib/db/queries";
 import { getClientIp, rateLimit } from "@/lib/rate-limit";
 
 const bodySchema = z.object({
@@ -40,13 +38,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const existing = await db
-      .select({ id: posts.id })
-      .from(posts)
-      .where(and(eq(posts.id, postId), eq(posts.status, "published")))
-      .limit(1);
-
-    if (!existing[0]) {
+    if (!(await isPublishedPost(postId))) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 

@@ -1,24 +1,24 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { auth } from "@/lib/auth";
 import { deleteCommentById, setCommentStatus } from "@/lib/db/queries";
+import { getSession } from "@/lib/session";
 
 const patchSchema = z.object({
   status: z.enum(["approved", "rejected", "pending"]),
 });
 
-function parseId(raw: string): number | null {
-  const id = Number(raw);
-  return Number.isInteger(id) && id > 0 ? id : null;
+function parseId(raw: string): string | null {
+  const id = raw.trim();
+  return id.length > 0 && id.length <= 100 ? id : null;
 }
 
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await auth();
-  if (!session?.user) {
+  const session = await getSession();
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -41,7 +41,7 @@ export async function PATCH(
   }
 
   try {
-    await setCommentStatus(id, parsed.data.status);
+    await setCommentStatus(id as unknown as number, parsed.data.status);
   } catch {
     return NextResponse.json(
       { error: "Failed to update comment" },
@@ -56,8 +56,8 @@ export async function DELETE(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await auth();
-  if (!session?.user) {
+  const session = await getSession();
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -68,7 +68,7 @@ export async function DELETE(
   }
 
   try {
-    await deleteCommentById(id);
+    await deleteCommentById(id as unknown as number);
   } catch {
     return NextResponse.json(
       { error: "Failed to delete comment" },

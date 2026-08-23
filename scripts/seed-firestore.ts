@@ -3,15 +3,7 @@ import dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 dotenv.config();
 
-import { hash } from "bcryptjs";
-import { count, eq } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/node-postgres";
-import type { PgTable } from "drizzle-orm/pg-core";
-import { Pool } from "pg";
-import * as schema from "../src/lib/db/schema";
-import { calcReadingTime } from "../src/lib/utils/blog";
-
-const { users, categories, categoryTranslations, tags, tagTranslations, posts, postTranslations, postTags, comments, newsletterSubscribers } = schema;
+import { getAdminDb } from "../src/lib/firebase/admin";
 
 type LocaleContent = { title: string; excerpt: string; contentMarkdown: string };
 
@@ -24,6 +16,22 @@ type PostSeed = {
   id: LocaleContent;
   en: LocaleContent;
 };
+
+const COLLECTIONS = ["posts", "categories", "tags", "comments", "subscribers"] as const;
+const BATCH_CHUNK = 400;
+
+function calcReadingTime(markdown: string): number {
+  const words = markdown
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/[#*_>`~\-\[\]()!]/g, " ")
+    .split(/\s+/)
+    .filter(Boolean).length;
+  return Math.max(1, Math.round(words / 200));
+}
+
+function daysAgo(days: number): Date {
+  return new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+}
 
 const categorySeeds = [
   { slug: "teknologi", nameId: "Teknologi", nameEn: "Technology" },
@@ -368,149 +376,153 @@ I am still unsure whether I can sustain a four part technical series alongside w
   },
 ];
 
-function daysAgo(days: number): Date {
-  return new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+async function wipeCollection(db: ReturnType<typeof getAdminDb>, name: string): Promise<number> {
+  const refs = await db.collection(name).listDocuments();
+  for (let i = 0; i < refs.length; i += BATCH_CHUNK) {
+    const batch = db.batch();
+    for (const ref of refs.slice(i, i + BATCH_CHUNK)) {
+      batch.delete(ref);
+    }
+    await batch.commit();
+  }
+  return refs.length;
 }
 
 async function main() {
-  if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes("placeholder")) {
-    console.error("DATABASE_URL belum diisi. Daftar Neon gratis di https://neon.tech lalu isi .env.local");
+  if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
+    console.error("FIREBASE_SERVICE_ACCOUNT belum diisi di .env.local.");
+    console.error("");
+    console.error("Cara mendapatkan Service Account:");
+    console.error("1. Buka Firebase Console > Project Settings > Service accounts");
+    console.error('2. Klik "Generate new private key" lalu simpan file JSON yang terunduh');
+    console.error("3. Encode file JSON tersebut ke base64 dengan PowerShell:");
+    console.error('   [Convert]::ToBase64String([IO.File]::ReadAllBytes("path\\serviceAccount.json"))');
+    console.error("4. Simpan hasilnya di .env.local sebagai satu baris:");
+    console.error("   FIREBASE_SERVICE_ACCOUNT=<hasil base64>");
     process.exit(1);
   }
 
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  const db = drizzle(pool, { schema });
+  const db = getAdminDb();
+  const now = new Date();
 
-  try {
-    const adminEmail = (process.env.ADMIN_EMAIL ?? "admin@blogku.test").toLowerCase();
-    const adminPassword = process.env.ADMIN_PASSWORD ?? "admin123";
-    const passwordHash = await hash(adminPassword, 10);
-
-    await db
-      .insert(users)
-      .values({ email: adminEmail, passwordHash, name: "Admin" })
-      .onConflictDoUpdate({ target: users.email, set: { passwordHash, name: "Admin" } });
-    console.log("Admin user siap:", adminEmail);
-
-    const categoryIds = new Map<string, number>();
-    for (const seed of categorySeeds) {
-      const existing = await db.select().from(categories).where(eq(categories.slug, seed.slug)).limit(1);
-      if (existing.length > 0) {
-        categoryIds.set(seed.slug, existing[0].id);
-        continue;
-      }
-      const [created] = await db.insert(categories).values({ slug: seed.slug }).returning();
-      await db.insert(categoryTranslations).values([
-        { categoryId: created.id, locale: "id", name: seed.nameId },
-        { categoryId: created.id, locale: "en", name: seed.nameEn },
-      ]);
-      categoryIds.set(seed.slug, created.id);
-      console.log("Kategori dibuat:", seed.slug);
-    }
-
-    const tagIds = new Map<string, number>();
-    for (const seed of tagSeeds) {
-      const existing = await db.select().from(tags).where(eq(tags.slug, seed.slug)).limit(1);
-      if (existing.length > 0) {
-        tagIds.set(seed.slug, existing[0].id);
-        continue;
-      }
-      const [created] = await db.insert(tags).values({ slug: seed.slug }).returning();
-      await db.insert(tagTranslations).values([
-        { tagId: created.id, locale: "id", name: seed.nameId },
-        { tagId: created.id, locale: "en", name: seed.nameEn },
-      ]);
-      tagIds.set(seed.slug, created.id);
-      console.log("Tag dibuat:", seed.slug);
-    }
-
-    const firstPostIdBySlug = new Map<string, string>();
-    let post1CreatedThisRun = false;
-
-    for (const seed of postSeeds) {
-      const existing = await db.select({ id: posts.id }).from(posts).where(eq(posts.slug, seed.slug)).limit(1);
-      if (existing.length > 0) {
-        firstPostIdBySlug.set(seed.slug, existing[0].id);
-        continue;
-      }
-
-      const [created] = await db
-        .insert(posts)
-        .values({
-          slug: seed.slug,
-          status: seed.status,
-          categoryId: seed.categorySlug !== null ? (categoryIds.get(seed.categorySlug) ?? null) : null,
-          publishedAt: seed.status === "published" && seed.daysAgo !== null ? daysAgo(seed.daysAgo) : null,
-          readingTimeId: calcReadingTime(seed.id.contentMarkdown),
-          readingTimeEn: calcReadingTime(seed.en.contentMarkdown),
-          viewsCount: Math.floor(Math.random() * 261) + 40,
-        })
-        .returning();
-      firstPostIdBySlug.set(seed.slug, created.id);
-
-      for (const locale of ["id", "en"] as const) {
-        const content = seed[locale];
-        await db.insert(postTranslations).values({
-          postId: created.id,
-          locale,
-          title: content.title,
-          excerpt: content.excerpt,
-          contentMarkdown: content.contentMarkdown,
-          metaTitle: `${content.title} | BlogKu`,
-          metaDescription: content.excerpt,
-        });
-      }
-
-      for (const tagSlug of seed.tagSlugs) {
-        const tagId = tagIds.get(tagSlug);
-        if (tagId === undefined) throw new Error(`Tag tidak ditemukan: ${tagSlug}`);
-        await db.insert(postTags).values({ postId: created.id, tagId });
-      }
-
-      if (seed.slug === "belajar-nextjs-app-router") post1CreatedThisRun = true;
-      console.log("Post dibuat:", seed.slug);
-    }
-
-    if (post1CreatedThisRun) {
-      const post1Id = firstPostIdBySlug.get("belajar-nextjs-app-router");
-      if (!post1Id) throw new Error("Post pertama tidak ditemukan");
-      await db.insert(comments).values([
-        { postId: post1Id, authorName: "Budi", authorEmail: "budi@example.com", content: "Artikelnya membantu banget, makasih!", status: "approved" },
-        { postId: post1Id, authorName: "Sari", authorEmail: "sari@example.com", content: "Turunya jelas sekali.", status: "approved" },
-        { postId: post1Id, authorName: "Anon", authorEmail: "anon@example.com", content: "Boleh bahas testing juga?", status: "pending" },
-      ]);
-      console.log("Komentar contoh ditambahkan.");
-    }
-
-    await db
-      .insert(newsletterSubscribers)
-      .values({ email: "test@example.com", status: "active" })
-      .onConflictDoNothing();
-    console.log("Subscriber contoh siap.");
-
-    const inventory: [string, PgTable][] = [
-      ["users", users],
-      ["categories", categories],
-      ["category_translations", categoryTranslations],
-      ["tags", tags],
-      ["tag_translations", tagTranslations],
-      ["posts", posts],
-      ["post_translations", postTranslations],
-      ["post_tags", postTags],
-      ["comments", comments],
-      ["newsletter_subscribers", newsletterSubscribers],
-    ];
-
-    console.log("\nRingkasan data:");
-    for (const [label, table] of inventory) {
-      const [row] = await db.select({ value: count() }).from(table);
-      console.log(`${label}: ${row.value}`);
-    }
-
-    console.log("\nSeed selesai.");
-  } finally {
-    await pool.end();
+  console.log("Menghapus data lama...");
+  for (const name of COLLECTIONS) {
+    const deleted = await wipeCollection(db, name);
+    console.log(`Koleksi "${name}": ${deleted} dokumen dihapus`);
   }
+
+  for (const seed of categorySeeds) {
+    await db.collection("categories").doc(seed.slug).set({
+      slug: seed.slug,
+      nameId: seed.nameId,
+      nameEn: seed.nameEn,
+      createdAt: now,
+    });
+    console.log("Kategori dibuat:", seed.slug);
+  }
+
+  const validTagSlugs = new Set<string>();
+  for (const seed of tagSeeds) {
+    await db.collection("tags").doc(seed.slug).set({
+      slug: seed.slug,
+      nameId: seed.nameId,
+      nameEn: seed.nameEn,
+      createdAt: now,
+    });
+    validTagSlugs.add(seed.slug);
+    console.log("Tag dibuat:", seed.slug);
+  }
+
+  const postIdsBySlug = new Map<string, string>();
+
+  for (const seed of postSeeds) {
+    for (const tagSlug of seed.tagSlugs) {
+      if (!validTagSlugs.has(tagSlug)) {
+        throw new Error(`Tag tidak ditemukan: ${tagSlug}`);
+      }
+    }
+
+    const publishedAt =
+      seed.status === "published" && seed.daysAgo !== null ? daysAgo(seed.daysAgo) : null;
+
+    const ref = db.collection("posts").doc();
+    await ref.set({
+      slug: seed.slug,
+      status: seed.status,
+      coverImageUrl: null,
+      categoryId: seed.categorySlug,
+      publishedAt,
+      readingTimeId: calcReadingTime(seed.id.contentMarkdown),
+      readingTimeEn: calcReadingTime(seed.en.contentMarkdown),
+      viewsCount: 0,
+      createdAt: now,
+      updatedAt: now,
+      translations: {
+        id: {
+          title: seed.id.title,
+          excerpt: seed.id.excerpt,
+          contentMarkdown: seed.id.contentMarkdown,
+          metaTitle: null,
+          metaDescription: null,
+        },
+        en: {
+          title: seed.en.title,
+          excerpt: seed.en.excerpt,
+          contentMarkdown: seed.en.contentMarkdown,
+          metaTitle: null,
+          metaDescription: null,
+        },
+      },
+      tagIds: [...seed.tagSlugs],
+    });
+    postIdsBySlug.set(seed.slug, ref.id);
+    console.log("Post dibuat:", seed.slug);
+  }
+
+  const firstPostId = postIdsBySlug.get("belajar-nextjs-app-router");
+  if (!firstPostId) throw new Error("Post pertama tidak ditemukan");
+
+  const commentsRef = db.collection("comments");
+  await commentsRef.add({
+    postId: firstPostId,
+    authorName: "Budi",
+    authorEmail: "budi@example.com",
+    content: "Artikelnya membantu banget, makasih!",
+    status: "approved",
+    createdAt: new Date(),
+  });
+  await commentsRef.add({
+    postId: firstPostId,
+    authorName: "Sari",
+    authorEmail: "sari@example.com",
+    content: "Turunya jelas sekali.",
+    status: "approved",
+    createdAt: new Date(),
+  });
+  await commentsRef.add({
+    postId: firstPostId,
+    authorName: "Anon",
+    authorEmail: "anon@example.com",
+    content: "Boleh bahas testing juga?",
+    status: "pending",
+    createdAt: new Date(),
+  });
+  console.log("Komentar contoh ditambahkan.");
+
+  await db.collection("subscribers").doc("test@example.com").set({
+    email: "test@example.com",
+    status: "active",
+    subscribedAt: new Date(),
+  });
+  console.log("Subscriber contoh siap.");
+
+  console.log("\nRingkasan data:");
+  for (const name of COLLECTIONS) {
+    const snap = await db.collection(name).get();
+    console.log(`${name}: ${snap.size}`);
+  }
+
+  console.log("\nSeed selesai.");
 }
 
 main().catch((error) => {

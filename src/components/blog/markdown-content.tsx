@@ -3,6 +3,8 @@ import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 import Markdown from "react-markdown";
 
+import { CopyCodeButton } from "@/components/blog/copy-code-button";
+import { ProtectedImage } from "@/components/blog/protected-image";
 import type { Components } from "react-markdown";
 
 type MarkdownContentProps = {
@@ -31,16 +33,26 @@ const components: Components = {
     );
   },
   img({ node: _node, src, alt, ...props }) {
-    return <img src={src} alt={alt ?? ""} loading="lazy" className="rounded-lg" {...props} />;
+    return (
+      <ProtectedImage
+        src={typeof src === "string" ? src : undefined}
+        alt={alt ?? ""}
+        className="rounded-lg"
+        {...props}
+      />
+    );
   },
   pre({ node: _node, children, ...props }) {
     return (
-      <pre
-        className="overflow-x-auto rounded-xl border bg-muted/50 p-4 text-sm"
-        {...props}
-      >
-        {children}
-      </pre>
+      <div data-code-block className="relative">
+        <pre
+          className="overflow-x-auto rounded-xl border bg-muted/50 p-4 text-sm"
+          {...props}
+        >
+          {children}
+        </pre>
+        <CopyCodeButton />
+      </div>
     );
   },
   table({ node: _node, children, ...props }) {

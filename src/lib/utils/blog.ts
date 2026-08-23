@@ -53,7 +53,7 @@ function headingId(text: string): string {
 export function extractHeadings(markdown: string): TocItem[] {
   const withoutCode = markdown.replace(/```[\s\S]*?```/g, "");
   const items: TocItem[] = [];
-  for (const match of withoutCode.matchAll(/^(#{2,3})\s+(.+)$/gm)) {
+  for (const match of withoutCode.matchAll(/^(#{2,4})\s+(.+)$/gm)) {
     const level = match[1].length;
     const text = match[2].replace(/[#*_`]/g, "").trim();
     items.push({ id: headingId(text), text, level });

@@ -178,6 +178,17 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           )}
         </div>
 
+        <div className="xl:hidden mb-8">
+          {tocItems.length > 0 ? (
+            <TableOfContents
+              items={tocItems}
+              locale={locale}
+              className="rounded-xl"
+              defaultOpen={false}
+            />
+          ) : null}
+        </div>
+
         <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_16rem]">
           <div className="min-w-0 max-w-[68ch]">
             <CopyAttribution url={shareUrl} siteName={SITE_NAME}>
@@ -191,7 +202,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
           {tocItems.length > 0 ? (
             <aside className="hidden xl:block">
-              <TableOfContents items={tocItems} locale={locale} />
+              <TableOfContents items={tocItems} locale={locale} className="sticky top-24" />
             </aside>
           ) : null}
         </div>

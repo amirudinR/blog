@@ -41,20 +41,22 @@ export function NewsletterForm({ t }: NewsletterFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2">
-      <Input
-        type="email"
-        name="email"
-        required
-        placeholder={t.emailPlaceholder}
-        aria-label={t.subscribe}
-        className="max-w-xs"
-      />
-      <Button type="submit" disabled={status === "sending"}>
-        {t.subscribe}
-      </Button>
+    <form onSubmit={handleSubmit}>
+      <div className="flex gap-2">
+        <Input
+          type="email"
+          name="email"
+          required
+          placeholder={t.emailPlaceholder}
+          aria-label={t.subscribe}
+          className="max-w-xs flex-1"
+        />
+        <Button type="submit" disabled={status === "sending"}>
+          {t.subscribe}
+        </Button>
+      </div>
       {status === "error" && (
-        <p className="text-sm text-red-600 dark:text-red-400">{t.subscribeError}</p>
+        <p className="mt-2 text-sm text-destructive">{t.subscribeError}</p>
       )}
     </form>
   );

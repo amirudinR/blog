@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { Button } from "@/components/ui/button";
 import { isValidLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 
@@ -11,19 +13,6 @@ export default async function AboutPage({ params }: AboutPageProps) {
   const { locale } = await params;
   if (!isValidLocale(locale)) notFound();
   const dict = await getDictionary(locale);
-
-  const paragraphs =
-    locale === "id"
-      ? [
-          "Halo! Selamat datang di blog pribadi saya. Di sini saya menuliskan cerita, catatan, dan hal-hal yang sedang saya pelajari — terutama seputar teknologi, pengembangan diri, dan kehidupan sehari-hari.",
-          "Blog ini dibuat sebagai tempat untuk berbagi pengetahuan dan pengalaman. Saya percaya bahwa menulis adalah salah satu cara terbaik untuk belajar, dan semoga apa yang saya tulis bisa bermanfaat juga bagi kamu yang membacanya.",
-          "Terima kasih sudah mampir. Jangan ragu untuk menjelajahi artikel-artikel yang tersedia, dan sampai jumpa di tulisan berikutnya!",
-        ]
-      : [
-          "Hi there! Welcome to my personal blog. This is where I write stories, notes, and things I am currently learning — mostly about technology, self-development, and everyday life.",
-          "This blog exists as a place to share knowledge and experiences. I believe writing is one of the best ways to learn, and I hope what I write here is useful for you too.",
-          "Thanks for stopping by. Feel free to explore the articles, and see you in the next post!",
-        ];
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-16 sm:px-6">
@@ -38,9 +27,19 @@ export default async function AboutPage({ params }: AboutPageProps) {
         <span className="h-px w-16 bg-primary/40" />
       </span>
       <div className="max-w-[65ch] space-y-5 leading-relaxed text-muted-foreground">
-        {paragraphs.map((paragraph) => (
-          <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-        ))}
+        <p>{dict.about.intro1}</p>
+        <p>{dict.about.intro2}</p>
+      </div>
+      <div className="mt-10 flex flex-wrap items-center gap-3">
+        <Button render={<Link href={`/${locale}/blog`} />}>
+          {dict.about.cta}
+        </Button>
+        <Button
+          variant="ghost"
+          render={<a href="mailto:amirudinridwan99@gmail.com" />}
+        >
+          Kontak
+        </Button>
       </div>
     </div>
   );

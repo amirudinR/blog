@@ -53,7 +53,10 @@
     "empty": "No posts with this tag yet."
   },
   "about": {
-    "title": "About Me"
+    "title": "About Me",
+    "intro1": "Hi there! Welcome to my personal blog. This is where I write stories, notes, and things I'm currently learning — mostly about technology, self-development, and everyday life.",
+    "intro2": "This blog is a place to share knowledge and experiences. I believe writing is one of the best ways to learn, and I hope what you find here is useful to you too.",
+    "cta": "Explore the Blog"
   },
   "search": {
     "title": "Search Posts",

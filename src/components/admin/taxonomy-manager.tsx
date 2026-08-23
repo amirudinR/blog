@@ -94,7 +94,12 @@ function TaxonomyForm({ kind, editing, onSuccess }: TaxonomyFormProps) {
   }
 
   return (
-    <form onSubmit={(e) => e.preventDefault()}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit();
+      }}
+    >
       <div className="grid gap-4 py-4">
         <div className="grid gap-2">
           <Label htmlFor={`${kind}-name-id`}>Nama (ID)</Label>
@@ -126,8 +131,7 @@ function TaxonomyForm({ kind, editing, onSuccess }: TaxonomyFormProps) {
       </div>
       <DialogFooter>
         <Button
-          type="button"
-          onClick={handleSubmit}
+          type="submit"
           disabled={pending || !nameId.trim()}
         >
           {pending ? (
@@ -195,7 +199,8 @@ export function TaxonomyManager({ kind, rows }: TaxonomyManagerProps) {
           </p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10">
+        <>
+          <div className="hidden overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10 md:block">
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50 hover:bg-muted/50">
@@ -257,7 +262,61 @@ export function TaxonomyManager({ kind, rows }: TaxonomyManagerProps) {
               ))}
             </TableBody>
           </Table>
-        </div>
+          </div>
+
+          <div className="grid gap-3 md:hidden">
+            {rows.map((row) => (
+              <div
+                key={row.id}
+                className="flex items-start justify-between gap-3 rounded-lg border p-3"
+              >
+                <div className="min-w-0 space-y-1">
+                  <p className="font-semibold">
+                    {row.nameId ?? (
+                      <span className="font-normal italic text-muted-foreground">
+                        —
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {row.nameEn ?? (
+                      <span className="italic">—</span>
+                    )}
+                  </p>
+                  <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-muted-foreground">
+                    {row.slug}
+                  </code>
+                </div>
+                <div className="flex shrink-0 items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-muted-foreground"
+                    aria-label={`Edit ${row.slug}`}
+                    onClick={() => openEdit(row)}
+                  >
+                    <Pencil className="size-4" />
+                  </Button>
+                  <DeleteConfirmButton
+                    trigger={
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-muted-foreground hover:text-destructive"
+                        aria-label={`Hapus ${row.slug}`}
+                      >
+                        <Trash2 className="size-4" />
+                      </Button>
+                    }
+                    title={`Hapus ${labels.singular.toLowerCase()} ini?`}
+                    description={`${labels.singular} "${row.nameId ?? row.slug}" akan dihapus permanen.`}
+                    onConfirm={() => handleDelete(row)}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>

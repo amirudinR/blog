@@ -1,7 +1,8 @@
 "use client";
 
-import { ExternalLink, Menu } from "lucide-react";
+import { Check, ExternalLink, Menu } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -13,12 +14,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
-import {
-  AdminMenuNavItems,
-  AdminSidebarNav,
-} from "@/components/admin/admin-nav";
-import { LogoutButton } from "@/components/admin/logout-button";
+import { ADMIN_NAV_ITEMS, AdminSidebarNav } from "@/components/admin/admin-nav";
+import { LogoutButton, performLogout } from "@/components/admin/logout-button";
 
 type AdminShellProps = {
   children: ReactNode;
@@ -26,19 +25,32 @@ type AdminShellProps = {
   userEmail: string | null;
 };
 
+function isActive(pathname: string | null, href: string): boolean {
+  const path = pathname ?? "/admin";
+  return href === "/admin" ? path === "/admin" : path.startsWith(href);
+}
+
+function getCurrentNavLabel(pathname: string | null): string {
+  const sorted = [...ADMIN_NAV_ITEMS].sort(
+    (a, b) => b.href.length - a.href.length
+  );
+  return (
+    sorted.find((item) => isActive(pathname, item.href))?.label ?? "Dashboard"
+  );
+}
+
 export function AdminShell({
   children,
   userName,
   userEmail,
 }: AdminShellProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
   const initial = (userName ?? userEmail ?? "A").charAt(0).toUpperCase();
+  const currentLabel = getCurrentNavLabel(pathname);
 
   function handleLogout() {
-    void (async () => {
-      await fetch("/api/auth/session", { method: "DELETE" });
-      window.location.href = "/admin/login";
-    })();
+    void performLogout();
   }
 
   return (
@@ -88,7 +100,21 @@ export function AdminShell({
                 }
               />
               <DropdownMenuContent align="start" className="w-52">
-                <AdminMenuNavItems />
+                {ADMIN_NAV_ITEMS.map((item) => {
+                  const Icon = item.icon;
+                  const active = isActive(pathname, item.href);
+                  return (
+                    <DropdownMenuItem
+                      key={item.href}
+                      render={<Link href={item.href} />}
+                      className={cn(active && "bg-accent text-accent-foreground")}
+                    >
+                      <Icon className="size-4" />
+                      {item.label}
+                      {active && <Check className="ml-auto size-4" />}
+                    </DropdownMenuItem>
+                  );
+                })}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   render={
@@ -107,7 +133,7 @@ export function AdminShell({
               </DropdownMenuContent>
             </DropdownMenu>
             <span className="font-heading text-lg font-bold tracking-tight">
-              BlogKu
+              {currentLabel}
             </span>
           </div>
 

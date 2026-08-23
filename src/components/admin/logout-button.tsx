@@ -5,6 +5,14 @@ import { useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 
+export async function performLogout(): Promise<void> {
+  try {
+    await fetch("/api/auth/session", { method: "DELETE" });
+  } finally {
+    window.location.href = "/admin/login";
+  }
+}
+
 export function LogoutButton() {
   const [pending, startTransition] = useTransition();
 
@@ -15,8 +23,7 @@ export function LogoutButton() {
       disabled={pending}
       onClick={() =>
         startTransition(async () => {
-          await fetch("/api/auth/session", { method: "DELETE" });
-          window.location.href = "/admin/login";
+          await performLogout();
         })
       }
     >

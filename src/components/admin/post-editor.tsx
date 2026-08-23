@@ -139,13 +139,13 @@ export function PostEditor({
   function handleTitleIdChange(value: string) {
     setTitleId(value);
     if (!slugTouched) setSlug(slugify(value));
-    if (errors.titleId) {
-      setErrors((prev) => {
-        const next = { ...prev };
-        delete next.titleId;
-        return next;
-      });
-    }
+    clearError("titleId");
+  }
+
+  function handleTitleEnChange(value: string) {
+    setTitleEn(value);
+    if (!slugTouched) setSlug(slugify(value));
+    clearError("titleEn");
   }
 
   function clearError(key: string) {
@@ -187,6 +187,8 @@ export function PostEditor({
       } else {
         toast.error(result.error);
       }
+    } catch {
+      toast.error("Gagal upload gambar. Coba lagi atau tempel URL.");
     } finally {
       setUploading(false);
     }
@@ -198,7 +200,10 @@ export function PostEditor({
     if (!contentId.trim()) next.contentId = "Konten (ID) wajib diisi";
     if (!slug.trim()) next.slug = "Slug wajib diisi";
     if (titleEn.trim() && !contentEn.trim()) {
-      next.contentEn = "Konten (EN) wajib diisi jika judul EN terisi";
+      next.contentEn = "Konten EN wajib jika judul EN diisi";
+    }
+    if (!titleEn.trim() && contentEn.trim()) {
+      next.titleEn = "Judul EN wajib jika konten EN diisi";
     }
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -281,12 +286,12 @@ export function PostEditor({
   function renderLocaleFields(locale: "id" | "en") {
     const isId = locale === "id";
     const title = isId ? titleId : titleEn;
-    const setTitle = isId ? handleTitleIdChange : setTitleEn;
+    const setTitle = isId ? handleTitleIdChange : handleTitleEnChange;
     const excerpt = isId ? excerptId : excerptEn;
     const setExcerpt = isId ? setExcerptId : setExcerptEn;
     const content = isId ? contentId : contentEn;
     const setContent = isId ? setContentId : setContentEn;
-    const errorKey = isId ? "titleId" : "";
+    const errorKey = isId ? "titleId" : "titleEn";
     const contentErrorKey = isId ? "contentId" : "contentEn";
 
     return (
@@ -404,7 +409,7 @@ export function PostEditor({
           </div>
           <Input
             value={title}
-            maxLength={70}
+            maxLength={60}
             onChange={(e) => setTitle(e.target.value)}
             className="h-7 text-xs"
           />
@@ -418,7 +423,7 @@ export function PostEditor({
           </div>
           <Textarea
             value={description}
-            maxLength={170}
+            maxLength={160}
             rows={2}
             onChange={(e) => setDescription(e.target.value)}
             className="text-xs"
@@ -461,35 +466,41 @@ export function PostEditor({
               Tersimpan {formatDateTimeId(lastSavedAt)}
             </span>
           )}
-          {mode === "edit" && initial?.status === "published" && (
+          {status === "published" ? (
             <Button
               type="button"
-              variant="secondary"
               disabled={saving}
               onClick={() => void doSave("published")}
             >
               {saving ? <Loader2 className="animate-spin" /> : null}
               Simpan
             </Button>
+          ) : (
+            <>
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={saving}
+                onClick={() => void doSave("draft")}
+              >
+                Simpan Draft
+              </Button>
+              <Button
+                type="button"
+                disabled={saving}
+                onClick={() => void doSave("published")}
+              >
+                {saving ? <Loader2 className="animate-spin" /> : null}
+                Publikasikan
+              </Button>
+            </>
           )}
-          <Button
-            type="button"
-            variant="secondary"
-            disabled={saving}
-            onClick={() => void doSave("draft")}
-          >
-            Simpan Draft
-          </Button>
-          <Button type="button" disabled={saving} onClick={() => void doSave("published")}>
-            {saving ? <Loader2 className="animate-spin" /> : null}
-            Publikasikan
-          </Button>
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
-        <div className="min-w-0">
-          <Card>
+      <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1fr)_20rem]">
+        <div className="min-w-0 contents lg:block lg:space-y-6">
+          <Card className="order-3">
             <CardContent className="pt-(--card-spacing)">
               <Tabs defaultValue="id">
                 <TabsList className="w-full max-w-xs">
@@ -510,7 +521,7 @@ export function PostEditor({
             </CardContent>
           </Card>
 
-          <Card className="mt-6">
+          <Card className="order-6">
             <CardHeader>
               <CardTitle>SEO</CardTitle>
             </CardHeader>
@@ -533,8 +544,8 @@ export function PostEditor({
           </Card>
         </div>
 
-        <div className="space-y-6">
-          <Card size="sm">
+        <div className="contents lg:block lg:space-y-6">
+          <Card size="sm" className="order-1">
             <CardHeader>
               <CardTitle>Publikasi</CardTitle>
             </CardHeader>
@@ -565,9 +576,19 @@ export function PostEditor({
                 <Label>Status</Label>
                 <Select
                   value={status}
-                  onValueChange={(value) =>
-                    setStatus(value as "draft" | "published")
-                  }
+                  onValueChange={(value) => {
+                    const next = value as "draft" | "published";
+                    if (
+                      next === "draft" &&
+                      status === "published" &&
+                      !window.confirm(
+                        "Ubah jadi draft? Post akan hilang dari blog."
+                      )
+                    ) {
+                      return;
+                    }
+                    setStatus(next);
+                  }}
                 >
                   <SelectTrigger className="w-full" aria-label="Status post">
                     <SelectValue>
@@ -589,7 +610,7 @@ export function PostEditor({
             </CardContent>
           </Card>
 
-          <Card size="sm">
+          <Card size="sm" className="order-2">
             <CardHeader>
               <CardTitle>Cover Image</CardTitle>
             </CardHeader>
@@ -662,7 +683,7 @@ export function PostEditor({
             </CardContent>
           </Card>
 
-          <Card size="sm">
+          <Card size="sm" className="order-4">
             <CardHeader>
               <CardTitle>Kategori</CardTitle>
             </CardHeader>
@@ -693,7 +714,7 @@ export function PostEditor({
             </CardContent>
           </Card>
 
-          <Card size="sm">
+          <Card size="sm" className="order-5">
             <CardHeader>
               <CardTitle>Tags</CardTitle>
             </CardHeader>

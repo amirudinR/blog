@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -42,7 +42,6 @@ export function CommentSection({
   locale,
 }: CommentSectionProps) {
   const t = getCommentsDict(locale);
-  const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<
     "idle" | "sending" | "success" | "error"
   >("idle");
@@ -121,7 +120,7 @@ export function CommentSection({
           <CardTitle>{t.title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor={`comment-name-${postId}`}>{t.name}</Label>

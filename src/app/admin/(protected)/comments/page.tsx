@@ -130,7 +130,7 @@ export default async function AdminCommentsPage({
           </p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10">
+        <div className="hidden overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10 md:block">
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50 hover:bg-muted/50">
@@ -188,6 +188,44 @@ export default async function AdminCommentsPage({
               ))}
             </TableBody>
           </Table>
+        </div>
+      )}
+
+      {rows.length > 0 && (
+        <div className="space-y-3 md:hidden">
+          {rows.map((comment) => (
+            <div
+              key={comment.id}
+              className="space-y-2 rounded-lg border bg-card p-4"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="truncate font-medium">{comment.authorName}</p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {comment.authorEmail}
+                  </p>
+                </div>
+                <CommentStatusBadge status={comment.status} />
+              </div>
+              <p className="line-clamp-3 whitespace-pre-wrap text-sm">
+                {comment.content}
+              </p>
+              {comment.postSlug ? (
+                <Link
+                  href={`/id/blog/${comment.postSlug}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="block truncate text-sm hover:text-primary hover:underline hover:underline-offset-4"
+                >
+                  {comment.postTitle ?? `/${comment.postSlug}`}
+                </Link>
+              ) : null}
+              <p className="text-xs text-muted-foreground">
+                {formatDateTime(comment.createdAt)}
+              </p>
+              <CommentActions id={comment.id} status={comment.status} />
+            </div>
+          ))}
         </div>
       )}
     </div>

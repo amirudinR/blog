@@ -3,7 +3,7 @@
 import { Menu, Search, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
@@ -38,6 +38,15 @@ export function Navbar({ locale }: NavbarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
 
   const switchLocale = () => {
     const current = pathname ?? `/${locale}`;
@@ -100,41 +109,48 @@ export function Navbar({ locale }: NavbarProps) {
       </div>
 
       {open && (
-        <div className="border-t border-border/70 md:hidden">
-          <nav className="mx-auto flex w-full max-w-5xl flex-col gap-1 px-4 py-4">
-            {NAV_LINKS.map((link) => (
+        <>
+          <div
+            aria-hidden
+            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm md:hidden"
+            onClick={() => setOpen(false)}
+          />
+          <div className="fixed inset-x-0 top-16 z-50 border-b border-border/70 bg-background shadow-lg md:hidden">
+            <nav className="mx-auto flex w-full max-w-5xl flex-col gap-1 px-4 py-4">
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.key}
+                  href={`/${locale}${link.href}`}
+                  className={`rounded-md px-3 py-3 text-sm font-medium transition-colors ${
+                    isActive(stripLocale(pathname), link.href)
+                      ? "bg-primary/5 text-primary"
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                  }`}
+                  onClick={() => setOpen(false)}
+                >
+                  {dict.nav[link.key]}
+                </Link>
+              ))}
               <Link
-                key={link.key}
-                href={`/${locale}${link.href}`}
-                className={`rounded-md px-2 py-2 text-sm font-medium transition-colors ${
-                  isActive(stripLocale(pathname), link.href)
-                    ? "bg-primary/5 text-primary"
-                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                }`}
+                href={`/${locale}/cari`}
+                className="flex items-center gap-2 rounded-md px-3 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                 onClick={() => setOpen(false)}
               >
-                {dict.nav[link.key]}
+                <Search className="size-4" />
+                {dict.nav.search}
               </Link>
-            ))}
-            <Link
-              href={`/${locale}/cari`}
-              className="flex items-center gap-2 rounded-md px-2 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-              onClick={() => setOpen(false)}
-            >
-              <Search className="size-4" />
-              {dict.nav.search}
-            </Link>
-            <div className="mt-2 flex items-center gap-2 px-2">
-              <ThemeToggle />
-              <Button variant="outline" size="sm" onClick={() => {
-                setOpen(false);
-                switchLocale();
-              }}>
-                {other.toUpperCase()}
-              </Button>
-            </div>
-          </nav>
-        </div>
+              <div className="mt-2 flex items-center gap-2 px-3">
+                <ThemeToggle />
+                <Button variant="outline" size="sm" onClick={() => {
+                  setOpen(false);
+                  switchLocale();
+                }}>
+                  {other.toUpperCase()}
+                </Button>
+              </div>
+            </nav>
+          </div>
+        </>
       )}
     </header>
   );

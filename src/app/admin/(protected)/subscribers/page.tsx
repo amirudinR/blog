@@ -69,7 +69,7 @@ export default async function AdminSubscribersPage() {
           </p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10">
+        <div className="hidden overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10 md:block">
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50 hover:bg-muted/50">
@@ -100,6 +100,35 @@ export default async function AdminSubscribersPage() {
               ))}
             </TableBody>
           </Table>
+        </div>
+      )}
+
+      {subscribers.length > 0 && (
+        <div className="space-y-3 md:hidden">
+          {subscribers.map((subscriber) => (
+            <div
+              key={subscriber.id}
+              className="space-y-2 rounded-lg border bg-card p-4"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <p className="min-w-0 break-all font-medium">
+                  {subscriber.email}
+                </p>
+                {subscriber.status === "active" ? (
+                  <Badge className="shrink-0 bg-emerald-500/15 text-emerald-700 dark:text-emerald-400">
+                    Aktif
+                  </Badge>
+                ) : (
+                  <Badge variant="secondary" className="shrink-0">
+                    Berhenti
+                  </Badge>
+                )}
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {formatDate(subscriber.subscribedAt)}
+              </p>
+            </div>
+          ))}
         </div>
       )}
     </div>

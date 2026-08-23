@@ -59,6 +59,7 @@ export default async function AdminDashboardPage() {
           icon={<FileText className="size-4" />}
           value={stats.totalPosts}
           label="Total Post"
+          href="/admin/posts"
         />
         <StatCard
           icon={<Send className="size-4" />}
@@ -69,6 +70,7 @@ export default async function AdminDashboardPage() {
           icon={<PenLine className="size-4" />}
           value={stats.draftPosts}
           label="Draft"
+          href="/admin/posts"
         />
         <StatCard
           icon={<Eye className="size-4" />}
@@ -86,6 +88,7 @@ export default async function AdminDashboardPage() {
           icon={<Users className="size-4" />}
           value={stats.subscribers}
           label="Subscriber"
+          href="/admin/subscribers"
         />
       </div>
 

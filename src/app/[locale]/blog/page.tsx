@@ -63,6 +63,37 @@ export default async function BlogListPage({
 
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_16rem]">
         <div>
+          <div className="-mx-4 mb-6 flex snap-x gap-2 overflow-x-auto px-4 pb-1 lg:hidden">
+            <Link
+              href={`/${locale}/blog`}
+              className="inline-flex shrink-0 snap-start items-center gap-1.5 whitespace-nowrap rounded-full border border-border/70 bg-card px-3 py-1 text-sm transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
+            >
+              {dict.blog.allCategories}
+            </Link>
+            {categories.map((cat) => (
+              <Link
+                key={`cat-${cat.slug}`}
+                href={`/${locale}/kategori/${cat.slug}`}
+                className="inline-flex shrink-0 snap-start items-center gap-1.5 whitespace-nowrap rounded-full border border-border/70 bg-card px-3 py-1 text-sm transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
+              >
+                {cat.name}
+                <span className="text-xs text-muted-foreground">
+                  {cat.postCount}
+                </span>
+              </Link>
+            ))}
+            {tags.map((tag) => (
+              <Link
+                key={`tag-${tag.slug}`}
+                href={`/${locale}/tag/${tag.slug}`}
+                className="inline-flex shrink-0 snap-start items-center gap-1.5 whitespace-nowrap rounded-full border border-border/70 bg-muted px-3 py-1 text-xs transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
+              >
+                {tag.name}
+                <span className="text-muted-foreground">{tag.postCount}</span>
+              </Link>
+            ))}
+          </div>
+
           {result.posts.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2">
               {result.posts.map((post) => (

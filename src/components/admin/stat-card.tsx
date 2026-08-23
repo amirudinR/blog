@@ -25,7 +25,8 @@ export function StatCard({
     <Card
       size="sm"
       className={cn(
-        "gap-2 transition-shadow hover:shadow-sm",
+        "gap-2",
+        href && "transition-shadow hover:shadow-sm",
         tone === "amber" && "bg-amber-500/5 ring-amber-500/40"
       )}
     >

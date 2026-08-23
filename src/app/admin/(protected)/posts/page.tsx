@@ -106,7 +106,7 @@ export default async function AdminPostsPage({
           )}
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10">
+        <div className="hidden overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10 md:block">
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50 hover:bg-muted/50">
@@ -164,6 +164,42 @@ export default async function AdminPostsPage({
               })}
             </TableBody>
           </Table>
+        </div>
+      )}
+
+      {posts.length > 0 && (
+        <div className="space-y-3 md:hidden">
+          {posts.map((post) => {
+            const primaryTitle = post.titleId ?? post.titleEn ?? post.slug;
+            const secondaryTitle =
+              post.titleId && post.titleEn && post.titleId !== post.titleEn
+                ? post.titleEn
+                : null;
+            return (
+              <div
+                key={post.id}
+                className="space-y-2 rounded-lg border bg-card p-4"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <Link
+                    href={`/admin/posts/${post.id}`}
+                    className="min-w-0 flex-1 truncate font-medium hover:text-primary hover:underline hover:underline-offset-4"
+                  >
+                    {primaryTitle}
+                  </Link>
+                  <StatusBadge status={post.status} />
+                </div>
+                <p className="truncate text-xs text-muted-foreground">
+                  {secondaryTitle ?? `/${post.slug}`}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {formatNumber(post.viewsCount)} dilihat ·{" "}
+                  {formatDateShort(post.publishedAt)}
+                </p>
+                <PostRowActions id={post.id} title={primaryTitle} />
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

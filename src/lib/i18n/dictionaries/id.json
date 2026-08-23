@@ -53,7 +53,10 @@
     "empty": "Belum ada artikel dengan tag ini."
   },
   "about": {
-    "title": "Tentang Saya"
+    "title": "Tentang Saya",
+    "intro1": "Halo! Selamat datang di blog pribadi saya. Di sini aku menuliskan cerita, catatan, dan hal-hal yang lagi aku pelajari — terutama seputar teknologi, pengembangan diri, dan kehidupan sehari-hari.",
+    "intro2": "Blog ini jadi tempat buat berbagi pengetahuan dan pengalaman. Bagiku, menulis adalah salah satu cara terbaik untuk belajar — semoga apa yang aku tulis di sini bisa bermanfaat juga buat kamu yang sedang membacanya.",
+    "cta": "Jelajahi Blog"
   },
   "search": {
     "title": "Cari Artikel",

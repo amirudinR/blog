@@ -172,7 +172,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               className="select-none object-cover"
             />
           ) : (
-            <div className="h-64 w-full rounded-xl bg-gradient-to-br from-primary/30 via-primary/10 to-muted sm:h-80 lg:h-96" />
+            <img
+              src={`/api/og?title=${encodeURIComponent(article.title)}&locale=${locale}`}
+              alt={article.title}
+              draggable={false}
+              className="h-full w-full object-cover"
+            />
           )}
         </div>
 

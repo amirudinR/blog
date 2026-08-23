@@ -27,7 +27,13 @@ export function PostCard({ post, locale }: PostCardProps) {
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           />
         ) : (
-          <div className="h-full w-full bg-gradient-to-br from-primary/20 via-primary/10 to-muted" />
+          <img
+            src={`/api/og?title=${encodeURIComponent(post.title)}&locale=${locale}`}
+            alt={post.title}
+            draggable={false}
+            loading="lazy"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
         )}
       </div>
       <div className="space-y-2.5 p-5">

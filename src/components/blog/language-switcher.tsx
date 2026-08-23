@@ -15,6 +15,10 @@ const OPTIONS: { value: Locale; label: string }[] = [
   { value: "en", label: "EN" },
 ];
 
+function setLocaleCookie(value: Locale) {
+  document.cookie = `locale=${value};path=/;max-age=31536000`;
+}
+
 export function LanguageSwitcher({ locale, className }: LanguageSwitcherProps) {
   const pathname = usePathname();
   const router = useRouter();
@@ -23,7 +27,7 @@ export function LanguageSwitcher({ locale, className }: LanguageSwitcherProps) {
     if (next === locale) return;
     const current = pathname ?? `/${locale}`;
     const target = current.replace(/^\/(id|en)/, `/${next}`);
-    document.cookie = `locale=${next};path=/;max-age=31536000`;
+    setLocaleCookie(next);
     router.push(target);
   }
 

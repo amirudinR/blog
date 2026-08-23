@@ -82,7 +82,7 @@ export function CommentSection({
   return (
     <section className="space-y-6">
       <div className="flex items-center gap-2">
-        <h2 className="font-heading text-xl font-bold tracking-tight">
+        <h2 className="font-heading text-lg sm:text-xl font-bold tracking-tight">
           {t.title}
         </h2>
         <Badge className="rounded-full bg-primary/10 text-primary hover:bg-primary/10">
@@ -117,7 +117,7 @@ export function CommentSection({
 
       <Card>
         <CardHeader>
-          <CardTitle>{t.title}</CardTitle>
+          <CardTitle className="text-base sm:text-lg">{t.title}</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">

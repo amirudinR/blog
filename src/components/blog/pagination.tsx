@@ -49,12 +49,12 @@ export function Pagination({ page, totalPages, baseHref, className }: Pagination
         <Link
           href={href(page - 1)}
           aria-label="Previous page"
-          className="inline-flex size-9 items-center justify-center rounded-lg border border-border/70 text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
+          className="inline-flex size-10 items-center justify-center rounded-lg border border-border/70 text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
         >
           <ChevronLeft className="size-4" />
         </Link>
       ) : (
-        <span className="inline-flex size-9 items-center justify-center rounded-lg border border-border/30 text-muted-foreground/30">
+        <span className="inline-flex size-10 items-center justify-center rounded-lg border border-border/30 text-muted-foreground/30">
           <ChevronLeft className="size-4" />
         </span>
       )}
@@ -63,7 +63,7 @@ export function Pagination({ page, totalPages, baseHref, className }: Pagination
         p === "..." ? (
           <span
             key={`ellipsis-${i}`}
-            className="inline-flex size-9 items-center justify-center text-sm text-muted-foreground"
+            className="inline-flex size-10 items-center justify-center text-sm text-muted-foreground"
           >
             ...
           </span>
@@ -73,7 +73,7 @@ export function Pagination({ page, totalPages, baseHref, className }: Pagination
             href={href(p)}
             aria-current={p === page ? "page" : undefined}
             className={cn(
-              "inline-flex size-9 items-center justify-center rounded-lg border text-sm font-medium transition-all",
+              "inline-flex size-10 items-center justify-center rounded-lg border text-sm font-medium transition-all",
               p === page
                 ? "border-primary bg-primary text-primary-foreground shadow-sm"
                 : "border-border/70 text-muted-foreground hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
@@ -88,12 +88,12 @@ export function Pagination({ page, totalPages, baseHref, className }: Pagination
         <Link
           href={href(page + 1)}
           aria-label="Next page"
-          className="inline-flex size-9 items-center justify-center rounded-lg border border-border/70 text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
+          className="inline-flex size-10 items-center justify-center rounded-lg border border-border/70 text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
         >
           <ChevronRight className="size-4" />
         </Link>
       ) : (
-        <span className="inline-flex size-9 items-center justify-center rounded-lg border border-border/30 text-muted-foreground/30">
+        <span className="inline-flex size-10 items-center justify-center rounded-lg border border-border/30 text-muted-foreground/30">
           <ChevronRight className="size-4" />
         </span>
       )}

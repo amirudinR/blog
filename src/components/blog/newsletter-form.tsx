@@ -42,7 +42,7 @@ export function NewsletterForm({ t }: NewsletterFormProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row gap-2">
         <Input
           type="email"
           name="email"
@@ -51,7 +51,7 @@ export function NewsletterForm({ t }: NewsletterFormProps) {
           aria-label={t.subscribe}
           className="max-w-xs flex-1"
         />
-        <Button type="submit" disabled={status === "sending"}>
+        <Button type="submit" disabled={status === "sending"} className="sm:w-auto w-full">
           {t.subscribe}
         </Button>
       </div>

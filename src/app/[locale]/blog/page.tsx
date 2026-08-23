@@ -65,9 +65,9 @@ export default async function BlogListPage({
     : null;
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6">
+    <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:py-12 sm:px-6">
       <div className="mb-10">
-        <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
+        <h1 className="font-heading text-2xl font-bold tracking-tight sm:text-4xl">
           {dict.blog.title}
         </h1>
         <span className="mt-4 flex h-px w-16 bg-primary/40" aria-hidden />
@@ -129,7 +129,7 @@ export default async function BlogListPage({
                 {activeCategoryName ?? activeTagName}
                 <Link
                   href={`/${locale}/blog`}
-                  className="ml-0.5 rounded-full p-0.5 transition-colors hover:bg-primary/20"
+                  className="ml-0.5 min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-full p-1 transition-colors hover:bg-primary/20"
                   aria-label={dict.blog.clearFilter}
                 >
                   <X className="size-3" />

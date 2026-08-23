@@ -15,11 +15,11 @@ export default async function AboutPage({ params }: AboutPageProps) {
   const dict = await getDictionary(locale);
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-16 sm:px-6">
+    <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:py-16 sm:px-6">
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
         {dict.site.name}
       </p>
-      <h1 className="mt-3 font-heading text-3xl font-bold tracking-tight sm:text-4xl">
+      <h1 className="mt-3 font-heading text-2xl font-bold tracking-tight sm:text-4xl">
         {dict.about.title}
       </h1>
       <span className="mt-5 mb-8 flex items-center gap-3" aria-hidden>

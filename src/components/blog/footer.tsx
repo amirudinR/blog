@@ -14,18 +14,18 @@ export function Footer({ locale }: FooterProps) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-16 border-t border-border/70">
-      <div className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6">
+    <footer className="mt-10 sm:mt-16 border-t border-border/70">
+      <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:py-10 sm:px-6">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
           <div className="max-w-sm">
-            <p className="font-heading text-lg font-bold tracking-tight text-foreground">
+            <p className="font-heading text-base font-bold tracking-tight text-foreground">
               {dict.site.name}
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-2 text-[13px] sm:text-sm leading-relaxed text-muted-foreground">
               {dict.site.description}
             </p>
           </div>
-          <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+          <nav className="flex flex-wrap items-center gap-x-4 sm:gap-x-6 gap-y-2 text-sm">
             <Link
               href={`/${locale}`}
               className="text-muted-foreground transition-colors hover:text-primary"

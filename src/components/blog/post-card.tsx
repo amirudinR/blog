@@ -36,7 +36,7 @@ export function PostCard({ post, locale }: PostCardProps) {
           {" · "}
           {post.readingTime} min
         </p>
-        <h3 className="line-clamp-2 font-semibold leading-snug tracking-tight group-hover:text-primary">
+        <h3 className="line-clamp-2 text-[15px] sm:text-base font-semibold leading-snug tracking-tight group-hover:text-primary">
           {post.title}
         </h3>
         {post.excerpt && (

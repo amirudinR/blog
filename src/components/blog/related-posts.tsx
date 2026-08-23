@@ -20,8 +20,8 @@ export function RelatedPosts({
 }: RelatedPostsProps) {
   if (posts.length === 0) {
     return (
-      <section className="mt-14">
-        <h2 className="mb-6 font-heading text-xl font-bold tracking-tight sm:text-2xl">
+      <section className="mt-10 sm:mt-14">
+        <h2 className="mb-6 font-heading text-lg font-bold tracking-tight sm:text-2xl">
           {title}
         </h2>
         <EmptyState icon={Newspaper} message={emptyMessage ?? title} />
@@ -30,9 +30,9 @@ export function RelatedPosts({
   }
 
   return (
-    <section className="mt-14">
+    <section className="mt-10 sm:mt-14">
       <div className="mb-6 flex items-center gap-5">
-        <h2 className="shrink-0 font-heading text-xl font-bold tracking-tight sm:text-2xl">
+        <h2 className="shrink-0 font-heading text-lg font-bold tracking-tight sm:text-2xl">
           {title}
         </h2>
         <span className="h-px flex-1 bg-border" aria-hidden />

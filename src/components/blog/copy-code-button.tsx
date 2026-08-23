@@ -34,7 +34,7 @@ export function CopyCodeButton() {
     <button
       type="button"
       onClick={handleCopy}
-      className="absolute top-2 right-2 inline-flex size-8 items-center justify-center rounded-md border border-border/60 bg-background/80 text-muted-foreground opacity-70 backdrop-blur transition-all hover:bg-muted hover:text-foreground hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+      className="absolute top-2 right-2 inline-flex size-10 items-center justify-center rounded-md border border-border/60 bg-background/80 text-muted-foreground opacity-70 backdrop-blur transition-all hover:bg-muted hover:text-foreground hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
     >
       <span className="sr-only">Copy code</span>
       {copied ? (

@@ -98,7 +98,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   };
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6">
+    <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:py-12 sm:px-6">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -127,7 +127,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               {article.categoryName}
             </Link>
           ) : null}
-          <h1 className="mt-3 font-heading text-4xl font-bold leading-tight tracking-tight sm:text-[2.75rem]">
+          <h1 className="mt-3 font-heading text-2xl font-bold leading-tight tracking-tight sm:text-3xl lg:text-[2.75rem]">
             {article.title}
           </h1>
 
@@ -152,7 +152,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               <Link
                 key={tag.slug}
                 href={`/${locale}/tag/${tag.slug}`}
-                className="rounded-full bg-muted px-3 py-0.5 text-xs transition-colors hover:bg-accent hover:text-accent-foreground"
+                className="rounded-full bg-muted px-3 py-1.5 text-xs transition-colors hover:bg-accent hover:text-accent-foreground"
               >
                 #{tag.name}
               </Link>
@@ -161,7 +161,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           <ViewCounter postId={article.id} />
         </header>
 
-        <div className="relative mb-10 aspect-video w-full overflow-hidden rounded-xl">
+        <div className="relative mb-6 sm:mb-10 aspect-video w-full overflow-hidden rounded-xl">
           {article.coverImageUrl ? (
             <Image
               src={article.coverImageUrl}
@@ -189,7 +189,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           ) : null}
         </div>
 
-        <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_16rem]">
+        <div className="grid gap-6 sm:gap-10 xl:grid-cols-[minmax(0,1fr)_16rem]">
           <div className="min-w-0 max-w-[68ch]">
             <CopyAttribution url={shareUrl} siteName={SITE_NAME}>
               <MarkdownContent markdown={article.contentMarkdown} />

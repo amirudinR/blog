@@ -100,7 +100,7 @@ export function Navbar({ locale }: NavbarProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="md:hidden"
+          className="md:hidden min-h-[44px] min-w-[44px]"
           aria-label={open ? "Close menu" : "Open menu"}
           onClick={() => setOpen((v) => !v)}
         >
@@ -139,9 +139,9 @@ export function Navbar({ locale }: NavbarProps) {
                 <Search className="size-4" />
                 {dict.nav.search}
               </Link>
-              <div className="mt-2 flex items-center gap-2 px-3">
+              <div className="mt-2 flex items-center gap-2 px-3 pb-2">
                 <ThemeToggle />
-                <Button variant="outline" size="sm" onClick={() => {
+                <Button variant="outline" size="default" onClick={() => {
                   setOpen(false);
                   switchLocale();
                 }}>

@@ -27,8 +27,8 @@ export default async function SearchPage({
   const result = q ? await searchPosts(locale, q, page) : null;
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6">
-      <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
+    <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:py-12 sm:px-6">
+      <h1 className="font-heading text-2xl font-bold tracking-tight sm:text-4xl">
         {dict.search.title}
       </h1>
       <span className="mt-4 mb-8 flex h-px w-16 bg-primary/40" aria-hidden />
@@ -36,7 +36,7 @@ export default async function SearchPage({
       <form
         method="GET"
         action={`/${locale}/cari`}
-        className="mb-10 flex max-w-xl gap-2"
+        className="mb-10 flex flex-col sm:flex-row max-w-xl gap-2"
       >
         <input
           type="search"
@@ -49,7 +49,7 @@ export default async function SearchPage({
         <button
           type="submit"
           aria-label={dict.nav.search}
-          className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+          className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 sm:w-auto w-full"
         >
           <Search className="size-4" aria-hidden />
           {dict.nav.search}

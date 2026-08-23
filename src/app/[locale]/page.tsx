@@ -25,15 +25,15 @@ export default async function HomePage({ params }: HomePageProps) {
   ]);
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6">
-      <section className="py-10 sm:py-14 lg:py-20">
+    <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:py-12 sm:px-6">
+      <section className="py-8 sm:py-14 lg:py-20">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
           {dict.home.overline}
         </p>
-        <h1 className="mt-4 max-w-2xl font-heading text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+        <h1 className="mt-4 max-w-2xl font-heading text-[1.75rem] font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
           {dict.site.tagline}
         </h1>
-        <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">
+        <p className="mt-5 max-w-xl text-base sm:text-lg leading-relaxed text-muted-foreground">
           {dict.site.description}
         </p>
         <div className="mt-8 flex items-center gap-3">
@@ -58,9 +58,9 @@ export default async function HomePage({ params }: HomePageProps) {
         </div>
       </section>
 
-      <section className="py-14 sm:py-16">
+      <section className="py-10 sm:py-16">
         <div className="mb-8 flex items-center gap-5">
-          <h2 className="shrink-0 font-heading text-2xl font-bold tracking-tight sm:text-3xl">
+          <h2 className="shrink-0 font-heading text-xl font-bold tracking-tight sm:text-3xl">
             {dict.home.featured}
           </h2>
           <span className="h-px flex-1 bg-border" aria-hidden />
@@ -76,10 +76,10 @@ export default async function HomePage({ params }: HomePageProps) {
         )}
       </section>
 
-      <section className="py-14 sm:py-16">
+      <section className="py-10 sm:py-16">
         <div className="mb-8 flex items-center justify-between gap-5">
           <div className="flex min-w-0 items-center gap-5">
-            <h2 className="shrink-0 font-heading text-2xl font-bold tracking-tight sm:text-3xl">
+            <h2 className="shrink-0 font-heading text-xl font-bold tracking-tight sm:text-3xl">
               {dict.home.latest}
             </h2>
             <span className="hidden h-px flex-1 bg-border sm:block" aria-hidden />
@@ -103,9 +103,9 @@ export default async function HomePage({ params }: HomePageProps) {
         )}
       </section>
 
-      <section className="py-14 sm:py-16">
-        <div className="mx-auto max-w-md rounded-2xl border border-primary/20 bg-primary/5 p-8 text-center shadow-sm">
-          <h2 className="font-heading text-xl font-bold tracking-tight">
+      <section className="py-10 sm:py-16">
+        <div className="mx-auto max-w-md rounded-2xl border border-primary/20 bg-primary/5 p-6 sm:p-8 text-center shadow-sm">
+          <h2 className="font-heading text-lg sm:text-xl font-bold tracking-tight">
             {dict.home.newsletterTitle}
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">

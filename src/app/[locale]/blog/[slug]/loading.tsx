@@ -10,8 +10,8 @@ export default function ArticleLoading() {
         <header className="mb-8">
           <Skeleton className="h-3 w-24" />
           <div className="mt-3 max-w-3xl space-y-3">
-            <Skeleton className="h-10 w-full sm:h-12" />
-            <Skeleton className="h-10 w-2/3 sm:h-12" />
+            <Skeleton className="h-8 w-full sm:h-10" />
+            <Skeleton className="h-8 w-2/3 sm:h-10" />
           </div>
           <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
             <Skeleton className="h-5 w-36" />

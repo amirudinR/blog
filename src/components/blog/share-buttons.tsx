@@ -79,6 +79,7 @@ export function ShareButtons({ url, title, t }: ShareButtonsProps) {
       <Button
         variant="ghost"
         size="icon"
+        className="min-h-[44px] min-w-[44px]"
         aria-label="Share on X"
         onClick={() =>
           openShare(
@@ -93,6 +94,7 @@ export function ShareButtons({ url, title, t }: ShareButtonsProps) {
       <Button
         variant="ghost"
         size="icon"
+        className="min-h-[44px] min-w-[44px]"
         aria-label="Share on Facebook"
         onClick={() =>
           openShare(
@@ -105,6 +107,7 @@ export function ShareButtons({ url, title, t }: ShareButtonsProps) {
       <Button
         variant="ghost"
         size="icon"
+        className="min-h-[44px] min-w-[44px]"
         aria-label="Share on WhatsApp"
         onClick={() =>
           openShare(
@@ -117,6 +120,7 @@ export function ShareButtons({ url, title, t }: ShareButtonsProps) {
       <Button
         variant="ghost"
         size="icon"
+        className="min-h-[44px] min-w-[44px]"
         aria-label={t.copyLink}
         onClick={copyLink}
       >

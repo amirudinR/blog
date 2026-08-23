@@ -63,3 +63,13 @@ export function extractHeadings(markdown: string): TocItem[] {
 
 export { headingId };
 
+export function getCoverSrc(
+  coverUrl: string | null,
+  title: string,
+  locale: Locale
+): string {
+  return (
+    coverUrl ??
+    `/api/og?title=${encodeURIComponent(title)}&locale=${locale}`
+  );
+}

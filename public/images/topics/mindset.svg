@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+<rect width="800" height="500" rx="24" fill="#faf6f0"/>
+<circle cx="700" cy="420" r="60" fill="#eed7c6"/>
+<circle cx="90" cy="90" r="34" fill="#eed7c6"/>
+<circle cx="640" cy="70" r="8" fill="#c2593a"/>
+<circle cx="120" cy="440" r="7" fill="#c2593a"/>
+<circle cx="748" cy="250" r="6" fill="#eed7c6"/>
+<polyline points="120 400 200 320 240 352 320 272" fill="none" stroke="#c2593a" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="336 256 328 280 312 264" fill="#c2593a"/>
+<g stroke="#8a5a44" stroke-width="9" stroke-linecap="round">
+<line x1="640" y1="171" x2="654" y2="171"/>
+<line x1="630" y1="154" x2="637" y2="142"/>
+<line x1="610" y1="154" x2="603" y2="142"/>
+<line x1="600" y1="171" x2="586" y2="171"/>
+<line x1="610" y1="188" x2="603" y2="200"/>
+<line x1="630" y1="188" x2="637" y2="200"/>
+</g>
+<circle cx="620" cy="171" r="20" fill="#faf6f0" stroke="#8a5a44" stroke-width="8"/>
+<circle cx="620" cy="171" r="7" fill="#c2593a"/>
+<g stroke="#8a5a44" stroke-width="7" stroke-linecap="round">
+<line x1="715" y1="266" x2="726" y2="266"/>
+<line x1="708" y1="253" x2="713" y2="244"/>
+<line x1="692" y1="253" x2="687" y2="244"/>
+<line x1="685" y1="266" x2="674" y2="266"/>
+<line x1="692" y1="279" x2="687" y2="288"/>
+<line x1="708" y1="279" x2="713" y2="288"/>
+</g>
+<circle cx="700" cy="266" r="15" fill="#faf6f0" stroke="#8a5a44" stroke-width="7"/>
+<circle cx="700" cy="266" r="5" fill="#c2593a"/>
+<path d="M 370 430 C 369 415 368 400 366 386 C 356 382 348 376 352 368 C 357 362 360 356 354 350 C 359 344 361 340 358 334 C 348 333 336 332 330 328 C 327 325 330 320 336 314 C 342 306 346 296 348 288 C 351 276 352 264 350 256 C 346 248 342 244 344 236 C 350 200 385 165 435 158 C 490 152 532 190 540 245 C 544 280 538 310 530 340 L 528 430 Z" fill="#ffffff" stroke="#33241c" stroke-width="9" stroke-linejoin="round"/>
+<rect x="398" y="296" width="64" height="14" rx="5" fill="#8a5a44"/>
+<polygon points="404 310 456 310 446 344 414 344" fill="#c2593a"/>
+<path d="M 430 296 C 430 278 430 266 430 252" fill="none" stroke="#8a5a44" stroke-width="5" stroke-linecap="round"/>
+<path d="M 430 258 C 412 250 406 232 416 222 C 430 230 434 246 430 258 Z" fill="#eed7c6"/>
+<path d="M 430 250 C 448 242 454 224 444 214 C 430 222 426 238 430 250 Z" fill="#eed7c6"/>
+</svg>

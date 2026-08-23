@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+<rect width="800" height="500" rx="24" fill="#faf6f0"/>
+<circle cx="740" cy="450" r="100" fill="#eed7c6" opacity=".45"/>
+<circle cx="60" cy="60" r="95" fill="#eed7c6" opacity=".45"/>
+<polygon points="200,96 296,136 200,176 104,136" fill="#33241c"/>
+<path d="M158,148 v22 q42,24 84,0 v-22 Z" fill="#33241c"/>
+<path d="M204,138 q60,6 64,44" fill="none" stroke="#c2593a" stroke-width="6" stroke-linecap="round"/>
+<circle cx="270" cy="188" r="9" fill="#c2593a"/>
+<g>
+<path d="M265,270 v-16 a35,22 0 0 1 70,0 v16" fill="none" stroke="#33241c" stroke-width="10"/>
+<rect x="210" y="270" width="180" height="125" rx="16" fill="#c2593a"/>
+<rect x="210" y="322" width="180" height="8" fill="#8a5a44"/>
+<rect x="238" y="314" width="18" height="22" rx="4" fill="#eed7c6"/>
+<rect x="344" y="314" width="18" height="22" rx="4" fill="#eed7c6"/>
+</g>
+<polygon points="430,430 430,396 484,396 484,362 538,362 538,328 592,328 592,294 646,294 646,430" fill="#eed7c6"/>
+<rect x="430" y="392" width="54" height="8" fill="#c2593a"/>
+<rect x="484" y="358" width="54" height="8" fill="#c2593a"/>
+<rect x="538" y="324" width="54" height="8" fill="#c2593a"/>
+<rect x="592" y="290" width="54" height="8" fill="#c2593a"/>
+<rect x="638" y="212" width="8" height="82" fill="#33241c"/>
+<polygon points="646,214 706,232 646,250" fill="#c2593a"/>
+<g>
+<line x1="96" y1="300" x2="128" y2="352" stroke="#c2593a" stroke-width="10"/>
+<line x1="160" y1="300" x2="128" y2="352" stroke="#c2593a" stroke-width="10"/>
+<rect x="118" y="346" width="20" height="16" rx="5" fill="#33241c"/>
+<rect x="94" y="360" width="68" height="84" rx="10" fill="#ffffff"/>
+<rect x="104" y="370" width="48" height="34" rx="6" fill="#eed7c6"/>
+<circle cx="128" cy="382" r="7" fill="#8a5a44"/>
+<path d="M117,404 a11,10 0 0 1 22,0 Z" fill="#8a5a44"/>
+<rect x="104" y="412" width="48" height="8" rx="4" fill="#eed7c6"/>
+<rect x="104" y="424" width="32" height="8" rx="4" fill="#eed7c6"/>
+</g>
+<circle cx="420" cy="120" r="7" fill="#c2593a" opacity=".35"/>
+<polygon points="480,80 484,90 494,94 484,98 480,108 476,98 466,94 476,90" fill="#eed7c6"/>
+<circle cx="700" cy="330" r="8" fill="#eed7c6"/>
+</svg>

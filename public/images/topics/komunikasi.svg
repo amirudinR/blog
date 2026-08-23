@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+<rect width="800" height="500" rx="24" fill="#faf6f0"/>
+<circle cx="60" cy="80" r="28" fill="#eed7c6"/>
+<circle cx="740" cy="60" r="30" fill="#eed7c6"/>
+<circle cx="58" cy="250" r="7" fill="#c2593a"/>
+<circle cx="772" cy="250" r="6" fill="#eed7c6"/>
+<path d="M 614 70 h 106 a 22 22 0 0 1 22 22 v 40 a 22 22 0 0 1 -22 22 h -60 l -34 34 l 6 -34 h -12 a 22 22 0 0 1 -22 -22 v -40 a 22 22 0 0 1 22 -22 z" fill="#ffffff" stroke="#33241c" stroke-width="7" stroke-linejoin="round"/>
+<circle cx="644" cy="112" r="6.5" fill="#c2593a"/>
+<circle cx="670" cy="112" r="6.5" fill="#c2593a"/>
+<circle cx="696" cy="112" r="6.5" fill="#c2593a"/>
+<path d="M 394 138 Q 420 168 394 198" fill="none" stroke="#c2593a" stroke-width="7" stroke-linecap="round"/>
+<path d="M 416 114 Q 456 168 416 222" fill="none" stroke="#c2593a" stroke-width="7" stroke-linecap="round"/>
+<path d="M 438 92 Q 492 168 438 244" fill="none" stroke="#c2593a" stroke-width="7" stroke-linecap="round"/>
+<line x1="330" y1="244" x2="330" y2="372" stroke="#33241c" stroke-width="11"/>
+<line x1="330" y1="372" x2="282" y2="428" stroke="#33241c" stroke-width="11" stroke-linecap="round"/>
+<line x1="330" y1="372" x2="378" y2="428" stroke="#33241c" stroke-width="11" stroke-linecap="round"/>
+<polygon points="304 210 356 210 346 244 314 244" fill="#33241c"/>
+<circle cx="330" cy="168" r="48" fill="#c2593a" stroke="#33241c" stroke-width="8"/>
+<g stroke="#ffffff" stroke-width="4" stroke-linecap="round">
+<line x1="312" y1="126" x2="312" y2="210"/>
+<line x1="330" y1="120" x2="330" y2="216"/>
+<line x1="348" y1="126" x2="348" y2="210"/>
+<line x1="286" y1="150" x2="374" y2="150"/>
+<line x1="282" y1="168" x2="378" y2="168"/>
+<line x1="286" y1="186" x2="374" y2="186"/>
+</g>
+<polygon points="536 292 704 292 690 328 550 328" fill="#ffffff" stroke="#33241c" stroke-width="7" stroke-linejoin="round"/>
+<polygon points="584 300 656 300 648 320 592 320" fill="#eed7c6"/>
+<polygon points="556 328 684 328 664 434 576 434" fill="#c2593a" stroke="#33241c" stroke-width="7" stroke-linejoin="round"/>
+<rect x="562" y="434" width="116" height="14" rx="7" fill="#33241c"/>
+<g>
+<path d="M 40 500 A 30 30 0 0 1 100 500 Z" fill="#8a5a44"/>
+<path d="M 120 500 A 30 30 0 0 1 180 500 Z" fill="#c2593a"/>
+<path d="M 200 500 A 30 30 0 0 1 260 500 Z" fill="#33241c"/>
+<path d="M 280 500 A 30 30 0 0 1 340 500 Z" fill="#eed7c6"/>
+<path d="M 360 500 A 30 30 0 0 1 420 500 Z" fill="#8a5a44"/>
+<path d="M 440 500 A 30 30 0 0 1 500 500 Z" fill="#33241c"/>
+<path d="M 520 500 A 30 30 0 0 1 580 500 Z" fill="#c2593a"/>
+<path d="M 600 500 A 30 30 0 0 1 660 500 Z" fill="#8a5a44"/>
+<path d="M 680 500 A 30 30 0 0 1 740 500 Z" fill="#eed7c6"/>
+</g>
+</svg>

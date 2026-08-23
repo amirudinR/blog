@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { CalendarDays, Clock, Eye } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { CommentSection } from "@/components/blog/comment-section";
 import { CopyAttribution } from "@/components/blog/copy-attribution";
 import { MarkdownContent } from "@/components/blog/markdown-content";
+import { ProtectedCover } from "@/components/blog/protected-cover";
 import { ReadingProgress } from "@/components/blog/reading-progress";
 import { RelatedPosts } from "@/components/blog/related-posts";
 import { ShareButtons } from "@/components/blog/share-buttons";
@@ -21,7 +21,7 @@ import {
 } from "@/lib/db/queries";
 import { isValidLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
-import { extractHeadings, formatDate } from "@/lib/utils/blog";
+import { extractHeadings, formatDate, getCoverSrc } from "@/lib/utils/blog";
 
 type ArticlePageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -162,20 +162,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         </header>
 
         <div className="relative mb-6 sm:mb-10 aspect-video w-full overflow-hidden rounded-xl">
-          {article.coverImageUrl ? (
-            <Image
-              src={article.coverImageUrl}
-              alt={article.title}
-              fill
-              priority
-              draggable={false}
-              onContextMenu={(e) => e.preventDefault()}
-              sizes="(max-width: 1152px) 100vw, 1152px"
-              className="select-none object-cover"
-            />
-          ) : (
-            <div className="h-64 w-full rounded-xl bg-gradient-to-br from-primary/30 via-primary/10 to-muted sm:h-80 lg:h-96" />
-          )}
+          <ProtectedCover
+            src={getCoverSrc(article.coverImageUrl, article.title, locale)}
+            alt={article.title}
+            fill
+            priority
+            sizes="(max-width: 1152px) 100vw, 1152px"
+            className="select-none object-cover"
+          />
         </div>
 
         <div className="xl:hidden mb-8">

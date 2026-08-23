@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+<rect width="800" height="500" rx="24" fill="#faf6f0"/>
+<rect x="250" y="110" width="310" height="210" rx="14" fill="#33241c"/>
+<rect x="262" y="122" width="286" height="186" rx="8" fill="#ffffff"/>
+<path d="M225,320 L585,320 L615,362 Q618,368 610,368 L200,368 Q192,368 195,362 Z" fill="#8a5a44"/>
+<rect x="370" y="320" width="70" height="10" rx="5" fill="#eed7c6"/>
+<path d="M372,196 Q405,158 438,196" fill="none" stroke="#33241c" stroke-width="8" stroke-linecap="round"/>
+<path d="M352,196 L458,196 L444,262 L366,262 Z" fill="#c2593a"/>
+<rect x="346" y="190" width="118" height="14" rx="7" fill="#8a5a44"/>
+<g stroke="#ffffff" stroke-width="5" opacity=".85" stroke-linecap="round">
+<line x1="380" y1="212" x2="384" y2="250"/>
+<line x1="405" y1="212" x2="405" y2="250"/>
+<line x1="430" y1="212" x2="426" y2="250"/>
+</g>
+<path d="M88,350 h22 l22,64 h96 l20,-48 h-122" fill="none" stroke="#8a5a44" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="146" cy="436" r="9" fill="#33241c"/>
+<circle cx="214" cy="436" r="9" fill="#33241c"/>
+<g transform="translate(660,105) rotate(25)">
+<rect x="-30" y="-30" width="60" height="60" rx="10" fill="#eed7c6"/>
+<circle cx="0" cy="-12" r="7" fill="#ffffff"/>
+</g>
+<g transform="translate(650,240)">
+<rect x="-62" y="-42" width="124" height="84" rx="12" fill="#c2593a"/>
+<rect x="-62" y="-22" width="124" height="18" fill="#33241c"/>
+<rect x="-42" y="8" width="26" height="18" rx="4" fill="#eed7c6"/>
+<circle cx="42" cy="22" r="4" fill="#ffffff"/>
+</g>
+<g transform="translate(610,400)">
+<rect x="-54" y="-50" width="108" height="100" rx="8" fill="#eed7c6"/>
+<rect x="-54" y="-50" width="108" height="18" rx="8" fill="#8a5a44"/>
+<rect x="-11" y="-50" width="22" height="100" fill="#c2593a"/>
+</g>
+<circle cx="120" cy="90" r="46" fill="none" stroke="#eed7c6" stroke-width="12"/>
+<circle cx="480" cy="430" r="6" fill="#eed7c6"/>
+<polygon points="700,300 704,310 714,314 704,318 700,328 696,318 686,314 696,310" fill="#eed7c6"/>
+</svg>

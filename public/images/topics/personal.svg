@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+<rect width="800" height="500" rx="24" fill="#faf6f0"/>
+<circle cx="60" cy="60" r="110" fill="#eed7c6" opacity=".45"/>
+<circle cx="750" cy="470" r="100" fill="#eed7c6" opacity=".4"/>
+<polygon points="312,0 362,0 388,168 356,178" fill="#c2593a"/>
+<polygon points="488,0 438,0 412,168 444,178" fill="#c2593a"/>
+<rect x="378" y="158" width="44" height="30" rx="8" fill="#33241c"/>
+<circle cx="400" cy="173" r="6" fill="#faf6f0"/>
+<rect x="320" y="182" width="160" height="210" rx="18" fill="#ffffff"/>
+<rect x="342" y="206" width="70" height="70" rx="10" fill="#eed7c6"/>
+<circle cx="377" cy="230" r="14" fill="#8a5a44"/>
+<path d="M355,276 a22,20 0 0 1 44,0 Z" fill="#8a5a44"/>
+<rect x="342" y="292" width="116" height="12" rx="6" fill="#eed7c6"/>
+<rect x="342" y="314" width="84" height="12" rx="6" fill="#eed7c6"/>
+<rect x="342" y="340" width="52" height="14" rx="7" fill="#c2593a"/>
+<g transform="translate(150,380)">
+<polygon points="-46,-12 0,-28 -8,24" fill="#33241c"/>
+<polygon points="46,-12 0,-28 8,24" fill="#33241c"/>
+<polygon points="-12,18 12,18 24,68 0,96 -24,68" fill="#c2593a"/>
+<polygon points="0,-4 22,14 0,32 -22,14" fill="#8a5a44"/>
+</g>
+<g transform="rotate(20 665 395)" stroke="#8a5a44" stroke-width="6" fill="none" stroke-linecap="round">
+<circle cx="665" cy="395" r="44" stroke-dasharray="190 86"/>
+<circle cx="665" cy="395" r="30" stroke-dasharray="120 68" stroke-dashoffset="40"/>
+<circle cx="665" cy="395" r="16" stroke-dasharray="60 40" stroke-dashoffset="20"/>
+</g>
+<circle cx="665" cy="395" r="5" fill="#8a5a44"/>
+<polygon points="640,150 620,215 655,196" fill="#8a5a44"/>
+<polygon points="670,150 690,215 655,196" fill="#c2593a"/>
+<circle cx="655" cy="110" r="46" fill="#c2593a"/>
+<circle cx="655" cy="110" r="33" fill="#eed7c6"/>
+<polygon points="655,90 659.7,103.5 674,103.8 662.6,112.5 666.8,126.2 655,118 643.2,126.2 647.4,112.5 636,103.8 650.3,103.5" fill="#ffffff"/>
+<circle cx="240" cy="120" r="7" fill="#c2593a" opacity=".35"/>
+<circle cx="520" cy="430" r="8" fill="#eed7c6"/>
+<polygon points="300,420 304,430 314,434 304,438 300,448 296,438 286,434 296,430" fill="#eed7c6"/>
+</svg>

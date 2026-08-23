@@ -2,9 +2,10 @@
 
 import { Menu, Search, X } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { LanguageSwitcher } from "@/components/blog/language-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import type { Locale } from "@/lib/i18n/config";
@@ -34,9 +35,7 @@ function isActive(current: string, href: string): boolean {
 
 export function Navbar({ locale }: NavbarProps) {
   const dict = (locale === "id" ? idDict : enDict) as Dictionary;
-  const other = locale === "id" ? "en" : "id";
   const pathname = usePathname();
-  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -47,13 +46,6 @@ export function Navbar({ locale }: NavbarProps) {
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open]);
-
-  const switchLocale = () => {
-    const current = pathname ?? `/${locale}`;
-    const next = current.replace(/^\/(id|en)/, `/${other}`);
-    document.cookie = `locale=${other};path=/;max-age=31536000`;
-    router.push(next);
-  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur">
@@ -87,14 +79,7 @@ export function Navbar({ locale }: NavbarProps) {
             <Search className="size-5" />
           </Link>
           <ThemeToggle />
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={switchLocale}
-            aria-label={`Switch to ${other}`}
-          >
-            {other.toUpperCase()}
-          </Button>
+          <LanguageSwitcher locale={locale} />
         </nav>
 
         <Button
@@ -141,12 +126,7 @@ export function Navbar({ locale }: NavbarProps) {
               </Link>
               <div className="mt-2 flex items-center gap-2 px-3 pb-2">
                 <ThemeToggle />
-                <Button variant="outline" size="default" onClick={() => {
-                  setOpen(false);
-                  switchLocale();
-                }}>
-                  {other.toUpperCase()}
-                </Button>
+                <LanguageSwitcher locale={locale} />
               </div>
             </nav>
           </div>

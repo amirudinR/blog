@@ -24,6 +24,11 @@ export async function generateMetadata({
       template: `%s | ${dict.site.name}`,
     },
     description: dict.site.description,
+    alternates: {
+      types: {
+        "application/rss+xml": `/${locale}/rss.xml`,
+      },
+    },
   };
 }
 

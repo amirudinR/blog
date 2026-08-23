@@ -20,6 +20,7 @@ import {
   type PostInputSchema,
 } from "@/lib/validation/post";
 import { slugify } from "@/lib/utils/blog";
+import { INDEXNOW_KEY, IS_LOCALHOST, SITE_URL } from "@/lib/constants";
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
 export type SavePostResult =
@@ -37,6 +38,29 @@ function revalidateBlog(): void {
   revalidatePath("/id/blog");
   revalidatePath("/en/blog");
   updateTag("posts");
+}
+
+async function pingIndexNow(slug: string): Promise<void> {
+  if (IS_LOCALHOST) return;
+  try {
+    await fetch("https://api.indexnow.org/IndexNow", {
+      method: "POST",
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify({
+        host: new URL(SITE_URL).host,
+        key: INDEXNOW_KEY,
+        keyLocation: `${SITE_URL}/${INDEXNOW_KEY}.txt`,
+        urlList: [
+          `${SITE_URL}/id/blog/${slug}`,
+          `${SITE_URL}/en/blog/${slug}`,
+          `${SITE_URL}/id/blog`,
+        ],
+      }),
+      signal: AbortSignal.timeout(5000),
+    });
+  } catch {
+    // fire-and-forget: indexing ping failure must not block saving
+  }
 }
 
 function toPostInput(data: PostInputSchema): PostInput {
@@ -80,10 +104,16 @@ export async function savePost(input: PostInputSchema): Promise<SavePostResult> 
     if (id) {
       await updatePost(id, postInput);
       revalidateBlog();
+      if (postInput.status === "published") {
+        await pingIndexNow(postInput.slug);
+      }
       return { ok: true, id };
     }
     const createdId = await createPost(postInput);
     revalidateBlog();
+    if (postInput.status === "published") {
+      await pingIndexNow(postInput.slug);
+    }
     return { ok: true, id: createdId };
   } catch (error) {
     return {

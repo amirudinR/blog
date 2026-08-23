@@ -51,9 +51,11 @@ export function AdminShell({ children, userName, userEmail }: AdminShellProps) {
   const initial = (userName ?? userEmail ?? "A").charAt(0).toUpperCase();
   const currentLabel = getCurrentNavLabel(pathname);
 
-  useEffect(() => {
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
     setDrawerOpen(false);
-  }, [pathname]);
+  }
 
   const toggleCollapsed = useCallback(() => {
     setCollapsed((prev) => {

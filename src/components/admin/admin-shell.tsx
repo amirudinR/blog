@@ -48,13 +48,12 @@ export function AdminShell({ children, userName, userEmail }: AdminShellProps) {
     if (typeof window === "undefined") return false;
     return localStorage.getItem("admin-sidebar-collapsed") === "true";
   });
-  const [lastPathname, setLastPathname] = useState(pathname);
-  if (pathname !== lastPathname) {
-    setLastPathname(pathname);
-    setDrawerOpen(false);
-  }
   const initial = (userName ?? userEmail ?? "A").charAt(0).toUpperCase();
   const currentLabel = getCurrentNavLabel(pathname);
+
+  useEffect(() => {
+    setDrawerOpen(false);
+  }, [pathname]);
 
   const toggleCollapsed = useCallback(() => {
     setCollapsed((prev) => {

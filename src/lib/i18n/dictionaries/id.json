@@ -42,7 +42,9 @@
     "page": "Halaman",
     "categories": "Kategori",
     "tags": "Tag",
-    "allCategories": "Semua Kategori"
+    "allCategories": "Semua Kategori",
+    "filtering": "Menampilkan",
+    "clearFilter": "Hapus filter"
   },
   "category": {
     "title": "Kategori",

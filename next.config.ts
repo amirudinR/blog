@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
         hostname: "**.public.blob.vercel-storage.com",
       },
     ],
-    formats: ["image/webp"],
+    formats: ["image/avif", "image/webp"],
   },
 };
 

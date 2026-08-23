@@ -44,8 +44,10 @@ const SIDEBAR_COLLAPSED_WIDTH = 72;
 export function AdminShell({ children, userName, userEmail }: AdminShellProps) {
   const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("admin-sidebar-collapsed") === "true";
+  });
   const [lastPathname, setLastPathname] = useState(pathname);
   if (pathname !== lastPathname) {
     setLastPathname(pathname);
@@ -53,12 +55,6 @@ export function AdminShell({ children, userName, userEmail }: AdminShellProps) {
   }
   const initial = (userName ?? userEmail ?? "A").charAt(0).toUpperCase();
   const currentLabel = getCurrentNavLabel(pathname);
-
-  useEffect(() => {
-    const saved = localStorage.getItem("admin-sidebar-collapsed");
-    if (saved === "true") setCollapsed(true);
-    setMounted(true);
-  }, []);
 
   const toggleCollapsed = useCallback(() => {
     setCollapsed((prev) => {
@@ -85,7 +81,7 @@ export function AdminShell({ children, userName, userEmail }: AdminShellProps) {
     setDrawerOpen(false);
   }
 
-  const sidebarWidth = mounted ? (collapsed ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_WIDTH) : SIDEBAR_WIDTH;
+  const sidebarWidth = collapsed ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_WIDTH;
 
   return (
     <div className="min-h-screen" style={{ "--admin-sidebar-w": `${sidebarWidth}px` } as React.CSSProperties}>

@@ -8,6 +8,8 @@ import { getFeaturedPosts, getLatestPosts } from "@/lib/db/queries";
 import { isValidLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 
+export const revalidate = 60;
+
 type HomePageProps = {
   params: Promise<{ locale: string }>;
 };
@@ -47,11 +49,11 @@ export default async function HomePage({ params }: HomePageProps) {
             <ArrowRight className="size-4" aria-hidden />
           </Link>
           <Link
-            href={`/${locale}/blog`}
+            href={`/${locale}/tentang`}
             className="inline-flex items-center gap-1.5 rounded-md px-2 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
           >
-            {dict.home.viewAll}
-            <ArrowRight className="size-4" aria-hidden />
+            {dict.nav.about}
+            <ArrowRight className="size-4" />
           </Link>
         </div>
       </section>

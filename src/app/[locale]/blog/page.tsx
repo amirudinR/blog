@@ -4,8 +4,9 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 import { EmptyState } from "@/components/blog/empty-state";
+import { Pagination } from "@/components/blog/pagination";
 import { PostCard } from "@/components/blog/post-card";
-import { Newspaper } from "lucide-react";
+import { Newspaper, X } from "lucide-react";
 import {
   getCategoriesWithCount,
   getLatestPosts,
@@ -15,6 +16,8 @@ import {
 } from "@/lib/db/queries";
 import { isValidLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+
+export const revalidate = 60;
 
 type BlogListPageProps = {
   params: Promise<{ locale: string }>;
@@ -29,7 +32,7 @@ function buildPageHref(
   if (filters.kategori) sp.set("kategori", filters.kategori);
   if (filters.tag) sp.set("tag", filters.tag);
   sp.set("page", String(page));
-  return `?${sp.toString()}`;
+  return `/blog?${sp.toString()}`;
 }
 
 export default async function BlogListPage({
@@ -54,6 +57,13 @@ export default async function BlogListPage({
     getTagsWithCount(locale),
   ]);
 
+  const activeCategoryName = filters.kategori
+    ? categories.find((c) => c.slug === filters.kategori)?.name
+    : null;
+  const activeTagName = filters.tag
+    ? tags.find((t) => t.slug === filters.tag)?.name
+    : null;
+
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6">
       <div className="mb-10">
@@ -65,37 +75,7 @@ export default async function BlogListPage({
 
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_16rem]">
         <div>
-          <div className="-mx-4 mb-6 flex snap-x gap-2 overflow-x-auto px-4 pb-1 lg:hidden">
-            <Link
-              href={`/${locale}/blog`}
-              className="inline-flex shrink-0 snap-start items-center gap-1.5 whitespace-nowrap rounded-full border border-border/70 bg-card px-3 py-1 text-sm transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
-            >
-              {dict.blog.allCategories}
-            </Link>
-            {categories.map((cat) => (
-              <Link
-                key={`cat-${cat.slug}`}
-                href={`/${locale}/kategori/${cat.slug}`}
-                className="inline-flex shrink-0 snap-start items-center gap-1.5 whitespace-nowrap rounded-full border border-border/70 bg-card px-3 py-1 text-sm transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
-              >
-                {cat.name}
-                <span className="text-xs text-muted-foreground">
-                  {cat.postCount}
-                </span>
-              </Link>
-            ))}
-            {tags.map((tag) => (
-              <Link
-                key={`tag-${tag.slug}`}
-                href={`/${locale}/tag/${tag.slug}`}
-                className="inline-flex shrink-0 snap-start items-center gap-1.5 whitespace-nowrap rounded-full border border-border/70 bg-muted px-3 py-1 text-xs transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
-              >
-                {tag.name}
-                <span className="text-muted-foreground">{tag.postCount}</span>
-              </Link>
-            ))}
-          </div>
-
+          {/* Mobile filter pills */}
           <div className="lg:hidden mb-6">
             <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
               <Link
@@ -103,11 +83,11 @@ export default async function BlogListPage({
                 className={cn(
                   "inline-flex items-center rounded-full border px-4 py-2 text-sm whitespace-nowrap transition-colors",
                   !sp.kategori && !sp.tag
-                    ? "bg-[var(--md-primary)] text-[var(--md-on-primary)] border-[var(--md-primary)]"
-                    : "border-[var(--md-outline-variant)] text-[var(--md-on-surface-variant)] hover:bg-[color-mix(in_srgb,var(--md-on-surface)_8%,transparent)]"
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "border-border/70 text-muted-foreground hover:bg-accent"
                 )}
               >
-                Semua
+                {dict.blog.allCategories}
               </Link>
               {categories.map((cat) => (
                 <Link
@@ -116,11 +96,12 @@ export default async function BlogListPage({
                   className={cn(
                     "inline-flex items-center rounded-full border px-4 py-2 text-sm whitespace-nowrap transition-colors",
                     sp.kategori === cat.slug
-                      ? "bg-[var(--md-primary)] text-[var(--md-on-primary)] border-[var(--md-primary)]"
-                      : "border-[var(--md-outline-variant)] text-[var(--md-on-surface-variant)] hover:bg-[color-mix(in_srgb,var(--md-on-surface)_8%,transparent)]"
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "border-border/70 text-muted-foreground hover:bg-accent"
                   )}
                 >
                   {cat.name}
+                  <span className="ml-1.5 text-xs opacity-70">{cat.postCount}</span>
                 </Link>
               ))}
               {tags.map((tag) => (
@@ -130,8 +111,8 @@ export default async function BlogListPage({
                   className={cn(
                     "inline-flex items-center rounded-full border px-4 py-2 text-sm whitespace-nowrap transition-colors",
                     sp.tag === tag.slug
-                      ? "bg-[var(--md-primary)] text-[var(--md-on-primary)] border-[var(--md-primary)]"
-                      : "border-[var(--md-outline-variant)] text-[var(--md-on-surface-variant)] hover:bg-[color-mix(in_srgb,var(--md-on-surface)_8%,transparent)]"
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "border-border/70 text-muted-foreground hover:bg-accent"
                   )}
                 >
                   {tag.name}
@@ -139,6 +120,23 @@ export default async function BlogListPage({
               ))}
             </div>
           </div>
+
+          {/* Active filter label */}
+          {(activeCategoryName || activeTagName) && (
+            <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
+              <span>{dict.blog.filtering}:</span>
+              <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-0.5 font-medium text-primary">
+                {activeCategoryName ?? activeTagName}
+                <Link
+                  href={`/${locale}/blog`}
+                  className="ml-0.5 rounded-full p-0.5 transition-colors hover:bg-primary/20"
+                  aria-label={dict.blog.clearFilter}
+                >
+                  <X className="size-3" />
+                </Link>
+              </span>
+            </div>
+          )}
 
           {result.posts.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2">
@@ -150,33 +148,11 @@ export default async function BlogListPage({
             <EmptyState icon={Newspaper} message={dict.blog.empty} />
           )}
 
-          {result.totalPages > 1 ? (
-            <nav className="mt-10 flex items-center justify-between">
-              {result.page > 1 ? (
-                <Link
-                  href={buildPageHref(filters, result.page - 1)}
-                  className="rounded-md border px-4 py-2 text-sm font-medium transition-colors hover:bg-accent"
-                >
-                  {dict.blog.prev}
-                </Link>
-              ) : (
-                <span />
-              )}
-              <span className="text-sm text-muted-foreground">
-                {dict.blog.page} {result.page} / {result.totalPages}
-              </span>
-              {result.page < result.totalPages ? (
-                <Link
-                  href={buildPageHref(filters, result.page + 1)}
-                  className="rounded-md border px-4 py-2 text-sm font-medium transition-colors hover:bg-accent"
-                >
-                  {dict.blog.next}
-                </Link>
-              ) : (
-                <span />
-              )}
-            </nav>
-          ) : null}
+          <Pagination
+            page={result.page}
+            totalPages={result.totalPages}
+            baseHref={buildPageHref(filters, 1).replace(/page=\d+/, "")}
+          />
         </div>
 
         <aside className="hidden lg:block">
@@ -190,7 +166,12 @@ export default async function BlogListPage({
                   <Link
                     key={cat.slug}
                     href={`/${locale}/kategori/${cat.slug}`}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card px-3 py-1 text-sm transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
+                    className={cn(
+                      "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm transition-colors",
+                      sp.kategori === cat.slug
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border/70 bg-card text-muted-foreground hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
+                    )}
                   >
                     {cat.name}
                     <span className="text-xs text-muted-foreground">
@@ -210,7 +191,12 @@ export default async function BlogListPage({
                   <Link
                     key={tag.slug}
                     href={`/${locale}/tag/${tag.slug}`}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-muted px-3 py-1 text-xs transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
+                    className={cn(
+                      "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs transition-colors",
+                      sp.tag === tag.slug
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border/70 bg-muted text-muted-foreground hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
+                    )}
                   >
                     {tag.name}
                     <span className="text-muted-foreground">{tag.postCount}</span>

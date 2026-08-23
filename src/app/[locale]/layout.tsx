@@ -7,8 +7,6 @@ import { Navbar } from "@/components/blog/navbar";
 import { isValidLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 
-export const dynamic = "force-dynamic";
-
 type LocaleLayoutProps = {
   children: ReactNode;
   params: Promise<{ locale: string }>;

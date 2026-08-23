@@ -1,5 +1,6 @@
 import "server-only";
 
+import { unstable_cache } from "next/cache";
 import { FieldValue, type DocumentData } from "firebase-admin/firestore";
 
 import { getAdminDb } from "@/lib/firebase/admin";
@@ -78,7 +79,7 @@ type PostRecord = {
   tagIds: string[];
 };
 
-type TaxonomyNames = Map<string, { nameId: string; nameEn: string }>;
+type TaxonomyNames = Record<string, { nameId: string; nameEn: string }>;
 
 type CardRow = PostCardData & { _categoryId: string | null };
 
@@ -150,19 +151,47 @@ async function fetchAllPosts(): Promise<PostRecord[]> {
   return snap.docs.map((doc) => normalizePost(doc.id, doc.data()));
 }
 
-async function fetchTaxonomyNames(
-  kind: typeof CATEGORIES | typeof TAGS
-): Promise<TaxonomyNames> {
-  const snap = await getAdminDb().collection(kind).get();
-  const map: TaxonomyNames = new Map();
-  for (const doc of snap.docs) {
-    map.set(doc.id, {
-      nameId: (doc.get("nameId") as string | undefined) ?? "",
-      nameEn: (doc.get("nameEn") as string | undefined) ?? "",
-    });
-  }
-  return map;
+type BlogData = {
+  posts: PostRecord[];
+  categoryNames: TaxonomyNames;
+  tagNames: TaxonomyNames;
+};
+
+async function fetchBlogData(): Promise<BlogData> {
+  const [postsSnap, catSnap, tagSnap] = await Promise.all([
+    postsCollection().where("status", "==", "published").get(),
+    getAdminDb().collection(CATEGORIES).get(),
+    getAdminDb().collection(TAGS).get(),
+  ]);
+
+  return {
+    posts: postsSnap.docs.map((doc) => normalizePost(doc.id, doc.data())),
+    categoryNames: Object.fromEntries(
+      catSnap.docs.map((d) => [
+        d.id,
+        {
+          nameId: (d.get("nameId") as string | undefined) ?? "",
+          nameEn: (d.get("nameEn") as string | undefined) ?? "",
+        },
+      ])
+    ),
+    tagNames: Object.fromEntries(
+      tagSnap.docs.map((d) => [
+        d.id,
+        {
+          nameId: (d.get("nameId") as string | undefined) ?? "",
+          nameEn: (d.get("nameEn") as string | undefined) ?? "",
+        },
+      ])
+    ),
+  };
 }
+
+export const getCachedBlogData = unstable_cache(
+  fetchBlogData,
+  ["blog-data-v1"],
+  { revalidate: 60, tags: ["posts"] }
+);
 
 function publishTime(post: PostRecord): number {
   return post.publishedAt ? post.publishedAt.getTime() : Number.NEGATIVE_INFINITY;
@@ -177,7 +206,7 @@ function localeName(
   id: string,
   locale: Locale
 ): string | null {
-  const entry = names.get(id);
+  const entry = names[id];
   if (!entry) return null;
   const name = locale === "id" ? entry.nameId : entry.nameEn;
   return name.length > 0 ? name : null;
@@ -249,10 +278,7 @@ export async function getLatestPosts(
   page = 1,
   perPage = 9
 ): Promise<PaginatedPosts> {
-  const [posts, categoryNames] = await Promise.all([
-    fetchAllPosts(),
-    fetchTaxonomyNames(CATEGORIES),
-  ]);
+  const { posts, categoryNames } = await getCachedBlogData();
   return paginate(toCardRows(posts, locale, categoryNames), page, perPage);
 }
 
@@ -260,10 +286,7 @@ export async function getFeaturedPosts(
   locale: Locale,
   limit = 3
 ): Promise<PostCardData[]> {
-  const [posts, categoryNames] = await Promise.all([
-    fetchAllPosts(),
-    fetchTaxonomyNames(CATEGORIES),
-  ]);
+  const { posts, categoryNames } = await getCachedBlogData();
   return stripRows(toCardRows(posts, locale, categoryNames).slice(0, limit));
 }
 
@@ -273,6 +296,7 @@ export async function listPostsByCategory(
   page = 1,
   perPage = 9
 ): Promise<PaginatedPosts> {
+  const { posts, categoryNames } = await getCachedBlogData();
   const catSnap = await getAdminDb()
     .collection(CATEGORIES)
     .doc(categorySlug)
@@ -280,10 +304,6 @@ export async function listPostsByCategory(
   if (!catSnap.exists) {
     return { posts: [], total: 0, page: 1, perPage, totalPages: 1 };
   }
-  const [posts, categoryNames] = await Promise.all([
-    fetchAllPosts(),
-    fetchTaxonomyNames(CATEGORIES),
-  ]);
   const filtered = posts.filter((post) => post.categoryId === categorySlug);
   return paginate(toCardRows(filtered, locale, categoryNames), page, perPage);
 }
@@ -294,14 +314,11 @@ export async function listPostsByTag(
   page = 1,
   perPage = 9
 ): Promise<PaginatedPosts> {
+  const { posts, categoryNames } = await getCachedBlogData();
   const tagSnap = await getAdminDb().collection(TAGS).doc(tagSlug).get();
   if (!tagSnap.exists) {
     return { posts: [], total: 0, page: 1, perPage, totalPages: 1 };
   }
-  const [posts, categoryNames] = await Promise.all([
-    fetchAllPosts(),
-    fetchTaxonomyNames(CATEGORIES),
-  ]);
   const filtered = posts.filter((post) => post.tagIds.includes(tagSlug));
   return paginate(toCardRows(filtered, locale, categoryNames), page, perPage);
 }
@@ -313,10 +330,7 @@ export async function searchPosts(
   perPage = 9
 ): Promise<PaginatedPosts> {
   const term = q.trim().toLowerCase();
-  const [posts, categoryNames] = await Promise.all([
-    fetchAllPosts(),
-    fetchTaxonomyNames(CATEGORIES),
-  ]);
+  const { posts, categoryNames } = await getCachedBlogData();
   const filtered = term
     ? posts.filter((post) => {
         const translation = post.translations[locale];
@@ -355,25 +369,13 @@ export async function getPostBySlug(
 
   let categoryName: string | null = null;
   if (post.categoryId) {
-    const catSnap = await getAdminDb()
-      .collection(CATEGORIES)
-      .doc(post.categoryId)
-      .get();
-    if (catSnap.exists) {
-      categoryName = localeName(
-        new Map([[catSnap.id, {
-          nameId: (catSnap.get("nameId") as string | undefined) ?? "",
-          nameEn: (catSnap.get("nameEn") as string | undefined) ?? "",
-        }]]),
-        catSnap.id,
-        availableLocale
-      );
-    }
+    const { categoryNames } = await getCachedBlogData();
+    categoryName = localeName(categoryNames, post.categoryId, availableLocale);
   }
 
-  const tagNames = await fetchTaxonomyNames(TAGS);
+  const { tagNames } = await getCachedBlogData();
   const tags = post.tagIds.flatMap((tagSlug) => {
-    const entry = tagNames.get(tagSlug);
+    const entry = tagNames[tagSlug];
     if (!entry) return [];
     return [
       {
@@ -411,10 +413,7 @@ export async function getRelatedPosts(
   locale: Locale,
   limit = 3
 ): Promise<PostCardData[]> {
-  const [posts, categoryNames] = await Promise.all([
-    fetchAllPosts(),
-    fetchTaxonomyNames(CATEGORIES),
-  ]);
+  const { posts, categoryNames } = await getCachedBlogData();
   const current = posts.find((post) => post.id === postId);
   const pool = toCardRows(posts, locale, categoryNames);
 
@@ -432,12 +431,9 @@ export async function getRelatedPosts(
 export async function getCategoriesWithCount(
   locale: Locale
 ): Promise<CategoryWithCount[]> {
-  const [categoryNames, posts] = await Promise.all([
-    fetchTaxonomyNames(CATEGORIES),
-    fetchAllPosts(),
-  ]);
+  const { posts, categoryNames } = await getCachedBlogData();
   const rows: CategoryWithCount[] = [];
-  for (const [slug, names] of categoryNames.entries()) {
+  for (const [slug, names] of Object.entries(categoryNames)) {
     const postCount = posts.filter(
       (post) =>
         post.status === "published" &&
@@ -455,9 +451,9 @@ export async function getCategoriesWithCount(
 }
 
 export async function getTagsWithCount(locale: Locale): Promise<TagWithCount[]> {
-  const [tagNames, posts] = await Promise.all([fetchTaxonomyNames(TAGS), fetchAllPosts()]);
+  const { posts, tagNames } = await getCachedBlogData();
   const rows: TagWithCount[] = [];
-  for (const [slug, names] of tagNames.entries()) {
+  for (const [slug, names] of Object.entries(tagNames)) {
     const postCount = posts.filter(
       (post) =>
         post.status === "published" &&

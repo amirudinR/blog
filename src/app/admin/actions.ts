@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 import {
@@ -36,6 +36,7 @@ function revalidateBlog(): void {
   revalidatePath("/");
   revalidatePath("/id/blog");
   revalidatePath("/en/blog");
+  updateTag("posts");
 }
 
 function toPostInput(data: PostInputSchema): PostInput {

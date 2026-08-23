@@ -42,7 +42,9 @@
     "page": "Page",
     "categories": "Categories",
     "tags": "Tags",
-    "allCategories": "All Categories"
+    "allCategories": "All Categories",
+    "filtering": "Showing",
+    "clearFilter": "Clear filter"
   },
   "category": {
     "title": "Category",

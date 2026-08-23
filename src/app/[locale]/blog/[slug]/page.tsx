@@ -169,6 +169,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               fill
               priority
               draggable={false}
+              onContextMenu={(e) => e.preventDefault()}
               sizes="(max-width: 1152px) 100vw, 1152px"
               className="select-none object-cover"
             />

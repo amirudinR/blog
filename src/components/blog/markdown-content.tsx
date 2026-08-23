@@ -1,4 +1,4 @@
-import rehypePrettyCode from "rehype-pretty-code";
+import rehypeHighlight from "rehype-highlight";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 import Markdown from "react-markdown";
@@ -9,14 +9,6 @@ import type { Components } from "react-markdown";
 
 type MarkdownContentProps = {
   markdown: string;
-};
-
-const prettyCodeOptions = {
-  theme: {
-    light: "github-light",
-    dark: "github-dark",
-  },
-  keepBackground: false,
 };
 
 const components: Components = {
@@ -77,7 +69,7 @@ export function MarkdownContent({ markdown }: MarkdownContentProps) {
     >
       <Markdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeSlug, [rehypePrettyCode, prettyCodeOptions]]}
+        rehypePlugins={[rehypeSlug, rehypeHighlight]}
         components={components}
       >
         {markdown}

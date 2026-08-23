@@ -162,14 +162,18 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         </header>
 
         <div className="relative mb-6 sm:mb-10 aspect-video w-full overflow-hidden rounded-xl">
-          <ProtectedCover
-            src={getCoverSrc(article.coverImageUrl, article.title, locale)}
-            alt={article.title}
-            fill
-            priority
-            sizes="(max-width: 1152px) 100vw, 1152px"
-            className="select-none object-cover"
-          />
+          {article.coverImageUrl ? (
+            <ProtectedCover
+              src={getCoverSrc(article.coverImageUrl, article.title, locale)}
+              alt={article.title}
+              fill
+              priority
+              sizes="(max-width: 1152px) 100vw, 1152px"
+              className="select-none object-cover"
+            />
+          ) : (
+            <div className="h-64 w-full rounded-xl bg-gradient-to-br from-primary/30 via-primary/10 to-muted sm:h-80 lg:h-96" />
+          )}
         </div>
 
         <div className="xl:hidden mb-8">

@@ -44,10 +44,7 @@ const SIDEBAR_COLLAPSED_WIDTH = 72;
 export function AdminShell({ children, userName, userEmail }: AdminShellProps) {
   const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return localStorage.getItem("admin-sidebar-collapsed") === "true";
-  });
+  const [collapsed, setCollapsed] = useState(false);
   const initial = (userName ?? userEmail ?? "A").charAt(0).toUpperCase();
   const currentLabel = getCurrentNavLabel(pathname);
 
@@ -56,6 +53,13 @@ export function AdminShell({ children, userName, userEmail }: AdminShellProps) {
     setPrevPathname(pathname);
     setDrawerOpen(false);
   }
+
+  useEffect(() => {
+    const saved = localStorage.getItem("admin-sidebar-collapsed");
+    if (saved !== "true") return;
+    const raf = requestAnimationFrame(() => setCollapsed(true));
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   const toggleCollapsed = useCallback(() => {
     setCollapsed((prev) => {

@@ -13,8 +13,29 @@ export function slugify(input: string): string {
     .replace(/-+/g, "-");
 }
 
+const FRONTMATTER_KEY =
+  /^\s*(title|excerpt|meta_title|metaTitle|meta_description|metaDescription|category|tags|reading_time|readingTime|slug|cover|cover_image|coverImage|cover_image_url|coverImageUrl|published_at|publishedAt|status)\s*[:=]/i;
+
+export function stripFrontmatter(markdown: string): string {
+  let text = markdown;
+  if (text.trimStart().startsWith("---")) {
+    const start = text.indexOf("---");
+    const end = text.indexOf("\n---", start + 3);
+    if (end !== -1) {
+      const nextLine = text.indexOf("\n", end + 1);
+      text = nextLine === -1 ? "" : text.slice(nextLine + 1);
+    }
+  }
+  const lines = text.split("\n");
+  let i = 0;
+  while (i < lines.length && (lines[i].trim() === "" || FRONTMATTER_KEY.test(lines[i]))) {
+    i++;
+  }
+  return lines.slice(i).join("\n").replace(/^\s+/, "");
+}
+
 export function calcReadingTime(markdown: string): number {
-  const words = markdown
+  const words = stripFrontmatter(markdown)
     .replace(/```[\s\S]*?```/g, " ")
     .replace(/[#*_>`~\-\[\]()!]/g, " ")
     .split(/\s+/)
@@ -32,7 +53,7 @@ export function formatDate(date: Date | string, locale: Locale): string {
 }
 
 export function excerptFrom(markdown: string, max = 160): string {
-  const plain = markdown
+  const plain = stripFrontmatter(markdown)
     .replace(/```[\s\S]*?```/g, "")
     .replace(/[#*_>`~\[\]()>!-]/g, " ")
     .replace(/\s+/g, " ")
@@ -51,7 +72,7 @@ function headingId(text: string): string {
 }
 
 export function extractHeadings(markdown: string): TocItem[] {
-  const withoutCode = markdown.replace(/```[\s\S]*?```/g, "");
+  const withoutCode = stripFrontmatter(markdown).replace(/```[\s\S]*?```/g, "");
   const items: TocItem[] = [];
   for (const match of withoutCode.matchAll(/^(#{2,4})\s+(.+)$/gm)) {
     const level = match[1].length;

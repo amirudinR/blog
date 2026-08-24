@@ -5,7 +5,7 @@ import { FieldValue, type DocumentData } from "firebase-admin/firestore";
 
 import { getAdminDb } from "@/lib/firebase/admin";
 import type { Locale } from "@/lib/i18n/config";
-import { calcReadingTime } from "@/lib/utils/blog";
+import { calcReadingTime, stripFrontmatter } from "@/lib/utils/blog";
 
 export type PostCardData = {
   id: string;
@@ -110,7 +110,9 @@ function normalizeTranslation(raw: unknown): TranslationContent {
   return {
     title: (data.title as string | undefined) ?? "",
     excerpt: (data.excerpt as string | null | undefined) ?? null,
-    contentMarkdown: (data.contentMarkdown as string | undefined) ?? "",
+    contentMarkdown: stripFrontmatter(
+      (data.contentMarkdown as string | undefined) ?? ""
+    ),
     metaTitle: (data.metaTitle as string | null | undefined) ?? null,
     metaDescription:
       (data.metaDescription as string | null | undefined) ?? null,

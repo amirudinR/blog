@@ -7,6 +7,7 @@
   "nav": {
     "home": "Home",
     "blog": "Blog",
+    "prophets": "Prophets",
     "about": "About",
     "search": "Search"
   },
@@ -53,6 +54,20 @@
   "tag": {
     "title": "Tag",
     "empty": "No posts with this tag yet."
+  },
+  "prophets": {
+    "title": "Stories of the Prophets",
+    "subtitle": "The journey of the prophets from Adam to Muhammad — complete stories with Quranic verses, transliteration, translation, and Jewish and Christian perspectives.",
+    "minRead": "min read",
+    "backToProphets": "Back to Prophets",
+    "chapter": "Chapter",
+    "prev": "Previous",
+    "next": "Next",
+    "groupQuran": "Prophets in the Quran",
+    "groupIslamic": "Other Islamic Figures",
+    "groupBridge": "Bridging Chapters",
+    "groupOther": "Jewish & Catholic Prophets",
+    "groupEpilogue": "Epilogue"
   },
   "about": {
     "title": "About Me",

@@ -21,6 +21,7 @@ type NavbarProps = {
 const NAV_LINKS = [
   { key: "home", href: "" },
   { key: "blog", href: "/blog" },
+  { key: "prophets", href: "/kisah-nabi" },
   { key: "about", href: "/tentang" },
 ] as const;
 

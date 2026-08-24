@@ -7,6 +7,7 @@
   "nav": {
     "home": "Beranda",
     "blog": "Blog",
+    "prophets": "Kisah Nabi",
     "about": "Tentang",
     "search": "Cari"
   },
@@ -53,6 +54,20 @@
   "tag": {
     "title": "Tag",
     "empty": "Belum ada artikel dengan tag ini."
+  },
+  "prophets": {
+    "title": "Kisah Para Nabi",
+    "subtitle": "Perjalanan para nabi dari Adam hingga Muhammad — kisah lengkap dengan dalil Al-Quran, transliterasi, terjemahan, serta perspektif Yahudi dan Nasrani.",
+    "minRead": "menit baca",
+    "backToProphets": "Kembali ke Kisah Nabi",
+    "chapter": "Chapter",
+    "prev": "Sebelumnya",
+    "next": "Selanjutnya",
+    "groupQuran": "Nabi dalam Al-Quran",
+    "groupIslamic": "Tokoh Islam Lainnya",
+    "groupBridge": "Chapter Penghubung",
+    "groupOther": "Nabi Yahudi & Katolik",
+    "groupEpilogue": "Epilog"
   },
   "about": {
     "title": "Tentang Saya",

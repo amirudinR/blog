@@ -474,6 +474,38 @@ export async function getTagsWithCount(locale: Locale): Promise<TagWithCount[]> 
   return rows;
 }
 
+export type TocArticle = {
+  slug: string;
+  title: string;
+  readingTime: number;
+  publishedAt: Date | null;
+  categoryName: string | null;
+};
+
+export async function getAllPostsForToc(
+  locale: Locale
+): Promise<TocArticle[]> {
+  const { posts, categoryNames } = await getCachedBlogData();
+  return sortPostsByPublishedDesc(
+    posts.filter(
+      (post) =>
+        post.status === "published" && Boolean(post.translations[locale])
+    )
+  ).map((post) => {
+    const translation = post.translations[locale]!;
+    return {
+      slug: post.slug,
+      title: translation.title,
+      readingTime:
+        (locale === "id" ? post.readingTimeId : post.readingTimeEn) ?? 1,
+      publishedAt: post.publishedAt,
+      categoryName: post.categoryId
+        ? localeName(categoryNames, post.categoryId, locale)
+        : null,
+    };
+  });
+}
+
 export async function getApprovedComments(
   postId: string
 ): Promise<CommentData[]> {

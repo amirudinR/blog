@@ -8,6 +8,7 @@
     "home": "Home",
     "blog": "Blog",
     "prophets": "Prophets",
+    "toc": "Contents",
     "about": "About",
     "search": "Search"
   },
@@ -54,6 +55,22 @@
   "tag": {
     "title": "Tag",
     "empty": "No posts with this tag yet."
+  },
+  "toc": {
+    "title": "Table of Contents",
+    "subtitle": "Explore all the content of this blog on one page — from the stories of the prophets to the latest articles.",
+    "navProphets": "Stories of the Prophets",
+    "navArticles": "Blog Articles",
+    "chapters": "chapters",
+    "articles": "articles",
+    "totalReading": "estimated total reading",
+    "hours": "hrs",
+    "minutes": "min",
+    "sectionOne": "Stories of the Prophets",
+    "sectionTwo": "Blog Articles",
+    "uncategorized": "Uncategorized",
+    "viewAll": "View all articles",
+    "backToTop": "Back to top"
   },
   "prophets": {
     "title": "Stories of the Prophets",

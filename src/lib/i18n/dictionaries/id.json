@@ -8,6 +8,7 @@
     "home": "Beranda",
     "blog": "Blog",
     "prophets": "Kisah Nabi",
+    "toc": "Daftar Isi",
     "about": "Tentang",
     "search": "Cari"
   },
@@ -54,6 +55,22 @@
   "tag": {
     "title": "Tag",
     "empty": "Belum ada artikel dengan tag ini."
+  },
+  "toc": {
+    "title": "Daftar Isi",
+    "subtitle": "Jelajahi seluruh konten blog ini dalam satu halaman — dari kisah para nabi hingga artikel-artikel terbaru.",
+    "navProphets": "Kisah Para Nabi",
+    "navArticles": "Artikel Blog",
+    "chapters": "chapter",
+    "articles": "artikel",
+    "totalReading": "estimasi total baca",
+    "hours": "jam",
+    "minutes": "mnt",
+    "sectionOne": "Kisah Para Nabi",
+    "sectionTwo": "Artikel Blog",
+    "uncategorized": "Tanpa Kategori",
+    "viewAll": "Lihat semua artikel",
+    "backToTop": "Kembali ke atas"
   },
   "prophets": {
     "title": "Kisah Para Nabi",

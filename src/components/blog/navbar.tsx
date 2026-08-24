@@ -22,6 +22,7 @@ const NAV_LINKS = [
   { key: "home", href: "" },
   { key: "blog", href: "/blog" },
   { key: "prophets", href: "/kisah-nabi" },
+  { key: "toc", href: "/daftar-isi" },
   { key: "about", href: "/tentang" },
 ] as const;
 

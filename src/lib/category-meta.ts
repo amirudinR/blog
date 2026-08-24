@@ -93,4 +93,19 @@ export const CATEGORY_META: Record<string, CategoryMeta> = {
       { slug: "powerpoint", labelId: "PowerPoint", labelEn: "PowerPoint" },
     ],
   },
+  akademik: {
+    slug: "akademik",
+    taglineId: "Skripsi Lancar, Referensi Beres",
+    taglineEn: "Smooth Thesis, Sorted References",
+    descId:
+      "Mendeley, Zotero, Turnitin, Overleaf, sampai SPSS — semua alat skripsi dijelaskan langkah demi langkah biar wisuda tepat waktu.",
+    descEn:
+      "Mendeley, Zotero, Turnitin, Overleaf, to SPSS — every thesis tool explained step by step so you graduate on time.",
+    svg: "/images/topics/akademik-alt.svg",
+    gradient: "from-[#8a5a44] via-[#33241c] to-[#c2593a]",
+    subcategories: [
+      { slug: "mendeley", labelId: "Mendeley", labelEn: "Mendeley" },
+      { slug: "alat-skripsi", labelId: "Alat Skripsi", labelEn: "Thesis Tools" },
+    ],
+  },
 };

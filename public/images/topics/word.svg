@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+<rect width="800" height="500" rx="24" fill="#faf6f0"/>
+<circle cx="92" cy="88" r="62" fill="#eed7c6" fill-opacity=".55"/>
+<circle cx="716" cy="418" r="84" fill="#eed7c6" fill-opacity=".5"/>
+<circle cx="696" cy="102" r="24" fill="none" stroke="#c2593a" stroke-opacity=".35" stroke-width="7"/>
+<circle cx="126" cy="396" r="11" fill="#c2593a" fill-opacity=".3"/>
+<circle cx="676" cy="262" r="9" fill="#8a5a44" fill-opacity=".5"/>
+<rect x="272" y="82" width="304" height="376" rx="16" fill="#eed7c6"/>
+<path d="M276 64h232l44 44v316a14 14 0 0 1-14 14H276a14 14 0 0 1-14-14V78a14 14 0 0 1 14-14Z" fill="#ffffff"/>
+<path d="M508 64l44 44h-44Z" fill="#eed7c6"/>
+<rect x="296" y="104" width="176" height="20" rx="10" fill="#c2593a"/>
+<path d="M486 94h12M486 132h12M492 94v38" stroke="#33241c" stroke-width="4" stroke-linecap="round"/>
+<rect x="296" y="142" width="112" height="12" rx="6" fill="#8a5a44"/>
+<rect x="296" y="172" width="216" height="12" rx="6" fill="#eed7c6"/>
+<rect x="296" y="196" width="196" height="12" rx="6" fill="#eed7c6"/>
+<rect x="296" y="220" width="228" height="12" rx="6" fill="#eed7c6"/>
+<path d="M296 248q10-9 20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0" fill="none" stroke="#c2593a" stroke-width="4" stroke-linecap="round"/>
+<rect x="296" y="276" width="222" height="12" rx="6" fill="#eed7c6"/>
+<rect x="296" y="300" width="204" height="12" rx="6" fill="#eed7c6"/>
+<rect x="296" y="324" width="230" height="12" rx="6" fill="#eed7c6"/>
+<rect x="296" y="356" width="150" height="12" rx="6" fill="#eed7c6"/>
+<rect x="296" y="380" width="184" height="12" rx="6" fill="#eed7c6"/>
+<circle cx="176" cy="212" r="46" fill="#c2593a"/>
+<path d="M0 -14 11 12H6.4L4.3 6H-4.3L-6.4 12H-11ZM0 -2.5 -3 -9.5H3Z" fill-rule="evenodd" fill="#faf6f0" transform="translate(176 213) scale(1.5)"/>
+<circle cx="636" cy="178" r="34" fill="#ffffff"/>
+<path d="M0 -14 11 12H6.4L4.3 6H-4.3L-6.4 12H-11ZM0 -2.5 -3 -9.5H3Z" fill-rule="evenodd" fill="#33241c" transform="translate(636 179) scale(1.05)"/>
+</svg>

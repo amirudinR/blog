@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+<rect width="800" height="500" rx="24" fill="#faf6f0"/>
+<circle cx="72" cy="72" r="40" fill="#eed7c6" opacity=".5"/>
+<circle cx="742" cy="436" r="54" fill="#eed7c6" opacity=".6"/>
+<circle cx="60" cy="420" r="13" fill="#c2593a" opacity=".18"/>
+<circle cx="736" cy="70" r="12" fill="#8a5a44" opacity=".22"/>
+<circle cx="648" cy="332" r="52" fill="#eed7c6"/>
+<polygon points="596,428 700,428 648,338" fill="#c2593a"/>
+<path d="M160 336C270 146 402 434 520 226C566 148 618 142 662 176" fill="none" stroke="#c2593a" stroke-width="6" stroke-linecap="round"/>
+<g stroke="#33241c" stroke-width="2.5">
+<line x1="160" y1="336" x2="270" y2="146"/>
+<line x1="520" y1="226" x2="402" y2="434"/>
+<line x1="520" y1="226" x2="566" y2="148"/>
+<line x1="662" y1="176" x2="618" y2="142"/>
+</g>
+<g fill="#ffffff" stroke="#33241c" stroke-width="2.5">
+<circle cx="270" cy="146" r="6"/>
+<circle cx="402" cy="434" r="6"/>
+<circle cx="566" cy="148" r="6"/>
+<circle cx="618" cy="142" r="6"/>
+</g>
+<g stroke="#33241c" stroke-width="3">
+<rect x="153" y="329" width="14" height="14" fill="#ffffff"/>
+<rect x="513" y="219" width="14" height="14" fill="#ffffff"/>
+<rect x="655" y="169" width="14" height="14" fill="#c2593a"/>
+</g>
+<g transform="translate(700 128) rotate(45)">
+<path d="M0 46L-14 6C-14 -12 14 -12 14 6Z" fill="#ffffff" stroke="#33241c" stroke-width="4" stroke-linejoin="round"/>
+<line x1="0" y1="42" x2="0" y2="4" stroke="#33241c" stroke-width="3"/>
+<circle cx="0" cy="-1" r="5" fill="#c2593a"/>
+</g>
+<g stroke="#33241c" stroke-width="2.5">
+<rect x="150" y="424" width="28" height="28" rx="7" fill="#c2593a"/>
+<rect x="188" y="424" width="28" height="28" rx="7" fill="#eed7c6"/>
+<rect x="226" y="424" width="28" height="28" rx="7" fill="#8a5a44"/>
+<rect x="264" y="424" width="28" height="28" rx="7" fill="#ffffff"/>
+<rect x="302" y="424" width="28" height="28" rx="7" fill="#33241c"/>
+<rect x="340" y="424" width="28" height="28" rx="7" fill="#faf6f0"/>
+</g>
+</svg>

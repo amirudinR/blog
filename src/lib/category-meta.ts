@@ -108,4 +108,19 @@ export const CATEGORY_META: Record<string, CategoryMeta> = {
       { slug: "alat-skripsi", labelId: "Alat Skripsi", labelEn: "Thesis Tools" },
     ],
   },
+  desain: {
+    slug: "desain",
+    taglineId: "Dari Nol Jago Desain",
+    taglineEn: "From Zero to Design Pro",
+    descId:
+      "Photoshop dan CorelDRAW dipecah jadi tutorial praktis: edit foto, efek keren, sampai file siap cetak yang diterima percetakan.",
+    descEn:
+      "Photoshop and CorelDRAW broken into practical tutorials: photo editing, cool effects, and print-ready files printers accept.",
+    svg: "/images/topics/desain-alt.svg",
+    gradient: "from-[#33241c] via-[#8a5a44] to-[#d97b52]",
+    subcategories: [
+      { slug: "photoshop", labelId: "Photoshop", labelEn: "Photoshop" },
+      { slug: "coreldraw", labelId: "CorelDRAW", labelEn: "CorelDRAW" },
+    ],
+  },
 };

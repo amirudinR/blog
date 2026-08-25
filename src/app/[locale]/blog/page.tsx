@@ -1,18 +1,18 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { ArrowUp, Newspaper, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 import { EmptyState } from "@/components/blog/empty-state";
-import { Pagination } from "@/components/blog/pagination";
-import { PostCard } from "@/components/blog/post-card";
-import { Newspaper, X } from "lucide-react";
 import {
+  buildTopicGroups,
+  GroupedArticleList,
+} from "@/components/blog/grouped-article-list";
+import {
+  getAllPostsFiltered,
   getCategoriesWithCount,
-  getLatestPosts,
   getTagsWithCount,
-  listPostsByCategory,
-  listPostsByTag,
 } from "@/lib/db/queries";
 import { isValidLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
@@ -21,19 +21,8 @@ export const revalidate = 60;
 
 type BlogListPageProps = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ page?: string; kategori?: string; tag?: string }>;
+  searchParams: Promise<{ kategori?: string; tag?: string }>;
 };
-
-function buildPageHref(
-  filters: { kategori?: string; tag?: string },
-  page: number
-): string {
-  const sp = new URLSearchParams();
-  if (filters.kategori) sp.set("kategori", filters.kategori);
-  if (filters.tag) sp.set("tag", filters.tag);
-  sp.set("page", String(page));
-  return `/blog?${sp.toString()}`;
-}
 
 export default async function BlogListPage({
   params,
@@ -44,15 +33,10 @@ export default async function BlogListPage({
   const dict = await getDictionary(locale);
 
   const sp = await searchParams;
-  const page = Number(sp.page) || 1;
   const filters = { kategori: sp.kategori, tag: sp.tag };
 
-  const [result, categories, tags] = await Promise.all([
-    sp.kategori
-      ? listPostsByCategory(sp.kategori, locale, page)
-      : sp.tag
-        ? listPostsByTag(sp.tag, locale, page)
-        : getLatestPosts(locale, page),
+  const [posts, categories, tags] = await Promise.all([
+    getAllPostsFiltered(locale, filters),
     getCategoriesWithCount(locale),
     getTagsWithCount(locale),
   ]);
@@ -64,8 +48,10 @@ export default async function BlogListPage({
     ? tags.find((t) => t.slug === filters.tag)?.name
     : null;
 
+  const groups = buildTopicGroups(posts, dict.toc.uncategorized, locale);
+
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:py-12 sm:px-6">
+    <div id="top" className="mx-auto w-full max-w-6xl px-4 py-8 sm:py-12 sm:px-6">
       <div className="mb-10">
         <h1 className="font-heading text-2xl font-bold tracking-tight sm:text-4xl">
           {dict.blog.title}
@@ -138,21 +124,47 @@ export default async function BlogListPage({
             </div>
           )}
 
-          {result.posts.length > 0 ? (
-            <div className="grid gap-6 sm:grid-cols-2">
-              {result.posts.map((post) => (
-                <PostCard key={post.id} post={post} locale={locale} />
-              ))}
-            </div>
+          {posts.length > 0 ? (
+            <>
+              {groups.length > 1 && (
+                <nav
+                  aria-label={dict.blog.categories}
+                  className="mb-8 flex flex-wrap gap-2"
+                >
+                  {groups.map((group) => (
+                    <a
+                      key={group.anchor}
+                      href={`#${group.anchor}`}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card px-3 py-1 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
+                    >
+                      {group.name}
+                      <span className="tabular-nums text-muted-foreground/70">
+                        {group.articleCount}
+                      </span>
+                    </a>
+                  ))}
+                </nav>
+              )}
+
+              <GroupedArticleList
+                groups={groups}
+                locale={locale}
+                minutesLabel={dict.toc.minutes}
+              />
+
+              <div className="mt-12 border-t border-border/70 pt-6 text-center">
+                <a
+                  href="#top"
+                  className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
+                >
+                  <ArrowUp className="size-4" aria-hidden />
+                  {dict.toc.backToTop}
+                </a>
+              </div>
+            </>
           ) : (
             <EmptyState icon={Newspaper} message={dict.blog.empty} />
           )}
-
-          <Pagination
-            page={result.page}
-            totalPages={result.totalPages}
-            baseHref={buildPageHref(filters, 1).replace(/page=\d+/, "")}
-          />
         </div>
 
         <aside className="hidden lg:block">

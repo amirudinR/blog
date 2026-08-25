@@ -506,6 +506,35 @@ export async function getAllPostsForToc(
   });
 }
 
+export async function getAllPostsFiltered(
+  locale: Locale,
+  filters: { kategori?: string | null; tag?: string | null } = {}
+): Promise<TocArticle[]> {
+  const { posts, categoryNames } = await getCachedBlogData();
+  return sortPostsByPublishedDesc(
+    posts.filter((post) => {
+      if (post.status !== "published") return false;
+      if (!post.translations[locale]) return false;
+      if (filters.kategori && post.categoryId !== filters.kategori)
+        return false;
+      if (filters.tag && !post.tagIds.includes(filters.tag)) return false;
+      return true;
+    })
+  ).map((post) => {
+    const translation = post.translations[locale]!;
+    return {
+      slug: post.slug,
+      title: translation.title,
+      readingTime:
+        (locale === "id" ? post.readingTimeId : post.readingTimeEn) ?? 1,
+      publishedAt: post.publishedAt,
+      categoryName: post.categoryId
+        ? localeName(categoryNames, post.categoryId, locale)
+        : null,
+    };
+  });
+}
+
 export async function getApprovedComments(
   postId: string
 ): Promise<CommentData[]> {

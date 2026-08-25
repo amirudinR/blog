@@ -7,6 +7,8 @@ import { getAdminDb } from "@/lib/firebase/admin";
 import type { Locale } from "@/lib/i18n/config";
 import { calcReadingTime, stripFrontmatter } from "@/lib/utils/blog";
 
+import rawSnapshot from "./blog-data-snapshot.json";
+
 export type PostCardData = {
   id: string;
   slug: string;
@@ -161,6 +163,32 @@ type BlogData = {
 
 let lastKnownGood: BlogData | null = null;
 
+type SnapshotFile = {
+  posts?: { id: string; data: Record<string, unknown> }[];
+  categories?: { id: string; nameId?: string; nameEn?: string }[];
+  tags?: { id: string; nameId?: string; nameEn?: string }[];
+};
+
+function restoreSnapshot(): BlogData | null {
+  const raw = rawSnapshot as SnapshotFile;
+  if (!raw.posts || raw.posts.length === 0) return null;
+  return {
+    posts: raw.posts.map((p) => normalizePost(p.id, p.data as DocumentData)),
+    categoryNames: Object.fromEntries(
+      (raw.categories ?? []).map((c) => [
+        c.id,
+        { nameId: c.nameId ?? "", nameEn: c.nameEn ?? "" },
+      ])
+    ),
+    tagNames: Object.fromEntries(
+      (raw.tags ?? []).map((t) => [
+        t.id,
+        { nameId: t.nameId ?? "", nameEn: t.nameEn ?? "" },
+      ])
+    ),
+  };
+}
+
 async function fetchBlogData(): Promise<BlogData> {
   try {
     const [postsSnap, catSnap, tagSnap] = await Promise.all([
@@ -194,6 +222,8 @@ async function fetchBlogData(): Promise<BlogData> {
     return data;
   } catch (error) {
     if (lastKnownGood) return lastKnownGood;
+    const restored = restoreSnapshot();
+    if (restored) return restored;
     throw error;
   }
 }
@@ -310,11 +340,7 @@ export async function listPostsByCategory(
   perPage = 9
 ): Promise<PaginatedPosts> {
   const { posts, categoryNames } = await getCachedBlogData();
-  const catSnap = await getAdminDb()
-    .collection(CATEGORIES)
-    .doc(categorySlug)
-    .get();
-  if (!catSnap.exists) {
+  if (!categoryNames[categorySlug]) {
     return { posts: [], total: 0, page: 1, perPage, totalPages: 1 };
   }
   const filtered = posts.filter((post) => post.categoryId === categorySlug);
@@ -327,9 +353,8 @@ export async function listPostsByTag(
   page = 1,
   perPage = 9
 ): Promise<PaginatedPosts> {
-  const { posts, categoryNames } = await getCachedBlogData();
-  const tagSnap = await getAdminDb().collection(TAGS).doc(tagSlug).get();
-  if (!tagSnap.exists) {
+  const { posts, categoryNames, tagNames } = await getCachedBlogData();
+  if (!tagNames[tagSlug]) {
     return { posts: [], total: 0, page: 1, perPage, totalPages: 1 };
   }
   const filtered = posts.filter((post) => post.tagIds.includes(tagSlug));
@@ -362,15 +387,9 @@ export async function getPostBySlug(
   slug: string,
   locale: Locale
 ): Promise<ArticleData | null> {
-  const snap = await postsCollection()
-    .where("slug", "==", slug)
-    .where("status", "==", "published")
-    .limit(1)
-    .get();
-  const doc = snap.docs[0];
-  if (!doc) return null;
-
-  const post = normalizePost(doc.id, doc.data());
+  const { posts, categoryNames, tagNames } = await getCachedBlogData();
+  const post = posts.find((candidate) => candidate.slug === slug);
+  if (!post) return null;
 
   let availableLocale: Locale = locale;
   let translation = post.translations[locale];
@@ -380,13 +399,10 @@ export async function getPostBySlug(
   }
   if (!translation) return null;
 
-  let categoryName: string | null = null;
-  if (post.categoryId) {
-    const { categoryNames } = await getCachedBlogData();
-    categoryName = localeName(categoryNames, post.categoryId, availableLocale);
-  }
+  const categoryName = post.categoryId
+    ? localeName(categoryNames, post.categoryId, availableLocale)
+    : null;
 
-  const { tagNames } = await getCachedBlogData();
   const tags = post.tagIds.flatMap((tagSlug) => {
     const entry = tagNames[tagSlug];
     if (!entry) return [];
@@ -544,32 +560,56 @@ export async function getAllPostsFiltered(
   });
 }
 
+const lastKnownComments = new Map<string, CommentData[]>();
+
+async function fetchApprovedComments(postId: string): Promise<CommentData[]> {
+  try {
+    const snap = await getAdminDb()
+      .collection(COMMENTS)
+      .where("postId", "==", postId)
+      .where("status", "==", "approved")
+      .get();
+    const rows = snap.docs.map((doc) => ({
+      id: doc.id,
+      authorName: (doc.get("authorName") as string | undefined) ?? "",
+      content: (doc.get("content") as string | undefined) ?? "",
+      createdAt: toRequiredDate(doc.get("createdAt")),
+    }));
+    rows.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    const result = rows.map((row) => ({
+      ...row,
+      id: row.id as unknown as number,
+    }));
+    lastKnownComments.set(postId, result);
+    return result;
+  } catch {
+    return lastKnownComments.get(postId) ?? [];
+  }
+}
+
+function getCachedApprovedComments(postId: string): Promise<CommentData[]> {
+  return unstable_cache(fetchApprovedComments, ["approved-comments-v1"], {
+    revalidate: 300,
+    tags: ["comments"],
+  })(postId);
+}
+
 export async function getApprovedComments(
   postId: string
 ): Promise<CommentData[]> {
-  const snap = await getAdminDb()
-    .collection(COMMENTS)
-    .where("postId", "==", postId)
-    .where("status", "==", "approved")
-    .get();
-  const rows = snap.docs.map((doc) => ({
-    id: doc.id,
-    authorName: (doc.get("authorName") as string | undefined) ?? "",
-    content: (doc.get("content") as string | undefined) ?? "",
-    createdAt: toRequiredDate(doc.get("createdAt")),
-  }));
-  rows.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-  return rows.map((row) => ({
-    ...row,
-    id: row.id as unknown as number,
-  }));
+  return getCachedApprovedComments(postId);
 }
 
 export async function incrementViews(postId: string): Promise<void> {
-  const ref = postsCollection().doc(postId);
-  const snap = await ref.get();
-  if (!snap.exists) return;
-  await ref.update({ viewsCount: FieldValue.increment(1) });
+  try {
+    const { posts } = await getCachedBlogData();
+    if (!posts.some((post) => post.id === postId)) return;
+    await postsCollection()
+      .doc(postId)
+      .set({ viewsCount: FieldValue.increment(1) }, { merge: true });
+  } catch {
+    // view counting is best-effort telemetry
+  }
 }
 
 export async function getAllPublishedSlugs(): Promise<

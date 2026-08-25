@@ -220,6 +220,7 @@ export async function moderateComment(
 
   try {
     await setCommentStatus(id, status);
+    updateTag("comments");
     revalidatePath("/admin/comments");
     revalidatePath("/admin");
     return { ok: true };
@@ -237,6 +238,7 @@ export async function removeComment(id: number): Promise<ActionResult> {
 
   try {
     await deleteCommentById(id);
+    updateTag("comments");
     revalidatePath("/admin/comments");
     revalidatePath("/admin");
     return { ok: true };

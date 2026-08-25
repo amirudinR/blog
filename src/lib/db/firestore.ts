@@ -220,18 +220,18 @@ async function fetchBlogData(): Promise<BlogData> {
     };
     lastKnownGood = data;
     return data;
-  } catch (error) {
+  } catch {
     if (lastKnownGood) return lastKnownGood;
     const restored = restoreSnapshot();
     if (restored) return restored;
-    throw error;
+    return { posts: [], categoryNames: {}, tagNames: {} };
   }
 }
 
 export const getCachedBlogData = unstable_cache(
   fetchBlogData,
   ["blog-data-v1"],
-  { revalidate: 1800, tags: ["posts"] }
+  { revalidate: 3600, tags: ["posts"] }
 );
 
 function publishTime(post: PostRecord): number {

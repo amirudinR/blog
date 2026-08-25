@@ -159,40 +159,49 @@ type BlogData = {
   tagNames: TaxonomyNames;
 };
 
-async function fetchBlogData(): Promise<BlogData> {
-  const [postsSnap, catSnap, tagSnap] = await Promise.all([
-    postsCollection().where("status", "==", "published").get(),
-    getAdminDb().collection(CATEGORIES).get(),
-    getAdminDb().collection(TAGS).get(),
-  ]);
+let lastKnownGood: BlogData | null = null;
 
-  return {
-    posts: postsSnap.docs.map((doc) => normalizePost(doc.id, doc.data())),
-    categoryNames: Object.fromEntries(
-      catSnap.docs.map((d) => [
-        d.id,
-        {
-          nameId: (d.get("nameId") as string | undefined) ?? "",
-          nameEn: (d.get("nameEn") as string | undefined) ?? "",
-        },
-      ])
-    ),
-    tagNames: Object.fromEntries(
-      tagSnap.docs.map((d) => [
-        d.id,
-        {
-          nameId: (d.get("nameId") as string | undefined) ?? "",
-          nameEn: (d.get("nameEn") as string | undefined) ?? "",
-        },
-      ])
-    ),
-  };
+async function fetchBlogData(): Promise<BlogData> {
+  try {
+    const [postsSnap, catSnap, tagSnap] = await Promise.all([
+      postsCollection().where("status", "==", "published").get(),
+      getAdminDb().collection(CATEGORIES).get(),
+      getAdminDb().collection(TAGS).get(),
+    ]);
+
+    const data: BlogData = {
+      posts: postsSnap.docs.map((doc) => normalizePost(doc.id, doc.data())),
+      categoryNames: Object.fromEntries(
+        catSnap.docs.map((d) => [
+          d.id,
+          {
+            nameId: (d.get("nameId") as string | undefined) ?? "",
+            nameEn: (d.get("nameEn") as string | undefined) ?? "",
+          },
+        ])
+      ),
+      tagNames: Object.fromEntries(
+        tagSnap.docs.map((d) => [
+          d.id,
+          {
+            nameId: (d.get("nameId") as string | undefined) ?? "",
+            nameEn: (d.get("nameEn") as string | undefined) ?? "",
+          },
+        ])
+      ),
+    };
+    lastKnownGood = data;
+    return data;
+  } catch (error) {
+    if (lastKnownGood) return lastKnownGood;
+    throw error;
+  }
 }
 
 export const getCachedBlogData = unstable_cache(
   fetchBlogData,
   ["blog-data-v1"],
-  { revalidate: 60, tags: ["posts"] }
+  { revalidate: 1800, tags: ["posts"] }
 );
 
 function publishTime(post: PostRecord): number {

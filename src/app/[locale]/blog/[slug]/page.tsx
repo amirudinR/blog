@@ -11,6 +11,7 @@ import { ReadingProgress } from "@/components/blog/reading-progress";
 import { RelatedPosts } from "@/components/blog/related-posts";
 import { ShareButtons } from "@/components/blog/share-buttons";
 import { TableOfContents } from "@/components/blog/toc";
+import { TextToSpeech } from "@/components/blog/text-to-speech";
 import { ViewCounter } from "@/components/blog/view-counter";
 import { SITE_NAME, SITE_URL } from "@/lib/constants";
 import {
@@ -21,7 +22,12 @@ import {
 } from "@/lib/db/queries";
 import { isValidLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
-import { extractHeadings, formatDate, getCoverSrc } from "@/lib/utils/blog";
+import {
+  extractHeadings,
+  formatDate,
+  getCoverSrc,
+  markdownToSpeechText,
+} from "@/lib/utils/blog";
 
 type ArticlePageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -157,6 +163,20 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 #{tag.name}
               </Link>
             ))}
+          </div>
+          <div className="mt-5">
+            <TextToSpeech
+              text={markdownToSpeechText(article.contentMarkdown)}
+              locale={locale}
+              labels={{
+                listen: dict.blog.ttsListen,
+                pause: dict.blog.ttsPause,
+                resume: dict.blog.ttsResume,
+                stop: dict.blog.ttsStop,
+                speed: dict.blog.ttsSpeed,
+                partOf: dict.blog.ttsPartOf,
+              }}
+            />
           </div>
           <ViewCounter postId={article.id} />
         </header>

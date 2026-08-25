@@ -8,6 +8,7 @@ import { MarkdownContent } from "@/components/blog/markdown-content";
 import { ReadingProgress } from "@/components/blog/reading-progress";
 import { ShareButtons } from "@/components/blog/share-buttons";
 import { TableOfContents } from "@/components/blog/toc";
+import { TextToSpeech } from "@/components/blog/text-to-speech";
 import { SITE_NAME, SITE_URL } from "@/lib/constants";
 import {
   getAllProphetSlugs,
@@ -16,6 +17,7 @@ import {
 } from "@/lib/content/prophets";
 import { isValidLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { markdownToSpeechText } from "@/lib/utils/blog";
 
 type ChapterPageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -111,6 +113,20 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
               <Clock className="size-4" aria-hidden />
               {chapter.readingTime} {dict.prophets.minRead}
             </span>
+          </div>
+          <div className="mt-5">
+            <TextToSpeech
+              text={markdownToSpeechText(chapter.content)}
+              locale={locale}
+              labels={{
+                listen: dict.blog.ttsListen,
+                pause: dict.blog.ttsPause,
+                resume: dict.blog.ttsResume,
+                stop: dict.blog.ttsStop,
+                speed: dict.blog.ttsSpeed,
+                partOf: dict.blog.ttsPartOf,
+              }}
+            />
           </div>
         </header>
 

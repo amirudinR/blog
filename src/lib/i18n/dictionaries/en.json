@@ -46,7 +46,13 @@
     "tags": "Tags",
     "allCategories": "All Categories",
     "filtering": "Showing",
-    "clearFilter": "Clear filter"
+    "clearFilter": "Clear filter",
+    "ttsListen": "Listen",
+    "ttsPause": "Pause",
+    "ttsResume": "Resume",
+    "ttsStop": "Stop",
+    "ttsSpeed": "Speech speed",
+    "ttsPartOf": "Part {current} of {total}"
   },
   "category": {
     "title": "Category",

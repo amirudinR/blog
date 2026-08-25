@@ -63,6 +63,26 @@ export function excerptFrom(markdown: string, max = 160): string {
 
 export type TocItem = { id: string; text: string; level: number };
 
+export function markdownToSpeechText(markdown: string): string {
+  return stripFrontmatter(markdown)
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/`([^`]*)`/g, "$1")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/^\s{0,3}#{1,6}\s+/gm, "")
+    .replace(/^\s*>\s?/gm, "")
+    .replace(/^\s*(?:[-*+]|\d+[.)])\s+/gm, "")
+    .replace(/[*_~]+/g, "")
+    .replace(/\|/g, " ")
+    .replace(/<[^>]+>/g, " ")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .join(". ")
+    .replace(/\.{2,}/g, ".")
+    .trim();
+}
+
 function headingId(text: string): string {
   return text
     .toLowerCase()

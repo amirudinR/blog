@@ -46,7 +46,13 @@
     "tags": "Tag",
     "allCategories": "Semua Kategori",
     "filtering": "Menampilkan",
-    "clearFilter": "Hapus filter"
+    "clearFilter": "Hapus filter",
+    "ttsListen": "Dengarkan",
+    "ttsPause": "Jeda",
+    "ttsResume": "Lanjutkan",
+    "ttsStop": "Berhenti",
+    "ttsSpeed": "Kecepatan suara",
+    "ttsPartOf": "Bagian {current} dari {total}"
   },
   "category": {
     "title": "Kategori",

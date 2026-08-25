@@ -7,6 +7,7 @@ import {
   getProphetChapterList,
   type ProphetGroup,
 } from "@/lib/content/prophets";
+import { subgroupArticles } from "@/lib/content/toc-subgroups";
 import { getAllPostsForToc } from "@/lib/db/queries";
 import { isValidLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
@@ -213,34 +214,55 @@ export default async function TocPage({ params }: TocPageProps) {
           </p>
         ) : (
           <div className="space-y-8">
-            {[...groupedArticles.entries()].map(([categoryName, posts]) => (
-              <div key={categoryName}>
-                <h3 className="mb-3 flex items-baseline gap-2 text-sm font-semibold uppercase tracking-[0.15em] text-muted-foreground">
-                  {categoryName}
-                  <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium normal-case tracking-normal">
-                    {posts.length}
-                  </span>
-                </h3>
-                <ol className="overflow-hidden rounded-xl border border-border/70 bg-card">
-                  {posts.map((post) => (
-                    <li key={post.slug}>
-                      <Link
-                        href={`/${locale}/blog/${post.slug}`}
-                        className="group flex items-baseline gap-2.5 px-4 py-3 transition-colors hover:bg-accent/50"
-                      >
-                        <span className="min-w-0 truncate text-sm font-medium transition-colors group-hover:text-primary sm:text-[15px]">
-                          {post.title}
-                        </span>
-                        <Leader />
-                        <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
-                          {post.publishedAt ? formatDate(post.publishedAt, locale) : ""}
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            ))}
+            {[...groupedArticles.entries()].map(([categoryName, posts]) => {
+              const subgroups = subgroupArticles(posts, categoryName, locale);
+              return (
+                <div key={categoryName}>
+                  <h3 className="mb-3 flex items-baseline gap-2 text-sm font-semibold uppercase tracking-[0.15em] text-muted-foreground">
+                    {categoryName}
+                    <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium normal-case tracking-normal">
+                      {posts.length}
+                    </span>
+                  </h3>
+                  <div className="space-y-4">
+                    {subgroups.map((subgroup) => (
+                      <div key={subgroup.label ?? "_all"}>
+                        {subgroup.label ? (
+                          <h4 className="mb-2 flex items-center gap-2 pl-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground/80">
+                            <span
+                              className="inline-block size-1.5 rounded-full bg-primary/60"
+                              aria-hidden
+                            />
+                            {subgroup.label}
+                            <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium normal-case tracking-normal">
+                              {subgroup.articles.length}
+                            </span>
+                          </h4>
+                        ) : null}
+                        <ol className="overflow-hidden rounded-xl border border-border/70 bg-card">
+                          {subgroup.articles.map((post) => (
+                            <li key={post.slug}>
+                              <Link
+                                href={`/${locale}/blog/${post.slug}`}
+                                className="group flex items-baseline gap-2.5 px-4 py-3 transition-colors hover:bg-accent/50"
+                              >
+                                <span className="min-w-0 truncate text-sm font-medium transition-colors group-hover:text-primary sm:text-[15px]">
+                                  {post.title}
+                                </span>
+                                <Leader />
+                                <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
+                                  {post.publishedAt ? formatDate(post.publishedAt, locale) : ""}
+                                </span>
+                              </Link>
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
 
             <div className="text-center">
               <Link

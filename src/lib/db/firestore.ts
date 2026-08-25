@@ -155,13 +155,13 @@ async function fetchAllPosts(): Promise<PostRecord[]> {
   return snap.docs.map((doc) => normalizePost(doc.id, doc.data()));
 }
 
-type BlogData = {
+type ListData = {
   posts: PostRecord[];
   categoryNames: TaxonomyNames;
   tagNames: TaxonomyNames;
 };
 
-let lastKnownGood: BlogData | null = null;
+let lastKnownGoodList: ListData | null = null;
 
 type SnapshotFile = {
   posts?: { id: string; data: Record<string, unknown> }[];
@@ -169,68 +169,125 @@ type SnapshotFile = {
   tags?: { id: string; nameId?: string; nameEn?: string }[];
 };
 
-function restoreSnapshot(): BlogData | null {
+function stripContent(post: PostRecord): PostRecord {
+  const translations = Object.fromEntries(
+    Object.entries(post.translations).map(([locale, translation]) => [
+      locale,
+      translation
+        ? {
+            ...translation,
+            contentMarkdown: "",
+            metaTitle: null,
+            metaDescription: null,
+          }
+        : undefined,
+    ])
+  );
+  return { ...post, translations } as PostRecord;
+}
+
+function taxonomyFromSnapshot(
+  rows?: { id: string; nameId?: string; nameEn?: string }[]
+): TaxonomyNames {
+  return Object.fromEntries(
+    (rows ?? []).map((row) => [
+      row.id,
+      { nameId: row.nameId ?? "", nameEn: row.nameEn ?? "" },
+    ])
+  );
+}
+
+function restoreSnapshotList(): ListData | null {
   const raw = rawSnapshot as SnapshotFile;
   if (!raw.posts || raw.posts.length === 0) return null;
   return {
-    posts: raw.posts.map((p) => normalizePost(p.id, p.data as DocumentData)),
-    categoryNames: Object.fromEntries(
-      (raw.categories ?? []).map((c) => [
-        c.id,
-        { nameId: c.nameId ?? "", nameEn: c.nameEn ?? "" },
-      ])
+    posts: raw.posts.map((p) =>
+      stripContent(normalizePost(p.id, p.data as DocumentData))
     ),
-    tagNames: Object.fromEntries(
-      (raw.tags ?? []).map((t) => [
-        t.id,
-        { nameId: t.nameId ?? "", nameEn: t.nameEn ?? "" },
-      ])
-    ),
+    categoryNames: taxonomyFromSnapshot(raw.categories),
+    tagNames: taxonomyFromSnapshot(raw.tags),
   };
 }
 
-async function fetchBlogData(): Promise<BlogData> {
-  try {
-    const [postsSnap, catSnap, tagSnap] = await Promise.all([
-      postsCollection().where("status", "==", "published").get(),
-      getAdminDb().collection(CATEGORIES).get(),
-      getAdminDb().collection(TAGS).get(),
-    ]);
+let snapshotPostIndex: Map<string, PostRecord> | null = null;
 
-    const data: BlogData = {
-      posts: postsSnap.docs.map((doc) => normalizePost(doc.id, doc.data())),
-      categoryNames: Object.fromEntries(
-        catSnap.docs.map((d) => [
-          d.id,
-          {
-            nameId: (d.get("nameId") as string | undefined) ?? "",
-            nameEn: (d.get("nameEn") as string | undefined) ?? "",
-          },
-        ])
-      ),
-      tagNames: Object.fromEntries(
-        tagSnap.docs.map((d) => [
-          d.id,
-          {
-            nameId: (d.get("nameId") as string | undefined) ?? "",
-            nameEn: (d.get("nameEn") as string | undefined) ?? "",
-          },
-        ])
-      ),
-    };
-    lastKnownGood = data;
-    return data;
+function snapshotPostBySlug(slug: string): PostRecord | null {
+  const raw = rawSnapshot as SnapshotFile;
+  if (!raw.posts || raw.posts.length === 0) return null;
+  if (!snapshotPostIndex) {
+    snapshotPostIndex = new Map(
+      raw.posts.map((p) => {
+        const record = normalizePost(p.id, p.data as DocumentData);
+        return [record.slug, record];
+      })
+    );
+  }
+  return snapshotPostIndex.get(slug) ?? null;
+}
+
+async function fetchListDataStrict(): Promise<ListData> {
+  const [postsSnap, catSnap, tagSnap] = await Promise.all([
+    postsCollection().where("status", "==", "published").get(),
+    getAdminDb().collection(CATEGORIES).get(),
+    getAdminDb().collection(TAGS).get(),
+  ]);
+
+  const data: ListData = {
+    posts: postsSnap.docs.map((doc) =>
+      stripContent(normalizePost(doc.id, doc.data()))
+    ),
+    categoryNames: Object.fromEntries(
+      catSnap.docs.map((d) => [
+        d.id,
+        {
+          nameId: (d.get("nameId") as string | undefined) ?? "",
+          nameEn: (d.get("nameEn") as string | undefined) ?? "",
+        },
+      ])
+    ),
+    tagNames: Object.fromEntries(
+      tagSnap.docs.map((d) => [
+        d.id,
+        {
+          nameId: (d.get("nameId") as string | undefined) ?? "",
+          nameEn: (d.get("nameEn") as string | undefined) ?? "",
+        },
+      ])
+    ),
+  };
+  lastKnownGoodList = data;
+  return data;
+}
+
+const getCachedListDataStrict = unstable_cache(fetchListDataStrict, ["blog-list-v1"], {
+  revalidate: 3600,
+  tags: ["posts"],
+});
+
+export async function getBlogData(): Promise<ListData> {
+  try {
+    return await getCachedListDataStrict();
   } catch {
-    if (lastKnownGood) return lastKnownGood;
-    const restored = restoreSnapshot();
+    if (lastKnownGoodList) return lastKnownGoodList;
+    const restored = restoreSnapshotList();
     if (restored) return restored;
     return { posts: [], categoryNames: {}, tagNames: {} };
   }
 }
 
-export const getCachedBlogData = unstable_cache(
-  fetchBlogData,
-  ["blog-data-v1"],
+async function fetchPostBySlugStrict(slug: string): Promise<PostRecord | null> {
+  const snap = await postsCollection()
+    .where("slug", "==", slug)
+    .where("status", "==", "published")
+    .limit(1)
+    .get();
+  const doc = snap.docs[0];
+  return doc ? normalizePost(doc.id, doc.data()) : null;
+}
+
+const getCachedPostBySlugStrict = unstable_cache(
+  fetchPostBySlugStrict,
+  ["post-content-v1"],
   { revalidate: 3600, tags: ["posts"] }
 );
 
@@ -321,7 +378,7 @@ export async function getLatestPosts(
   page = 1,
   perPage = 9
 ): Promise<PaginatedPosts> {
-  const { posts, categoryNames } = await getCachedBlogData();
+  const { posts, categoryNames } = await getBlogData();
   return paginate(toCardRows(posts, locale, categoryNames), page, perPage);
 }
 
@@ -329,7 +386,7 @@ export async function getFeaturedPosts(
   locale: Locale,
   limit = 3
 ): Promise<PostCardData[]> {
-  const { posts, categoryNames } = await getCachedBlogData();
+  const { posts, categoryNames } = await getBlogData();
   return stripRows(toCardRows(posts, locale, categoryNames).slice(0, limit));
 }
 
@@ -339,7 +396,7 @@ export async function listPostsByCategory(
   page = 1,
   perPage = 9
 ): Promise<PaginatedPosts> {
-  const { posts, categoryNames } = await getCachedBlogData();
+  const { posts, categoryNames } = await getBlogData();
   if (!categoryNames[categorySlug]) {
     return { posts: [], total: 0, page: 1, perPage, totalPages: 1 };
   }
@@ -353,7 +410,7 @@ export async function listPostsByTag(
   page = 1,
   perPage = 9
 ): Promise<PaginatedPosts> {
-  const { posts, categoryNames, tagNames } = await getCachedBlogData();
+  const { posts, categoryNames, tagNames } = await getBlogData();
   if (!tagNames[tagSlug]) {
     return { posts: [], total: 0, page: 1, perPage, totalPages: 1 };
   }
@@ -368,15 +425,14 @@ export async function searchPosts(
   perPage = 9
 ): Promise<PaginatedPosts> {
   const term = q.trim().toLowerCase();
-  const { posts, categoryNames } = await getCachedBlogData();
+  const { posts, categoryNames } = await getBlogData();
   const filtered = term
     ? posts.filter((post) => {
         const translation = post.translations[locale];
         if (!translation) return false;
         return (
           translation.title.toLowerCase().includes(term) ||
-          (translation.excerpt?.toLowerCase().includes(term) ?? false) ||
-          translation.contentMarkdown.toLowerCase().includes(term)
+          (translation.excerpt?.toLowerCase().includes(term) ?? false)
         );
       })
     : posts;
@@ -387,9 +443,16 @@ export async function getPostBySlug(
   slug: string,
   locale: Locale
 ): Promise<ArticleData | null> {
-  const { posts, categoryNames, tagNames } = await getCachedBlogData();
-  const post = posts.find((candidate) => candidate.slug === slug);
+  let post: PostRecord | null = null;
+  try {
+    post = await getCachedPostBySlugStrict(slug);
+  } catch {
+    post = null;
+  }
+  if (!post) post = snapshotPostBySlug(slug);
   if (!post) return null;
+
+  const { categoryNames, tagNames } = await getBlogData();
 
   let availableLocale: Locale = locale;
   let translation = post.translations[locale];
@@ -442,7 +505,7 @@ export async function getRelatedPosts(
   locale: Locale,
   limit = 3
 ): Promise<PostCardData[]> {
-  const { posts, categoryNames } = await getCachedBlogData();
+  const { posts, categoryNames } = await getBlogData();
   const current = posts.find((post) => post.id === postId);
   const pool = toCardRows(posts, locale, categoryNames);
 
@@ -460,7 +523,7 @@ export async function getRelatedPosts(
 export async function getCategoriesWithCount(
   locale: Locale
 ): Promise<CategoryWithCount[]> {
-  const { posts, categoryNames } = await getCachedBlogData();
+  const { posts, categoryNames } = await getBlogData();
   const rows: CategoryWithCount[] = [];
   for (const [slug, names] of Object.entries(categoryNames)) {
     const postCount = posts.filter(
@@ -480,7 +543,7 @@ export async function getCategoriesWithCount(
 }
 
 export async function getTagsWithCount(locale: Locale): Promise<TagWithCount[]> {
-  const { posts, tagNames } = await getCachedBlogData();
+  const { posts, tagNames } = await getBlogData();
   const rows: TagWithCount[] = [];
   for (const [slug, names] of Object.entries(tagNames)) {
     const postCount = posts.filter(
@@ -510,7 +573,7 @@ export type TocArticle = {
 export async function getAllPostsForToc(
   locale: Locale
 ): Promise<TocArticle[]> {
-  const { posts, categoryNames } = await getCachedBlogData();
+  const { posts, categoryNames } = await getBlogData();
   return sortPostsByPublishedDesc(
     posts.filter(
       (post) =>
@@ -535,7 +598,7 @@ export async function getAllPostsFiltered(
   locale: Locale,
   filters: { kategori?: string | null; tag?: string | null } = {}
 ): Promise<TocArticle[]> {
-  const { posts, categoryNames } = await getCachedBlogData();
+  const { posts, categoryNames } = await getBlogData();
   return sortPostsByPublishedDesc(
     posts.filter((post) => {
       if (post.status !== "published") return false;
@@ -602,7 +665,7 @@ export async function getApprovedComments(
 
 export async function incrementViews(postId: string): Promise<void> {
   try {
-    const { posts } = await getCachedBlogData();
+    const { posts } = await getBlogData();
     if (!posts.some((post) => post.id === postId)) return;
     await postsCollection()
       .doc(postId)
@@ -615,16 +678,13 @@ export async function incrementViews(postId: string): Promise<void> {
 export async function getAllPublishedSlugs(): Promise<
   { slug: string; updatedAt: Date }[]
 > {
-  const snap = await postsCollection().where("status", "==", "published").get();
-  return snap.docs.map((doc) => {
-    const post = normalizePost(doc.id, doc.data());
-    return { slug: post.slug, updatedAt: post.updatedAt };
-  });
+  const { posts } = await getBlogData();
+  return posts.map((post) => ({ slug: post.slug, updatedAt: post.updatedAt }));
 }
 
 export async function isPublishedPost(postId: string): Promise<boolean> {
-  const snap = await postsCollection().doc(postId).get();
-  return snap.exists && snap.data()?.status === "published";
+  const { posts } = await getBlogData();
+  return posts.some((post) => post.id === postId);
 }
 
 export type AdminStats = {

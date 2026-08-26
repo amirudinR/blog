@@ -1,8 +1,5 @@
 import { notFound } from "next/navigation";
-import { ArrowUp, Newspaper } from "lucide-react";
 
-import { EmptyState } from "@/components/blog/empty-state";
-import { BlogFilter } from "@/components/blog/blog-filter";
 import {
   getAllPostsFiltered,
   getCategoriesWithCount,
@@ -10,6 +7,7 @@ import {
 } from "@/lib/db/queries";
 import { isValidLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { BlogFilterClient } from "@/components/blog/blog-filter-client";
 
 export const revalidate = 60;
 
@@ -35,13 +33,6 @@ export default async function BlogListPage({
     getTagsWithCount(locale),
   ]);
 
-  const activeCategoryName = filters.kategori
-    ? categories.find((c) => c.slug === filters.kategori)?.name
-    : null;
-  const activeTagName = filters.tag
-    ? tags.find((t) => t.slug === filters.tag)?.name
-    : null;
-
   const serializedPosts = posts.map((p) => ({
     slug: p.slug,
     title: p.title,
@@ -62,49 +53,23 @@ export default async function BlogListPage({
 
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_16rem]">
         <div>
-          {/* Active filter label */}
-          {(activeCategoryName || activeTagName) && (
-            <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
-              <span>{dict.blog.filtering}:</span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-0.5 font-medium text-primary">
-                {activeCategoryName ?? activeTagName}
-              </span>
-            </div>
-          )}
-
-          {posts.length > 0 ? (
-            <>
-              <BlogFilter
-                posts={serializedPosts}
-                categories={categories}
-                tags={tags}
-                locale={locale}
-                dictionary={{
-                  allCategories: dict.blog.allCategories,
-                  categories: dict.blog.categories,
-                  tags: dict.blog.tags,
-                  filtering: dict.blog.filtering,
-                  clearFilter: dict.blog.clearFilter,
-                  minutes: dict.toc.minutes,
-                  searchPlaceholder: dict.blog.searchPlaceholder,
-                }}
-                initialKategori={sp.kategori}
-                initialTag={sp.tag}
-              />
-
-              <div className="mt-12 border-t border-border/70 pt-6 text-center">
-                <a
-                  href="#top"
-                  className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
-                >
-                  <ArrowUp className="size-4" aria-hidden />
-                  {dict.toc.backToTop}
-                </a>
-              </div>
-            </>
-          ) : (
-            <EmptyState icon={Newspaper} message={dict.blog.empty} />
-          )}
+          <BlogFilterClient
+            posts={serializedPosts}
+            categories={categories}
+            tags={tags}
+            locale={locale}
+            dictionary={{
+              allCategories: dict.blog.allCategories,
+              categories: dict.blog.categories,
+              tags: dict.blog.tags,
+              filtering: dict.blog.filtering,
+              clearFilter: dict.blog.clearFilter,
+              minutes: dict.toc.minutes,
+              searchPlaceholder: dict.blog.searchPlaceholder,
+            }}
+            initialKategori={sp.kategori}
+            initialTag={sp.tag}
+          />
         </div>
 
         <aside className="hidden lg:block">
@@ -117,7 +82,7 @@ export default async function BlogListPage({
                 {categories.map((cat) => (
                   <a
                     key={cat.slug}
-                    href={`#artikel`}
+                    href={`#${cat.slug}`}
                     className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card px-3 py-1 text-sm text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
                   >
                     {cat.name}

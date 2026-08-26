@@ -14,7 +14,7 @@ export function Footer({ locale }: FooterProps) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-10 sm:mt-16 border-t border-border/70">
+    <footer className="mt-10 sm:mt-16 border-t border-border/70 print:hidden">
       <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:py-10 sm:px-6">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
           <div className="max-w-sm">
@@ -57,10 +57,28 @@ export function Footer({ locale }: FooterProps) {
               {dict.nav.about}
             </Link>
             <Link
+              href={`/${locale}/tersimpan`}
+              className="text-muted-foreground transition-colors hover:text-primary"
+            >
+              {dict.saved.title}
+            </Link>
+            <Link
               href={`/${locale}/cari`}
               className="text-muted-foreground transition-colors hover:text-primary"
             >
               {dict.nav.search}
+            </Link>
+            <Link
+              href={`/${locale}/privasi`}
+              className="text-muted-foreground transition-colors hover:text-primary"
+            >
+              {dict.footer.privacy}
+            </Link>
+            <Link
+              href={`/${locale}/kontak`}
+              className="text-muted-foreground transition-colors hover:text-primary"
+            >
+              {dict.footer.contact}
             </Link>
           </nav>
         </div>

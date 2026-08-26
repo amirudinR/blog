@@ -2,6 +2,7 @@
 
 import {
   BookOpen,
+  Bookmark,
   Compass,
   Home,
   Info,
@@ -59,7 +60,7 @@ export function Navbar({ locale }: NavbarProps) {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur print:hidden">
       <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-4 sm:px-6">
         <Link
           href={`/${locale}`}
@@ -97,6 +98,14 @@ export function Navbar({ locale }: NavbarProps) {
             className="flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
           >
             <Search className="size-[18px]" aria-hidden />
+          </Link>
+          <Link
+            href={`/${locale}/tersimpan`}
+            aria-label={dict.saved.title}
+            title={dict.saved.title}
+            className="flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          >
+            <Bookmark className="size-[18px]" aria-hidden />
           </Link>
           <ThemeToggle />
           <LanguageSwitcher locale={locale} className="ml-1" />
@@ -150,6 +159,14 @@ export function Navbar({ locale }: NavbarProps) {
               >
                 <Search className="size-[18px] shrink-0" aria-hidden />
                 {dict.nav.search}
+              </Link>
+              <Link
+                href={`/${locale}/tersimpan`}
+                className="flex min-h-[44px] items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                onClick={() => setOpen(false)}
+              >
+                <Bookmark className="size-[18px] shrink-0" aria-hidden />
+                {dict.saved.title}
               </Link>
               <Link
                 href={`/${locale}/kisah-nabi`}

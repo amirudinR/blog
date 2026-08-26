@@ -6,8 +6,11 @@ import { notFound } from "next/navigation";
 import { CommentSection } from "@/components/blog/comment-section";
 import { CopyAttribution } from "@/components/blog/copy-attribution";
 import { MarkdownContent } from "@/components/blog/markdown-content";
+import { ArticleBody } from "@/components/blog/article-body";
+import { BookmarkButton } from "@/components/blog/bookmark-button";
 import { ProtectedCover } from "@/components/blog/protected-cover";
 import { ReadingProgress } from "@/components/blog/reading-progress";
+import { ReadingTracker } from "@/components/blog/reading-tracker";
 import { RelatedPosts } from "@/components/blog/related-posts";
 import { ShareButtons } from "@/components/blog/share-buttons";
 import { TableOfContents } from "@/components/blog/toc";
@@ -103,11 +106,37 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     inLanguage: locale === "id" ? "id-ID" : "en-US",
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: SITE_NAME, item: SITE_URL },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: article.categoryName ?? dict.blog.title,
+        item: categorySlug
+          ? `${SITE_URL}/${locale}/kategori/${categorySlug}`
+          : `${SITE_URL}/${locale}/blog`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: article.title,
+        item: shareUrl,
+      },
+    ],
+  };
+
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:py-12 sm:px-6">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <ReadingProgress />
       <Link
@@ -164,7 +193,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               </Link>
             ))}
           </div>
-          <div className="mt-5">
+          <div className="mt-5 flex flex-wrap items-center gap-2 print:hidden">
             <TextToSpeech
               text={markdownToSpeechText(article.contentMarkdown)}
               locale={locale}
@@ -182,7 +211,19 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 restart: dict.blog.ttsRestart,
               }}
             />
+            <BookmarkButton
+              href={`/${locale}/blog/${article.slug}`}
+              title={article.title}
+              labels={{
+                save: dict.saved.save,
+                saved: dict.saved.saved,
+              }}
+            />
           </div>
+          <ReadingTracker
+            href={`/${locale}/blog/${article.slug}`}
+            title={article.title}
+          />
           <ViewCounter postId={article.id} />
         </header>
 
@@ -220,30 +261,44 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         <div className="grid gap-6 sm:gap-10 xl:grid-cols-[minmax(0,1fr)_16rem]">
           <div className="min-w-0 max-w-[68ch]">
             <CopyAttribution url={shareUrl} siteName={SITE_NAME}>
-              <MarkdownContent markdown={article.contentMarkdown} />
+              <ArticleBody
+                labels={{
+                  increase: dict.reading.increase,
+                  decrease: dict.reading.decrease,
+                  serif: dict.reading.serif,
+                }}
+              >
+                <MarkdownContent markdown={article.contentMarkdown} />
+              </ArticleBody>
             </CopyAttribution>
 
-            <div className="mt-10 border-t border-border/70 pt-6">
+            <div className="mt-10 border-t border-border/70 pt-6 print:hidden">
               <ShareButtons title={article.title} url={shareUrl} t={dict.blog} />
             </div>
           </div>
 
           {tocItems.length > 0 ? (
-            <aside className="hidden xl:block">
+            <aside className="hidden xl:block print:hidden">
               <TableOfContents items={tocItems} locale={locale} className="sticky top-24" />
             </aside>
           ) : null}
         </div>
       </article>
 
-      <CommentSection postId={article.id} comments={comments} locale={locale} />
+      <div className="print:hidden">
+        <CommentSection
+          postId={article.id}
+          comments={comments}
+          locale={locale}
+        />
 
-      <RelatedPosts
-        posts={relatedPosts}
-        locale={locale}
-        title={dict.blog.related}
-        emptyMessage={dict.blog.empty}
-      />
+        <RelatedPosts
+          posts={relatedPosts}
+          locale={locale}
+          title={dict.blog.related}
+          emptyMessage={dict.blog.empty}
+        />
+      </div>
     </div>
   );
 }

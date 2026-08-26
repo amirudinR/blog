@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Geist, Geist_Mono, Source_Serif_4 } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { Analytics } from "@vercel/analytics/react";
 
+import { ServiceWorkerRegister } from "@/components/blog/service-worker-register";
 import { SITE_URL } from "@/lib/constants";
 import "./globals.css";
 
@@ -26,6 +27,18 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "BlogKu",
   description: "Personal blog",
+  appleWebApp: {
+    capable: true,
+    title: "BlogKu",
+    statusBarStyle: "default",
+  },
+  icons: {
+    apple: "/icons/apple-touch-icon.png",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#4f46e5",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -45,6 +58,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         >
           {children}
           <Analytics />
+          <ServiceWorkerRegister />
         </ThemeProvider>
       </body>
     </html>

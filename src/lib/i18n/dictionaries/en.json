@@ -14,8 +14,10 @@
   },
   "home": {
     "overline": "Notes & Essays",
-    "featured": "Featured Posts",
-    "latest": "Latest Posts",
+    "featured": "Featured Articles",
+    "latest": "Latest Articles",
+    "popular": "Most Read",
+    "continueTitle": "Continue Reading",
     "viewAll": "View All",
     "readMore": "Read More",
     "newsletterTitle": "Subscribe to Newsletter",
@@ -123,7 +125,24 @@
   },
   "footer": {
     "rights": "All rights reserved.",
-    "builtWith": "Built with Next.js"
+    "builtWith": "Built with Next.js",
+    "privacy": "Privacy",
+    "contact": "Contact"
+  },
+  "saved": {
+    "title": "Saved",
+    "subtitle": "Articles you bookmarked to read later.",
+    "empty": "No saved articles yet. Use the Save button on any article page.",
+    "browse": "Browse Articles",
+    "remove": "Remove from saved",
+    "save": "Save",
+    "saved": "Saved",
+    "resume": "Continue reading"
+  },
+  "reading": {
+    "increase": "Increase font size",
+    "decrease": "Decrease font size",
+    "serif": "Toggle serif font"
   },
   "notFound": {
     "title": "Page not found",

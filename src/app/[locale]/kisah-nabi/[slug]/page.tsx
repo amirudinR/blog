@@ -5,7 +5,10 @@ import { notFound } from "next/navigation";
 
 import { CopyAttribution } from "@/components/blog/copy-attribution";
 import { MarkdownContent } from "@/components/blog/markdown-content";
+import { ArticleBody } from "@/components/blog/article-body";
+import { BookmarkButton } from "@/components/blog/bookmark-button";
 import { ReadingProgress } from "@/components/blog/reading-progress";
+import { ReadingTracker } from "@/components/blog/reading-tracker";
 import { ShareButtons } from "@/components/blog/share-buttons";
 import { TableOfContents } from "@/components/blog/toc";
 import { TextToSpeech } from "@/components/blog/text-to-speech";
@@ -114,7 +117,7 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
               {chapter.readingTime} {dict.prophets.minRead}
             </span>
           </div>
-          <div className="mt-5">
+          <div className="mt-5 flex flex-wrap items-center gap-2 print:hidden">
             <TextToSpeech
               text={markdownToSpeechText(chapter.content)}
               locale={locale}
@@ -132,10 +135,22 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
                 restart: dict.blog.ttsRestart,
               }}
             />
+            <BookmarkButton
+              href={`/${locale}/kisah-nabi/${slug}`}
+              title={chapter.title}
+              labels={{
+                save: dict.saved.save,
+                saved: dict.saved.saved,
+              }}
+            />
           </div>
+          <ReadingTracker
+            href={`/${locale}/kisah-nabi/${slug}`}
+            title={chapter.title}
+          />
         </header>
 
-        <div className="mb-6 sm:mb-8 xl:hidden">
+        <div className="mb-6 sm:mb-8 xl:hidden print:hidden">
           {chapter.headings.length > 0 ? (
             <TableOfContents
               items={chapter.headings}
@@ -149,16 +164,24 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
         <div className="grid gap-6 sm:gap-10 xl:grid-cols-[minmax(0,1fr)_16rem]">
           <div className="min-w-0 max-w-[68ch]">
             <CopyAttribution url={shareUrl} siteName={SITE_NAME}>
-              <MarkdownContent markdown={chapter.content} />
+              <ArticleBody
+                labels={{
+                  increase: dict.reading.increase,
+                  decrease: dict.reading.decrease,
+                  serif: dict.reading.serif,
+                }}
+              >
+                <MarkdownContent markdown={chapter.content} />
+              </ArticleBody>
             </CopyAttribution>
 
-            <div className="mt-10 border-t border-border/70 pt-6">
+            <div className="mt-10 border-t border-border/70 pt-6 print:hidden">
               <ShareButtons title={chapter.title} url={shareUrl} t={dict.blog} />
             </div>
 
             <nav
               aria-label={dict.prophets.chapter}
-              className="mt-10 grid gap-3 sm:grid-cols-2"
+              className="mt-10 grid gap-3 sm:grid-cols-2 print:hidden"
             >
               {prev ? (
                 <Link
@@ -204,7 +227,7 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
           </div>
 
           {chapter.headings.length > 0 ? (
-            <aside className="hidden xl:block">
+            <aside className="hidden xl:block print:hidden">
               <TableOfContents
                 items={chapter.headings}
                 locale={locale}

@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 
 import { Footer } from "@/components/blog/footer";
 import { Navbar } from "@/components/blog/navbar";
+import { SITE_NAME, SITE_URL } from "@/lib/constants";
 import { isValidLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 
@@ -39,8 +40,25 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!isValidLocale(locale)) notFound();
 
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE_NAME,
+    url: `${SITE_URL}/${locale}`,
+    inLanguage: locale === "id" ? "id-ID" : "en-US",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${SITE_URL}/${locale}/cari?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
       <Navbar locale={locale} />
       <main className="flex-1">{children}</main>
       <Footer locale={locale} />

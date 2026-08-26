@@ -18,6 +18,7 @@ export type PostCardData = {
   readingTime: number;
   publishedAt: Date | null;
   categoryName: string | null;
+  viewsCount?: number;
 };
 
 export type ArticleData = PostCardData & {
@@ -337,6 +338,7 @@ function toCardRows(
       categoryName: post.categoryId
         ? localeName(categoryNames, post.categoryId, locale)
         : null,
+      viewsCount: post.viewsCount,
       _categoryId: post.categoryId,
     };
   });
@@ -352,6 +354,7 @@ function stripRows(rows: CardRow[]): PostCardData[] {
     readingTime: row.readingTime,
     publishedAt: row.publishedAt,
     categoryName: row.categoryName,
+    viewsCount: row.viewsCount,
   }));
 }
 
@@ -388,6 +391,18 @@ export async function getFeaturedPosts(
 ): Promise<PostCardData[]> {
   const { posts, categoryNames } = await getBlogData();
   return stripRows(toCardRows(posts, locale, categoryNames).slice(0, limit));
+}
+
+export async function getMostViewedPosts(
+  locale: Locale,
+  limit = 6
+): Promise<PostCardData[]> {
+  const { posts, categoryNames } = await getBlogData();
+  const viewed = toCardRows(posts, locale, categoryNames)
+    .filter((row) => (row.viewsCount ?? 0) > 0)
+    .sort((a, b) => (b.viewsCount ?? 0) - (a.viewsCount ?? 0))
+    .slice(0, limit);
+  return stripRows(viewed);
 }
 
 export async function listPostsByCategory(

@@ -16,6 +16,8 @@
     "overline": "Catatan & Tulisan",
     "featured": "Artikel Unggulan",
     "latest": "Artikel Terbaru",
+    "popular": "Paling Dibaca",
+    "continueTitle": "Lanjutkan Membaca",
     "viewAll": "Lihat Semua",
     "readMore": "Baca Selengkapnya",
     "newsletterTitle": "Berlangganan Newsletter",
@@ -123,7 +125,24 @@
   },
   "footer": {
     "rights": "Semua hak dilindungi.",
-    "builtWith": "Dibuat dengan Next.js"
+    "builtWith": "Dibuat dengan Next.js",
+    "privacy": "Privasi",
+    "contact": "Kontak"
+  },
+  "saved": {
+    "title": "Tersimpan",
+    "subtitle": "Artikel yang kamu tandai untuk dibaca nanti.",
+    "empty": "Belum ada artikel tersimpan. Gunakan tombol Simpan di halaman artikel.",
+    "browse": "Jelajahi Artikel",
+    "remove": "Hapus dari tersimpan",
+    "save": "Simpan",
+    "saved": "Tersimpan",
+    "resume": "Lanjutkan baca"
+  },
+  "reading": {
+    "increase": "Perbesar huruf",
+    "decrease": "Perkecil huruf",
+    "serif": "Ganti gaya huruf serif"
   },
   "notFound": {
     "title": "Halaman tidak ditemukan",

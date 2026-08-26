@@ -2,9 +2,10 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { ContinueReading } from "@/components/blog/continue-reading";
 import { NewsletterForm } from "@/components/blog/newsletter-form";
 import { PostCard } from "@/components/blog/post-card";
-import { getFeaturedPosts, getLatestPosts } from "@/lib/db/queries";
+import { getFeaturedPosts, getLatestPosts, getMostViewedPosts } from "@/lib/db/queries";
 import { isValidLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 
@@ -19,9 +20,10 @@ export default async function HomePage({ params }: HomePageProps) {
   if (!isValidLocale(locale)) notFound();
   const dict = await getDictionary(locale);
 
-  const [featured, latest] = await Promise.all([
+  const [featured, latest, mostViewed] = await Promise.all([
     getFeaturedPosts(locale, 3),
     getLatestPosts(locale, 1, 6),
+    getMostViewedPosts(locale, 6),
   ]);
 
   return (
@@ -57,6 +59,15 @@ export default async function HomePage({ params }: HomePageProps) {
           </Link>
         </div>
       </section>
+
+      <ContinueReading
+        labels={{
+          title: dict.home.continueTitle,
+          resume: dict.saved.resume,
+          partOf: dict.blog.ttsPartOf,
+          emptyHint: "",
+        }}
+      />
 
       <section className="py-10 sm:py-16">
         <div className="mb-8 flex items-center gap-5">
@@ -95,6 +106,24 @@ export default async function HomePage({ params }: HomePageProps) {
         {latest.posts.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {latest.posts.map((post) => (
+              <PostCard key={post.id} post={post} locale={locale} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-muted-foreground">{dict.blog.empty}</p>
+        )}
+      </section>
+
+      <section className="py-10 sm:py-16">
+        <div className="mb-8 flex items-center gap-5">
+          <h2 className="shrink-0 font-heading text-xl font-bold tracking-tight sm:text-3xl">
+            {dict.home.popular}
+          </h2>
+          <span className="h-px flex-1 bg-border" aria-hidden />
+        </div>
+        {mostViewed.length > 0 ? (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {mostViewed.map((post) => (
               <PostCard key={post.id} post={post} locale={locale} />
             ))}
           </div>

@@ -118,6 +118,7 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
             <TextToSpeech
               text={markdownToSpeechText(chapter.content)}
               locale={locale}
+              storageKey={`kisah-nabi-${slug}`}
               labels={{
                 listen: dict.blog.ttsListen,
                 pause: dict.blog.ttsPause,
@@ -125,6 +126,10 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
                 stop: dict.blog.ttsStop,
                 speed: dict.blog.ttsSpeed,
                 partOf: dict.blog.ttsPartOf,
+                voice: dict.blog.ttsVoice,
+                arabicVoice: dict.blog.ttsArabicVoice,
+                auto: dict.blog.ttsAuto,
+                restart: dict.blog.ttsRestart,
               }}
             />
           </div>

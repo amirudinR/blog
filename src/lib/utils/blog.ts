@@ -63,6 +63,50 @@ export function excerptFrom(markdown: string, max = 160): string {
 
 export type TocItem = { id: string; text: string; level: number };
 
+export type SpeechChunk = { text: string; arabic: boolean };
+
+const ARABIC_CHAR = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/;
+
+function segmentScripts(text: string): SpeechChunk[] {
+  const segments: SpeechChunk[] = [];
+  let current = "";
+  let currentArabic = false;
+  for (const char of text) {
+    if (/\s/.test(char)) {
+      if (current) current += char;
+      continue;
+    }
+    const arabic = ARABIC_CHAR.test(char);
+    if (current && arabic !== currentArabic) {
+      segments.push({ text: current.trim(), arabic: currentArabic });
+      current = "";
+    }
+    currentArabic = arabic;
+    current += char;
+  }
+  if (current.trim()) segments.push({ text: current.trim(), arabic: currentArabic });
+  return segments.filter((segment) => segment.text.length > 0);
+}
+
+export function buildSpeechChunks(text: string, chunkSize = 240): SpeechChunk[] {
+  const sentences = text.match(/[^.!?؟]+[.!?؟]*\s*/g) ?? [text];
+  const chunks: SpeechChunk[] = [];
+  for (const sentence of sentences) {
+    for (const segment of segmentScripts(sentence)) {
+      let buffer = "";
+      for (const word of segment.text.split(/\s+/)) {
+        if (buffer && buffer.length + word.length + 1 > chunkSize) {
+          chunks.push({ text: buffer.trim(), arabic: segment.arabic });
+          buffer = "";
+        }
+        buffer += (buffer ? " " : "") + word;
+      }
+      if (buffer.trim()) chunks.push({ text: buffer.trim(), arabic: segment.arabic });
+    }
+  }
+  return chunks.filter((chunk) => chunk.text.length > 0);
+}
+
 export function markdownToSpeechText(markdown: string): string {
   return stripFrontmatter(markdown)
     .replace(/```[\s\S]*?```/g, " ")

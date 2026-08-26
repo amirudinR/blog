@@ -52,7 +52,11 @@
     "ttsResume": "Resume",
     "ttsStop": "Stop",
     "ttsSpeed": "Speech speed",
-    "ttsPartOf": "Part {current} of {total}"
+    "ttsPartOf": "Part {current} of {total}",
+    "ttsVoice": "Voice",
+    "ttsArabicVoice": "Arabic voice",
+    "ttsAuto": "Auto",
+    "ttsRestart": "Start over"
   },
   "category": {
     "title": "Category",

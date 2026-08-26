@@ -52,7 +52,11 @@
     "ttsResume": "Lanjutkan",
     "ttsStop": "Berhenti",
     "ttsSpeed": "Kecepatan suara",
-    "ttsPartOf": "Bagian {current} dari {total}"
+    "ttsPartOf": "Bagian {current} dari {total}",
+    "ttsVoice": "Suara",
+    "ttsArabicVoice": "Suara Arab",
+    "ttsAuto": "Otomatis",
+    "ttsRestart": "Mulai dari awal"
   },
   "category": {
     "title": "Kategori",

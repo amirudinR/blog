@@ -168,6 +168,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             <TextToSpeech
               text={markdownToSpeechText(article.contentMarkdown)}
               locale={locale}
+              storageKey={`blog-${article.slug}`}
               labels={{
                 listen: dict.blog.ttsListen,
                 pause: dict.blog.ttsPause,
@@ -175,6 +176,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 stop: dict.blog.ttsStop,
                 speed: dict.blog.ttsSpeed,
                 partOf: dict.blog.ttsPartOf,
+                voice: dict.blog.ttsVoice,
+                arabicVoice: dict.blog.ttsArabicVoice,
+                auto: dict.blog.ttsAuto,
+                restart: dict.blog.ttsRestart,
               }}
             />
           </div>

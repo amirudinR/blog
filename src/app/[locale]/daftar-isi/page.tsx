@@ -240,12 +240,18 @@ export default async function TocPage({ params }: TocPageProps) {
                           </h4>
                         ) : null}
                         <ol className="overflow-hidden rounded-xl border border-border/70 bg-card">
-                          {subgroup.articles.map((post) => (
+                          {subgroup.articles.map((post, index) => (
                             <li key={post.slug}>
                               <Link
                                 href={`/${locale}/blog/${post.slug}`}
                                 className="group flex items-baseline gap-2.5 px-4 py-3 transition-colors hover:bg-accent/50"
                               >
+                                <span
+                                  className="flex size-6 shrink-0 translate-y-0.5 items-center justify-center rounded-md bg-primary/10 text-[11px] font-bold tabular-nums text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground"
+                                  aria-hidden
+                                >
+                                  {index + 1}
+                                </span>
                                 <span className="min-w-0 truncate text-sm font-medium transition-colors group-hover:text-primary sm:text-[15px]">
                                   {post.title}
                                 </span>

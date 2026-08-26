@@ -583,6 +583,7 @@ export type TocArticle = {
   readingTime: number;
   publishedAt: Date | null;
   categoryName: string | null;
+  tags?: string[];
 };
 
 export async function getAllPostsForToc(
@@ -634,6 +635,7 @@ export async function getAllPostsFiltered(
       categoryName: post.categoryId
         ? localeName(categoryNames, post.categoryId, locale)
         : null,
+      tags: post.tagIds,
     };
   });
 }

@@ -49,6 +49,7 @@
     "allCategories": "All Categories",
     "filtering": "Showing",
     "clearFilter": "Clear filter",
+    "searchPlaceholder": "Search article titles...",
     "ttsListen": "Listen",
     "ttsPause": "Pause",
     "ttsResume": "Resume",
@@ -82,7 +83,9 @@
     "sectionTwo": "Blog Articles",
     "uncategorized": "Uncategorized",
     "viewAll": "View all articles",
-    "backToTop": "Back to top"
+    "backToTop": "Back to top",
+    "searchPlaceholder": "Search article titles or prophet stories...",
+    "noResults": "No content matches your search."
   },
   "prophets": {
     "title": "Stories of the Prophets",

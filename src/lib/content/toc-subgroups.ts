@@ -1,9 +1,14 @@
 import type { Locale } from "@/lib/i18n/config";
-import type { TocArticle } from "@/lib/db/firestore";
+
+export type TocArticleLike = {
+  slug: string;
+  title: string;
+  readingTime: number;
+};
 
 export type TocSubgroup = {
   label: string | null;
-  articles: TocArticle[];
+  articles: TocArticleLike[];
 };
 
 type RuleGroup = {
@@ -873,9 +878,9 @@ const CATEGORY_MERGE_LABELS: Record<string, string> = {
 };
 
 function sortAlphabetically(
-  articles: TocArticle[],
+  articles: TocArticleLike[],
   locale: Locale
-): TocArticle[] {
+): TocArticleLike[] {
   const collator = new Intl.Collator(locale === "id" ? "id" : "en", {
     sensitivity: "base",
     numeric: true,
@@ -884,7 +889,7 @@ function sortAlphabetically(
 }
 
 export function subgroupArticles(
-  articles: TocArticle[],
+  articles: TocArticleLike[],
   categoryName: string,
   locale: Locale
 ): TocSubgroup[] {
@@ -897,7 +902,7 @@ export function subgroupArticles(
     label: locale === "id" ? group.labelId : group.labelEn,
     articles: [],
   }));
-  const rest: TocArticle[] = [];
+  const rest: TocArticleLike[] = [];
 
   for (const article of sorted) {
     const searchable = `${article.title} ${article.slug}`;

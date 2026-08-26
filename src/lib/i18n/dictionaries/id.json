@@ -49,6 +49,7 @@
     "allCategories": "Semua Kategori",
     "filtering": "Menampilkan",
     "clearFilter": "Hapus filter",
+    "searchPlaceholder": "Cari judul artikel...",
     "ttsListen": "Dengarkan",
     "ttsPause": "Jeda",
     "ttsResume": "Lanjutkan",
@@ -82,7 +83,9 @@
     "sectionTwo": "Artikel Blog",
     "uncategorized": "Tanpa Kategori",
     "viewAll": "Lihat semua artikel",
-    "backToTop": "Kembali ke atas"
+    "backToTop": "Kembali ke atas",
+    "searchPlaceholder": "Cari judul artikel atau kisah nabi...",
+    "noResults": "Tidak ada konten yang cocok."
   },
   "prophets": {
     "title": "Kisah Para Nabi",

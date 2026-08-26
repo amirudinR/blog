@@ -137,6 +137,15 @@
   }
 }
 
+/* Hide scrollbar for horizontal scrolling containers */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 @layer components {
   .prose :not(pre) > code {
     @apply rounded-md bg-muted px-1.5 py-0.5 text-[0.875em] font-medium;

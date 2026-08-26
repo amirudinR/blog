@@ -39,6 +39,18 @@ export function Footer({ locale }: FooterProps) {
               {dict.nav.blog}
             </Link>
             <Link
+              href={`/${locale}/kisah-nabi`}
+              className="text-muted-foreground transition-colors hover:text-primary"
+            >
+              {dict.nav.prophets}
+            </Link>
+            <Link
+              href={`/${locale}/daftar-isi`}
+              className="text-muted-foreground transition-colors hover:text-primary"
+            >
+              {dict.nav.toc}
+            </Link>
+            <Link
               href={`/${locale}/tentang`}
               className="text-muted-foreground transition-colors hover:text-primary"
             >

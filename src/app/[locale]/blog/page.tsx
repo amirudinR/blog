@@ -7,7 +7,6 @@ import {
 } from "@/lib/db/queries";
 import { isValidLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
-import { BlogFilterClient } from "@/components/blog/blog-filter-client";
 
 export const revalidate = 60;
 
@@ -27,20 +26,11 @@ export default async function BlogListPage({
   const sp = await searchParams;
   const filters = { kategori: sp.kategori, tag: sp.tag };
 
-  const [posts, categories, tags] = await Promise.all([
+  const [, categories, tags] = await Promise.all([
     getAllPostsFiltered(locale, filters),
     getCategoriesWithCount(locale),
     getTagsWithCount(locale),
   ]);
-
-  const serializedPosts = posts.map((p) => ({
-    slug: p.slug,
-    title: p.title,
-    categoryName: p.categoryName,
-    tags: p.tags ?? [],
-    readingTime: p.readingTime,
-    publishedAt: p.publishedAt ? p.publishedAt.toISOString() : null,
-  }));
 
   return (
     <div id="top" className="mx-auto w-full max-w-6xl px-4 py-8 sm:py-12 sm:px-6">
@@ -53,23 +43,7 @@ export default async function BlogListPage({
 
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_16rem]">
         <div>
-          <BlogFilterClient
-            posts={serializedPosts}
-            categories={categories}
-            tags={tags}
-            locale={locale}
-            dictionary={{
-              allCategories: dict.blog.allCategories,
-              categories: dict.blog.categories,
-              tags: dict.blog.tags,
-              filtering: dict.blog.filtering,
-              clearFilter: dict.blog.clearFilter,
-              minutes: dict.toc.minutes,
-              searchPlaceholder: dict.blog.searchPlaceholder,
-            }}
-            initialKategori={sp.kategori}
-            initialTag={sp.tag}
-          />
+          <p>DEBUG: BlogFilterClient removed for testing</p>
         </div>
 
         <aside className="hidden lg:block">

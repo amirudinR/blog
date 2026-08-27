@@ -1,15 +1,7 @@
 "use client";
 
-import dynamic from "next/dynamic";
+import { useState, useEffect } from "react";
 import type { Locale } from "@/lib/i18n/config";
-
-const BlogFilter = dynamic(
-  () =>
-    import("@/components/blog/blog-filter").then((mod) => ({
-      default: mod.BlogFilter,
-    })),
-  { ssr: false }
-);
 
 type Post = {
   slug: string;
@@ -42,5 +34,25 @@ type Props = {
 };
 
 export function BlogFilterClient(props: Props) {
+  const [BlogFilter, setBlogFilter] = useState<
+    React.ComponentType<Props> | null
+  >(null);
+
+  useEffect(() => {
+    import("@/components/blog/blog-filter").then((mod) =>
+      setBlogFilter(() => mod.BlogFilter)
+    );
+  }, []);
+
+  if (!BlogFilter) {
+    return (
+      <div className="space-y-5">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="h-40 animate-pulse rounded-xl bg-muted" />
+        ))}
+      </div>
+    );
+  }
+
   return <BlogFilter {...props} />;
 }

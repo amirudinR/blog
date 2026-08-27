@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { ArrowUp } from "lucide-react";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { TocSearch } from "@/components/blog/toc-search";
@@ -71,24 +70,29 @@ export default async function TocPage({ params }: TocPageProps) {
   );
 
   return (
-    <div id="top" className="mx-auto w-full max-w-4xl px-4 py-8 sm:py-12 sm:px-6">
-      <header className="mb-8 text-center sm:mb-10">
-        <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
+    <div id="top" className="mx-auto w-full max-w-3xl px-4 py-10 sm:py-14 sm:px-6">
+      <header className="mb-10 text-center sm:mb-14">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+          {locale === "id" ? "Indeks Lengkap" : "Complete Index"}
+        </p>
+        <h1 className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-[2.5rem] sm:leading-tight">
           {dict.toc.title}
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+        <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-[15px]">
           {dict.toc.subtitle}
         </p>
 
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary">
-            {chapters.length} {dict.toc.chapters}
+        <div className="mt-6 inline-flex items-center divide-x divide-border/60 rounded-full border border-border/60 bg-card px-4 py-2 text-xs font-medium text-muted-foreground shadow-xs">
+          <span className="pr-3 tabular-nums">
+            <span className="font-semibold text-foreground">{chapters.length}</span>{" "}
+            {dict.toc.chapters}
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary">
-            {articles.length} {dict.toc.articles}
+          <span className="px-3 tabular-nums">
+            <span className="font-semibold text-foreground">{articles.length}</span>{" "}
+            {dict.toc.articles}
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground">
-            ~{totalHours} {dict.toc.hours} · {dict.toc.totalReading}
+          <span className="pl-3 tabular-nums">
+            ~{totalHours} {dict.toc.hours}
           </span>
         </div>
       </header>
@@ -119,12 +123,12 @@ export default async function TocPage({ params }: TocPageProps) {
         groupLabels={groupLabels}
       />
 
-      <footer className="mt-16 border-t border-border/70 pt-6 text-center">
+      <footer className="mt-16 border-t border-border/60 pt-6 text-center">
         <a
           href="#top"
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-primary"
         >
-          <ArrowUp className="size-4" aria-hidden />
+          <ArrowUp className="size-3.5" aria-hidden />
           {dict.toc.backToTop}
         </a>
       </footer>

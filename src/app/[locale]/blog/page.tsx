@@ -7,6 +7,7 @@ import {
 } from "@/lib/db/queries";
 import { isValidLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { TestClient } from "@/components/blog/test-client";
 
 export const revalidate = 60;
 
@@ -42,6 +43,7 @@ export default async function BlogListPage({
 
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_16rem]">
         <div>
+          <TestClient />
           <p className="text-muted-foreground">BlogFilterClient removed for testing — {posts.length} posts loaded</p>
         </div>
 

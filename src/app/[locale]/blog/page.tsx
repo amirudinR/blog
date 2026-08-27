@@ -3,6 +3,7 @@ import { ArrowUp, Newspaper } from "lucide-react";
 
 import { EmptyState } from "@/components/blog/empty-state";
 import { BlogFilter } from "@/components/blog/blog-filter";
+import { getProphetChapterList } from "@/lib/content/prophets";
 import {
   getAllPostsFiltered,
   getCategoriesWithCount,
@@ -29,10 +30,11 @@ export default async function BlogListPage({
   const sp = await searchParams;
   const filters = { kategori: sp.kategori, tag: sp.tag };
 
-  const [posts, categories, tags] = await Promise.all([
+  const [posts, categories, tags, prophetChapters] = await Promise.all([
     getAllPostsFiltered(locale, filters),
     getCategoriesWithCount(locale),
     getTagsWithCount(locale),
+    getProphetChapterList(),
   ]);
 
   const activeCategoryName = filters.kategori
@@ -42,14 +44,29 @@ export default async function BlogListPage({
     ? tags.find((t) => t.slug === filters.tag)?.name
     : null;
 
-  const serializedPosts = posts.map((p) => ({
-    slug: p.slug,
-    title: p.title,
-    categoryName: p.categoryName,
-    tags: p.tags ?? [],
-    readingTime: p.readingTime,
-    publishedAt: p.publishedAt ? p.publishedAt.toISOString() : null,
+  const prophetLabel = dict.toc.navProphets;
+
+  const prophetPosts = prophetChapters.map((c) => ({
+    slug: c.slug,
+    title: c.title,
+    categoryName: prophetLabel,
+    tags: [] as string[],
+    readingTime: c.readingTime,
+    publishedAt: null,
+    type: "prophet" as const,
   }));
+
+  const serializedPosts = [
+    ...prophetPosts,
+    ...posts.map((p) => ({
+      slug: p.slug,
+      title: p.title,
+      categoryName: p.categoryName,
+      tags: p.tags ?? [],
+      readingTime: p.readingTime,
+      publishedAt: p.publishedAt ? p.publishedAt.toISOString() : null,
+    })),
+  ];
 
   return (
     <div id="top" className="mx-auto w-full max-w-6xl px-4 py-8 sm:py-12 sm:px-6">
@@ -72,7 +89,7 @@ export default async function BlogListPage({
             </div>
           )}
 
-          {posts.length > 0 ? (
+          {serializedPosts.length > 0 ? (
             <>
               <BlogFilter
                 posts={serializedPosts}

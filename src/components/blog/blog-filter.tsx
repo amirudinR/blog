@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import type { Locale } from "@/lib/i18n/config";
 import {
   subgroupArticles,
+  type TocArticleLike,
   type TocSubgroup,
 } from "@/lib/content/toc-subgroups";
 
@@ -18,7 +19,13 @@ type Post = {
   tags: string[];
   readingTime: number;
   publishedAt: string | null;
+  type?: "prophet" | "blog";
 };
+
+function postHref(locale: Locale, post: TocArticleLike): string {
+  if (post.type === "prophet") return `/${locale}/kisah-nabi/${post.slug}`;
+  return `/${locale}/blog/${post.slug}`;
+}
 
 type Category = { slug: string; name: string; postCount: number };
 type Tag = { slug: string; name: string; postCount: number };
@@ -254,7 +261,7 @@ export function BlogFilter({
                     {subgroup.articles.map((post, index) => (
                       <li key={post.slug}>
                         <Link
-                          href={`/${locale}/blog/${post.slug}`}
+                          href={postHref(locale, post)}
                           className="group flex items-baseline gap-2.5 px-4 py-3 transition-colors hover:bg-accent/50"
                         >
                           <span

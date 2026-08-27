@@ -4,6 +4,7 @@ export type TocArticleLike = {
   slug: string;
   title: string;
   readingTime: number;
+  type?: "prophet" | "blog";
 };
 
 export type TocSubgroup = {

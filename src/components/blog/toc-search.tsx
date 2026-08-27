@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useCallback } from "react";
 import Link from "next/link";
-import { Search, X } from "lucide-react";
+import { Search, X, ChevronsUpDown } from "lucide-react";
 
 import type { Locale } from "@/lib/i18n/config";
 import { subgroupArticles, type TocSubgroup } from "@/lib/content/toc-subgroups";
@@ -68,8 +68,21 @@ export function TocSearch({
   groupLabels,
 }: TocSearchProps) {
   const [search, setSearch] = useState("");
+  const [allExpanded, setAllExpanded] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const articleSectionRef = useRef<HTMLDivElement>(null);
   const q = search.toLowerCase().trim();
+
+  const toggleAll = useCallback(() => {
+    const section = articleSectionRef.current;
+    if (!section) return;
+    const details = section.querySelectorAll("details");
+    const next = !allExpanded;
+    details.forEach((d) => {
+      d.open = next;
+    });
+    setAllExpanded(next);
+  }, [allExpanded]);
 
   const filteredChapters = useMemo(
     () =>
@@ -218,9 +231,18 @@ export function TocSearch({
             <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium normal-case tracking-normal">
               {filteredArticles.length}
             </span>
+            <button
+              type="button"
+              onClick={toggleAll}
+              className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-border/70 bg-card px-2.5 py-1.5 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground"
+              aria-label={allExpanded ? "Tutup semua" : "Buka semua"}
+            >
+              <ChevronsUpDown className="size-3.5" aria-hidden />
+              {allExpanded ? "Tutup semua" : "Buka semua"}
+            </button>
           </div>
 
-          <div className="space-y-8">
+          <div ref={articleSectionRef} className="space-y-8">
             {groupedArticles.map(({ categoryName, subgroups }) => (
               <div key={categoryName}>
                 <h3 className="mb-3 flex items-baseline gap-2 text-sm font-semibold uppercase tracking-[0.15em] text-muted-foreground">
@@ -229,35 +251,47 @@ export function TocSearch({
                     {subgroups.reduce((sum, sg) => sum + sg.articles.length, 0)}
                   </span>
                 </h3>
-                <div className="space-y-6">
+                <div className="space-y-2">
                   {subgroups.map((subgroup) => (
-                    <div key={subgroup.label ?? "_all"}>
-                      {subgroup.label ? (
-                        <h4 className="mb-2 flex items-center gap-2 pl-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground/80">
-                          <span
-                            className="inline-block size-1.5 rounded-full bg-primary/60"
-                            aria-hidden
-                          />
-                          {subgroup.label}
-                          <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium normal-case tracking-normal">
-                            {subgroup.articles.length}
-                          </span>
-                        </h4>
-                      ) : null}
-                      <ol className="overflow-hidden rounded-xl border border-border/70 bg-card">
+                    <details
+                      key={subgroup.label ?? "_all"}
+                      className="group rounded-xl border border-border/70 bg-card open:shadow-sm"
+                    >
+                      <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/80 transition-colors hover:bg-accent/50 [&::-webkit-details-marker]:hidden [&::marker]:hidden">
+                        <span
+                          className="inline-block size-1.5 shrink-0 rounded-full bg-primary/60"
+                          aria-hidden
+                        />
+                        {subgroup.label ?? t.articles}
+                        <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium normal-case tracking-normal">
+                          {subgroup.articles.length}
+                        </span>
+                        <svg
+                          className="ml-auto size-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-90"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                      </summary>
+                      <ol className="border-t border-border/70">
                         {subgroup.articles.map((post, index) => (
                           <li key={post.slug}>
                             <Link
                               href={`/${locale}/blog/${post.slug}`}
-                              className="group flex items-baseline gap-2.5 px-4 py-3 transition-colors hover:bg-accent/50"
+                              className="group/link flex items-baseline gap-2.5 px-4 py-3 transition-colors hover:bg-accent/50"
                             >
                               <span
-                                className="flex size-6 shrink-0 translate-y-0.5 items-center justify-center rounded-md bg-primary/10 text-[11px] font-bold tabular-nums text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground"
+                                className="flex size-6 shrink-0 translate-y-0.5 items-center justify-center rounded-md bg-primary/10 text-[11px] font-bold tabular-nums text-primary transition-colors group-hover/link:bg-primary group-hover/link:text-primary-foreground"
                                 aria-hidden
                               >
                                 {index + 1}
                               </span>
-                              <span className="min-w-0 flex-1 truncate text-sm font-medium transition-colors group-hover:text-primary sm:text-[15px]">
+                              <span className="min-w-0 flex-1 truncate text-sm font-medium transition-colors group-hover/link:text-primary sm:text-[15px]">
                                 {post.title}
                               </span>
                               <Leader />
@@ -270,7 +304,7 @@ export function TocSearch({
                           </li>
                         ))}
                       </ol>
-                    </div>
+                    </details>
                   ))}
                 </div>
               </div>

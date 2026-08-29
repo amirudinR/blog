@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
 <rect width="800" height="500" rx="24" fill="#faf6f0"/>
 <rect x="120" y="150" width="300" height="170" rx="24" fill="#c2593a"/>
 <polygon points="180,310 220,356 140,356" fill="#c2593a"/>

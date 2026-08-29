@@ -25,11 +25,13 @@ const components: Components = {
     );
   },
   img({ node: _node, src, alt, ...props }) {
+    const isTopicSvg = typeof src === "string" && src.startsWith("/images/topics/");
     return (
       <ProtectedImage
         src={typeof src === "string" ? src : undefined}
         alt={alt ?? ""}
         className="rounded-lg"
+        {...(isTopicSvg ? { width: 800, height: 500 } : {})}
         {...props}
       />
     );
